@@ -3,8 +3,8 @@ import {
   checkIsAuthenticated,
   rootLink,
 } from '../../scripts/commerce.js';
-import { EQUIPMENT_PRODUCTS, getEquipmentProductBySku } from './equipment-products.js';
-import { DELIVERY_SITES, findSiteBySearchValue, getSiteSearchLabel } from './sites.js';
+import { EQUIPMENT_PRODUCTS } from './equipment-products.js';
+import { DELIVERY_SITES, findSiteById, getSiteSearchLabel } from './sites.js';
 import {
   STEP_SEQUENCE,
   createEquipmentLine,
@@ -23,14 +23,26 @@ import '../../scripts/initializers/checkout.js';
 import '../../scripts/initializers/order.js';
 
 const STEP_TITLES = {
-  orderType: '1. Order Type',
-  deliveryDate: '2. Delivery Date',
-  transport: '3. Transport',
-  equipment: '4. Equipment',
-  siteContact: '5. Site Address & Contact',
-  deliveryWindow: '6. Delivery Window',
+  orderType: 'Order Type',
+  deliveryDate: 'Delivery Date',
+  transport: 'Transport',
+  equipment: 'Equipment',
+  siteContact: 'Site & Contact',
+  deliveryWindow: 'Delivery Window',
 };
 
+const STEP_DESCRIPTIONS = {
+  orderType: 'Choose between a single delivery or a 7-day recurring order.',
+  deliveryDate: 'Select the date your pallets need to be delivered.',
+  transport: 'Choose whether CHEP or your own fleet handles transport.',
+  equipment: 'Select the pallet types and quantities you require.',
+  siteContact: 'Specify the delivery address and on-site contact details.',
+  deliveryWindow: 'Set your preferred delivery time window for the driver.',
+};
+
+/* ------------------------------------------------------------------
+   Utility helpers
+   ------------------------------------------------------------------ */
 function escapeHtml(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
@@ -38,10 +50,6 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
-}
-
-function getTodayIsoDate() {
-  return new Date().toISOString().split('T')[0];
 }
 
 function getStepErrors(state, stepId) {
@@ -53,28 +61,229 @@ function clearStepError(state, stepId) {
   state.submitError = '';
 }
 
-function syncSelectedSite(state) {
-  const matchedSite = findSiteBySearchValue(state.data.siteSearch);
-  state.data.siteId = matchedSite?.id || '';
+
+/* ------------------------------------------------------------------
+   SVG icons
+   ------------------------------------------------------------------ */
+function renderCheckIcon() {
+  return `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
 }
 
-function renderError(message) {
-  if (!message) return '';
-  return `<p class="order-new-delivery__field-error" role="alert">${escapeHtml(message)}</p>`;
+function renderArrowIcon() {
+  return `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
 }
 
-function renderStepMessage(message) {
-  if (!message) return '';
+function renderPalletIcon(material) {
+  const colors = {
+    wood: '#c68642',
+    'wood-metal': '#8a9bb0',
+    plastic: '#1fa6e8',
+  };
+  const c = colors[material] || colors.wood;
+  return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="2" y="9" width="28" height="3.5" rx="1" fill="${c}"/>
+    <rect x="2" y="14.5" width="28" height="3.5" rx="1" fill="${c}" opacity="0.75"/>
+    <rect x="2" y="19" width="28" height="3.5" rx="1" fill="${c}" opacity="0.5"/>
+    <rect x="2" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
+    <rect x="12.5" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
+    <rect x="23" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
+  </svg>`;
+}
+
+/* ------------------------------------------------------------------
+   Calendar date picker
+   ------------------------------------------------------------------ */
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'];
+const DAY_ABBR = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+function renderChevronLeft() {
+  return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>`;
+}
+function renderChevronRight() {
+  return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>`;
+}
+function renderChevronUp() {
+  return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l5-5 5 5"/></svg>`;
+}
+function renderChevronDown() {
+  return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>`;
+}
+
+function renderCalendar(state, errors) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const selected = state.data.deliveryDate
+    ? new Date(`${state.data.deliveryDate}T00:00:00`)
+    : null;
+
+  const dispYear = state.ui?.calendarYear ?? (selected?.getFullYear() ?? today.getFullYear());
+  const dispMonth = state.ui?.calendarMonth ?? (selected?.getMonth() ?? today.getMonth());
+
+  const firstOfMonth = new Date(dispYear, dispMonth, 1);
+  const daysInMonth = new Date(dispYear, dispMonth + 1, 0).getDate();
+  const startOffset = (firstOfMonth.getDay() + 6) % 7; // Monday-first
+
+  const prevM = dispMonth === 0 ? 11 : dispMonth - 1;
+  const prevY = dispMonth === 0 ? dispYear - 1 : dispYear;
+  const nextM = dispMonth === 11 ? 0 : dispMonth + 1;
+  const nextY = dispMonth === 11 ? dispYear + 1 : dispYear;
+
+  const canGoPrev = dispYear > today.getFullYear()
+    || (dispYear === today.getFullYear() && dispMonth > today.getMonth());
+
+  const dowHeaders = DAY_ABBR.map((d) => `<span class="ond-cal__dow">${d}</span>`).join('');
+  const emptyCells = Array.from({ length: startOffset }, () => '<span class="ond-cal__day ond-cal__day--empty"></span>').join('');
+
+  const dayCells = Array.from({ length: daysInMonth }, (_, i) => {
+    const dayNum = i + 1;
+    const thisDate = new Date(dispYear, dispMonth, dayNum);
+    const isPast = thisDate < today;
+    const isToday = thisDate.getTime() === today.getTime();
+    const isSelected = selected
+      && thisDate.getFullYear() === selected.getFullYear()
+      && thisDate.getMonth() === selected.getMonth()
+      && thisDate.getDate() === selected.getDate();
+
+    const cls = ['ond-cal__day', isToday && 'is-today', isSelected && 'is-selected'].filter(Boolean).join(' ');
+    const mo = String(dispMonth + 1).padStart(2, '0');
+    const dy = String(dayNum).padStart(2, '0');
+
+    return `<button
+      type="button"
+      class="${cls}"
+      data-cal-date="${dispYear}-${mo}-${dy}"
+      aria-label="${dayNum} ${MONTH_NAMES[dispMonth]} ${dispYear}${isToday ? ', today' : ''}${isSelected ? ', selected' : ''}"
+      aria-pressed="${isSelected ? 'true' : 'false'}"
+      ${isPast ? 'disabled' : ''}
+    >${dayNum}</button>`;
+  }).join('');
+
+  const selectedLabel = selected
+    ? `<p class="ond-cal__selected-label">
+        Selected: <strong>${selected.getDate()} ${MONTH_NAMES[selected.getMonth()]} ${selected.getFullYear()}</strong>
+       </p>`
+    : '';
+
   return `
-    <div class="order-new-delivery__step-message" role="alert">
-      ${escapeHtml(message)}
+    <div class="ond-calendar">
+      <div class="ond-cal__header">
+        <button type="button" class="ond-cal__nav-btn" data-cal-nav-year="${prevY}" data-cal-nav-month="${prevM}" aria-label="Previous month" ${!canGoPrev ? 'disabled' : ''}>
+          ${renderChevronLeft()}
+        </button>
+        <span class="ond-cal__month-label" aria-live="polite">${MONTH_NAMES[dispMonth]} ${dispYear}</span>
+        <button type="button" class="ond-cal__nav-btn" data-cal-nav-year="${nextY}" data-cal-nav-month="${nextM}" aria-label="Next month">
+          ${renderChevronRight()}
+        </button>
+      </div>
+      <div class="ond-cal__grid">
+        ${dowHeaders}
+        ${emptyCells}
+        ${dayCells}
+      </div>
+    </div>
+    ${selectedLabel}
+    ${renderError(errors.fields.deliveryDate)}
+  `;
+}
+
+/* ------------------------------------------------------------------
+   Time stepper
+   ------------------------------------------------------------------ */
+function renderTimeStepper(value, fieldName, ariaLabel) {
+  const hasParts = value && value.includes(':');
+  const h = hasParts ? Number(value.split(':')[0]) : null;
+  const m = hasParts ? Number(value.split(':')[1]) : null;
+  const dispH = h !== null ? String(h).padStart(2, '0') : '––';
+  const dispM = m !== null ? String(m).padStart(2, '0') : '––';
+  const isEmpty = h === null;
+
+  return `
+    <div class="ond-time-stepper" aria-label="${escapeHtml(ariaLabel)}">
+      <div class="ond-time-col">
+        <button type="button" class="ond-time-arrow" data-time-step="1" data-time-field="${escapeHtml(fieldName)}" data-time-part="hour" aria-label="Increase hour">
+          ${renderChevronUp()}
+        </button>
+        <div class="ond-time-display${isEmpty ? ' is-placeholder' : ''}">${dispH}</div>
+        <button type="button" class="ond-time-arrow" data-time-step="-1" data-time-field="${escapeHtml(fieldName)}" data-time-part="hour" aria-label="Decrease hour">
+          ${renderChevronDown()}
+        </button>
+        <div class="ond-time-unit">hr</div>
+      </div>
+      <div class="ond-time-sep-col"><span class="ond-time-colon" aria-hidden="true">:</span></div>
+      <div class="ond-time-col">
+        <button type="button" class="ond-time-arrow" data-time-step="1" data-time-field="${escapeHtml(fieldName)}" data-time-part="minute" aria-label="Increase minute">
+          ${renderChevronUp()}
+        </button>
+        <div class="ond-time-display${isEmpty ? ' is-placeholder' : ''}">${dispM}</div>
+        <button type="button" class="ond-time-arrow" data-time-step="-1" data-time-field="${escapeHtml(fieldName)}" data-time-part="minute" aria-label="Decrease minute">
+          ${renderChevronDown()}
+        </button>
+        <div class="ond-time-unit">min</div>
+      </div>
     </div>
   `;
 }
 
-function renderRadioCard({ name, value, label, checked, stepId }) {
+function formatSiteType(type) {
+  return type.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ');
+}
+
+function renderSiteCards(state, errors) {
+  const cards = DELIVERY_SITES.map((site) => {
+    const isSelected = state.data.siteId === site.id;
+    const address = [site.address1, site.city, site.postcode].filter(Boolean).join(', ');
+
+    return `
+      <label class="ond-site-card${isSelected ? ' is-selected' : ''}">
+        <input
+          type="radio"
+          name="siteId"
+          value="${escapeHtml(site.id)}"
+          data-site-id="${escapeHtml(site.id)}"
+          ${isSelected ? 'checked' : ''}
+        >
+        <span class="ond-site-card__check" aria-hidden="true">
+          ${isSelected ? renderCheckIcon() : ''}
+        </span>
+        <span class="ond-site-card__info">
+          <span class="ond-site-card__name">${escapeHtml(site.name)}</span>
+          <span class="ond-site-card__address">${escapeHtml(address)}</span>
+          <span class="ond-site-card__type">${escapeHtml(formatSiteType(site.type))}</span>
+        </span>
+      </label>
+    `;
+  }).join('');
+
   return `
-    <label class="order-new-delivery__choice-card">
+    <div class="ond-site-grid" role="radiogroup" aria-label="Select delivery site">
+      ${cards}
+    </div>
+    ${renderError(errors.fields.siteSearch)}
+  `;
+}
+
+/* ------------------------------------------------------------------
+   Shared render helpers
+   ------------------------------------------------------------------ */
+function renderError(message) {
+  if (!message) return '';
+  return `<p class="ond-field-error" role="alert">${escapeHtml(message)}</p>`;
+}
+
+function renderStepMessage(message) {
+  if (!message) return '';
+  return `<div class="ond-step-message" role="alert">${escapeHtml(message)}</div>`;
+}
+
+function renderChoiceCard({ name, value, label, checked, stepId }) {
+  return `
+    <label class="ond-choice-card">
       <input
         type="radio"
         name="${escapeHtml(name)}"
@@ -82,64 +291,112 @@ function renderRadioCard({ name, value, label, checked, stepId }) {
         data-step-input="${escapeHtml(stepId)}"
         ${checked ? 'checked' : ''}
       >
-      <span>${escapeHtml(label)}</span>
+      <span class="ond-choice-card__label">${escapeHtml(label)}</span>
     </label>
   `;
 }
 
-function renderEquipmentOptions(selectedSku) {
+/* ------------------------------------------------------------------
+   Equipment product cards
+   ------------------------------------------------------------------ */
+function getEquipmentQuantity(state, sku) {
+  const line = state.data.equipment.find((l) => l.sku === sku);
+  return line ? Number(line.quantity) : 0;
+}
+
+function formatMaterial(material) {
+  if (material === 'wood') return 'Wooden';
+  if (material === 'wood-metal') return 'Wood & Metal';
+  if (material === 'plastic') return 'Plastic';
+  return material;
+}
+
+function renderEquipmentCards(state, errors) {
+  const cards = EQUIPMENT_PRODUCTS.map((product) => {
+    const qty = getEquipmentQuantity(state, product.sku);
+    const isSelected = qty > 0;
+    const dimsMatch = product.label.match(/\d+ x \d+ mm/);
+    const dims = dimsMatch ? dimsMatch[0] : '';
+    const shortName = product.label.replace(/\s*\d+ x \d+ mm.*/, '').trim();
+
+    return `
+      <div class="ond-equipment-card${isSelected ? ' is-selected' : ''}">
+        <div class="ond-equipment-card__top">
+          <div class="ond-equipment-card__icon">
+            ${renderPalletIcon(product.material)}
+          </div>
+          <div class="ond-equipment-card__info">
+            <div class="ond-equipment-card__name">${escapeHtml(shortName)}</div>
+            ${dims ? `<div class="ond-equipment-card__dims">${escapeHtml(dims)}</div>` : ''}
+            <span class="ond-equipment-card__material">${escapeHtml(formatMaterial(product.material))}</span>
+          </div>
+        </div>
+        <div class="ond-equipment-card__footer">
+          <span class="ond-qty-label">Qty</span>
+          <div class="ond-qty-controls">
+            <button
+              type="button"
+              class="ond-qty-btn"
+              data-qty-change="-1"
+              data-qty-sku="${escapeHtml(product.sku)}"
+              aria-label="Decrease quantity for ${escapeHtml(shortName)}"
+              ${qty === 0 ? 'disabled' : ''}
+            >−</button>
+            <span class="ond-qty-value" aria-live="polite" aria-atomic="true">${qty}</span>
+            <button
+              type="button"
+              class="ond-qty-btn"
+              data-qty-change="1"
+              data-qty-sku="${escapeHtml(product.sku)}"
+              aria-label="Increase quantity for ${escapeHtml(shortName)}"
+            >+</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
   return `
-    <option value="">Select equipment</option>
-    ${EQUIPMENT_PRODUCTS.map((product) => `
-      <option value="${escapeHtml(product.sku)}" ${product.sku === selectedSku ? 'selected' : ''}>
-        ${escapeHtml(product.label)}
-      </option>
-    `).join('')}
+    <div class="ond-equipment-grid">${cards}</div>
+    ${renderError(errors.fields.equipment)}
   `;
 }
 
-function renderEquipmentRows(state, errors) {
-  return state.data.equipment.map((line, index) => `
-    <div class="order-new-delivery__equipment-row">
-      <div class="order-new-delivery__field">
-        <label for="equipment-sku-${index}">Equipment type</label>
-        <select
-          id="equipment-sku-${index}"
-          data-equipment-field="sku"
-          data-equipment-index="${index}"
-        >
-          ${renderEquipmentOptions(line.sku)}
-        </select>
-        ${renderError(errors.fields[`equipment-${index}-sku`])}
+/* ------------------------------------------------------------------
+   Step progress indicator
+   ------------------------------------------------------------------ */
+function renderStepProgressIndicator(state) {
+  const items = STEP_SEQUENCE.map((stepId, index) => {
+    const isCompleted = state.completedSteps.includes(stepId);
+    const isActive = state.activeStep === stepId;
+    let stateClass = '';
+    if (isCompleted) stateClass = 'is-complete';
+    else if (isActive) stateClass = 'is-active';
+
+    const dotContent = isCompleted ? renderCheckIcon() : String(index + 1);
+    const connector = index < STEP_SEQUENCE.length - 1
+      ? '<div class="ond-progress__connector"></div>'
+      : '';
+
+    return `
+      <div class="ond-progress__item${stateClass ? ` ${stateClass}` : ''}">
+        <div class="ond-progress__dot" aria-hidden="true">${dotContent}</div>
+        <span class="ond-progress__label">${escapeHtml(STEP_TITLES[stepId])}</span>
       </div>
-      <div class="order-new-delivery__field order-new-delivery__field--quantity">
-        <label for="equipment-quantity-${index}">Quantity</label>
-        <input
-          id="equipment-quantity-${index}"
-          type="number"
-          min="1"
-          step="1"
-          inputmode="numeric"
-          value="${escapeHtml(line.quantity)}"
-          data-equipment-field="quantity"
-          data-equipment-index="${index}"
-        >
-        ${renderError(errors.fields[`equipment-${index}-quantity`])}
-      </div>
-      <div class="order-new-delivery__equipment-actions">
-        <button
-          type="button"
-          class="button secondary"
-          data-remove-equipment="${index}"
-          ${state.data.equipment.length === 1 ? 'disabled' : ''}
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-  `).join('');
+      ${connector}
+    `;
+  }).join('');
+
+  return `
+    <nav class="ond-progress" aria-label="Order steps">
+      <div class="ond-progress__track">${items}</div>
+    </nav>
+  `;
 }
 
+/* ------------------------------------------------------------------
+   Step body content per step
+   ------------------------------------------------------------------ */
 function renderStepBody(stepId, state, siteListId) {
   const errors = getStepErrors(state, stepId);
   const isLastStep = stepId === STEP_SEQUENCE[STEP_SEQUENCE.length - 1];
@@ -149,15 +406,15 @@ function renderStepBody(stepId, state, siteListId) {
   switch (stepId) {
     case 'orderType':
       content = `
-        <div class="order-new-delivery__choice-grid">
-          ${renderRadioCard({
+        <div class="ond-choice-grid">
+          ${renderChoiceCard({
             name: 'orderType',
             value: 'single',
             label: 'Single Order',
             checked: state.data.orderType === 'single',
             stepId,
           })}
-          ${renderRadioCard({
+          ${renderChoiceCard({
             name: 'orderType',
             value: 'seven-day',
             label: '7 Day Order',
@@ -168,47 +425,36 @@ function renderStepBody(stepId, state, siteListId) {
         ${renderError(errors.fields.orderType)}
       `;
       break;
+
     case 'deliveryDate':
       content = `
-        <div class="order-new-delivery__field-grid">
-          <div class="order-new-delivery__field">
-            <label for="delivery-date">Delivery date</label>
-            <input
-              id="delivery-date"
-              type="date"
-              min="${getTodayIsoDate()}"
-              value="${escapeHtml(state.data.deliveryDate)}"
-              data-field="deliveryDate"
-            >
-            ${renderError(errors.fields.deliveryDate)}
+        <div class="ond-date-layout">
+          <div>
+            ${renderCalendar(state, errors)}
           </div>
-          <div class="order-new-delivery__field">
+          <div class="ond-field">
             <label for="delivery-source">Source</label>
-            <input
-              id="delivery-source"
-              type="text"
-              value="${escapeHtml(state.data.source)}"
-              readonly
-            >
-            <p class="order-new-delivery__help-text">Source is fixed as CHEP for this flow.</p>
+            <input id="delivery-source" type="text" value="${escapeHtml(state.data.source)}" readonly>
+            <p class="ond-help-text">Source is fixed as CHEP for this flow.</p>
           </div>
         </div>
       `;
       break;
+
     case 'transport':
       content = `
-        <div class="order-new-delivery__choice-grid">
-          ${renderRadioCard({
+        <div class="ond-choice-grid">
+          ${renderChoiceCard({
             name: 'transport',
             value: 'chep',
-            label: 'CHEP',
+            label: 'CHEP Delivery',
             checked: state.data.transport === 'chep',
             stepId,
           })}
-          ${renderRadioCard({
+          ${renderChoiceCard({
             name: 'transport',
             value: 'customer',
-            label: 'Customer',
+            label: 'Customer Pickup',
             checked: state.data.transport === 'customer',
             stepId,
           })}
@@ -216,69 +462,60 @@ function renderStepBody(stepId, state, siteListId) {
         ${renderError(errors.fields.transport)}
       `;
       break;
+
     case 'equipment':
       content = `
         ${renderStepMessage(errors.summary)}
-        <div class="order-new-delivery__equipment-list">
-          ${renderEquipmentRows(state, errors)}
-        </div>
-        ${renderError(errors.fields.equipment)}
-        <button type="button" class="button secondary" data-add-equipment>Add equipment line</button>
+        ${renderEquipmentCards(state, errors)}
       `;
       break;
+
     case 'siteContact':
       content = `
         ${renderStepMessage(errors.summary)}
-        <div class="order-new-delivery__field-grid">
-          <div class="order-new-delivery__field order-new-delivery__field--full">
-            <label for="site-search">Site or location</label>
-            <input
-              id="site-search"
-              list="${escapeHtml(siteListId)}"
-              value="${escapeHtml(state.data.siteSearch)}"
-              data-field="siteSearch"
-              autocomplete="off"
-            >
-            <datalist id="${escapeHtml(siteListId)}">
-              ${DELIVERY_SITES.map((site) => `<option value="${escapeHtml(getSiteSearchLabel(site))}"></option>`).join('')}
-            </datalist>
-            ${renderError(errors.fields.siteSearch)}
-          </div>
-          <div class="order-new-delivery__field">
+        <div class="ond-site-section">
+          <p class="ond-site-section-label">Delivery site</p>
+          ${renderSiteCards(state, errors)}
+        </div>
+        <div class="ond-field-grid">
+          <div class="ond-field">
             <label for="contact-name">Contact name</label>
-            <input id="contact-name" type="text" value="${escapeHtml(state.data.contactName)}" data-field="contactName">
+            <input id="contact-name" type="text" value="${escapeHtml(state.data.contactName)}" data-field="contactName" placeholder="Full name">
             ${renderError(errors.fields.contactName)}
           </div>
-          <div class="order-new-delivery__field">
+          <div class="ond-field">
             <label for="contact-phone">Contact phone</label>
-            <input id="contact-phone" type="tel" value="${escapeHtml(state.data.contactPhone)}" data-field="contactPhone">
+            <input id="contact-phone" type="tel" value="${escapeHtml(state.data.contactPhone)}" data-field="contactPhone" placeholder="+44…">
             ${renderError(errors.fields.contactPhone)}
           </div>
-          <div class="order-new-delivery__field order-new-delivery__field--full">
+          <div class="ond-field ond-field--full">
             <label for="contact-email">Contact email</label>
-            <input id="contact-email" type="email" value="${escapeHtml(state.data.contactEmail)}" data-field="contactEmail">
+            <input id="contact-email" type="email" value="${escapeHtml(state.data.contactEmail)}" data-field="contactEmail" placeholder="name@company.com">
             ${renderError(errors.fields.contactEmail)}
           </div>
         </div>
       `;
       break;
+
     case 'deliveryWindow':
       content = `
         ${renderStepMessage(errors.summary)}
-        <div class="order-new-delivery__field-grid">
-          <div class="order-new-delivery__field">
-            <label for="time-from">Time from</label>
-            <input id="time-from" type="time" value="${escapeHtml(state.data.timeFrom)}" data-field="timeFrom">
+        <div class="ond-time-layout">
+          <div class="ond-time-slot">
+            <p class="ond-time-slot__label">Earliest time</p>
+            ${renderTimeStepper(state.data.timeFrom, 'timeFrom', 'Earliest delivery time')}
             ${renderError(errors.fields.timeFrom)}
           </div>
-          <div class="order-new-delivery__field">
-            <label for="time-to">Time to</label>
-            <input id="time-to" type="time" value="${escapeHtml(state.data.timeTo)}" data-field="timeTo">
+          <div class="ond-time-layout__sep" aria-hidden="true">to</div>
+          <div class="ond-time-slot">
+            <p class="ond-time-slot__label">Latest time</p>
+            ${renderTimeStepper(state.data.timeTo, 'timeTo', 'Latest delivery time')}
             ${renderError(errors.fields.timeTo)}
           </div>
         </div>
       `;
       break;
+
     default:
       content = '';
   }
@@ -287,127 +524,266 @@ function renderStepBody(stepId, state, siteListId) {
     ? `
       <button
         type="button"
-        class="button order-new-delivery__primary-action"
+        class="ond-btn-primary"
         data-submit-order
         ${state.submitting ? 'disabled aria-disabled="true"' : ''}
       >
-        ${state.submitting ? 'Placing order...' : 'Place Order'}
+        ${state.submitting ? 'Placing order…' : `Place Order ${renderArrowIcon()}`}
       </button>
     `
     : `
       <button
         type="button"
-        class="button order-new-delivery__primary-action"
+        class="ond-btn-primary"
         data-continue-step="${escapeHtml(stepId)}"
       >
-        Continue
+        Continue ${renderArrowIcon()}
       </button>
     `;
 
   return `
+    <p class="ond-step__description">${escapeHtml(STEP_DESCRIPTIONS[stepId])}</p>
     ${content}
-    <div class="order-new-delivery__step-actions">
+    <div class="ond-step-actions">
       ${actionButton}
     </div>
   `;
 }
 
+/* ------------------------------------------------------------------
+   Wizard shell
+   ------------------------------------------------------------------ */
 function renderWizard(state, siteListId) {
-  return `
-    <div class="order-new-delivery__shell" ${state.submitting ? 'aria-busy="true"' : ''}>
-      <div class="order-new-delivery__intro">
-        <h2>Order New Delivery</h2>
-        <p>Create a new B2B pallet delivery order using the authenticated Adobe Commerce customer session.</p>
-      </div>
-      ${state.submitError ? `<div class="order-new-delivery__form-error" role="alert">${escapeHtml(state.submitError)}</div>` : ''}
-      <div class="order-new-delivery__steps">
-        ${STEP_SEQUENCE.map((stepId) => {
-          const isActive = state.activeStep === stepId;
-          const isCompleted = state.completedSteps.includes(stepId);
-          const stepTitleId = `order-new-delivery-title-${stepId}`;
-          const stepPanelId = `order-new-delivery-panel-${stepId}`;
-          const summary = isCompleted ? getStepSummary(stepId, state) : '';
+  const stepCards = STEP_SEQUENCE.map((stepId, index) => {
+    const isActive = state.activeStep === stepId;
+    const isCompleted = state.completedSteps.includes(stepId);
+    const isUpcoming = !isActive && !isCompleted;
+    const stepNumber = index + 1;
+    const stepTitleId = `ond-title-${stepId}`;
+    const stepPanelId = `ond-panel-${stepId}`;
+    const summary = isCompleted ? getStepSummary(stepId, state) : '';
 
-          return `
-            <section class="order-new-delivery__step ${isActive ? 'is-open' : ''} ${isCompleted ? 'is-complete' : ''}">
-              <h3 class="order-new-delivery__step-title" id="${stepTitleId}">
-                <button
-                  type="button"
-                  class="order-new-delivery__step-toggle"
-                  data-open-step="${escapeHtml(stepId)}"
-                  aria-expanded="${isActive ? 'true' : 'false'}"
-                  aria-controls="${stepPanelId}"
-                >
-                  <span>${escapeHtml(STEP_TITLES[stepId])}</span>
-                  ${summary ? `<span class="order-new-delivery__summary">${escapeHtml(summary)}</span>` : ''}
-                </button>
-              </h3>
-              <div
-                id="${stepPanelId}"
-                class="order-new-delivery__step-panel"
-                role="region"
-                aria-labelledby="${stepTitleId}"
-                ${isActive ? '' : 'hidden'}
-              >
-                ${renderStepBody(stepId, state, siteListId)}
-              </div>
-            </section>
-          `;
-        }).join('')}
-      </div>
+    let stateClass = '';
+    if (isActive) stateClass = 'is-active';
+    else if (isCompleted) stateClass = 'is-complete';
+    else stateClass = 'is-upcoming';
+
+    const badgeContent = isCompleted ? renderCheckIcon() : String(stepNumber);
+
+    return `
+      <section
+        class="ond-step ${stateClass}"
+        data-step-id="${escapeHtml(stepId)}"
+        aria-labelledby="${stepTitleId}"
+      >
+        <h3 class="ond-step__heading" id="${stepTitleId}">
+          <button
+            type="button"
+            class="ond-step__header"
+            data-open-step="${escapeHtml(stepId)}"
+            aria-expanded="${isActive ? 'true' : 'false'}"
+            aria-controls="${stepPanelId}"
+            ${isUpcoming ? 'disabled aria-disabled="true"' : ''}
+          >
+            <span class="ond-step__badge" aria-hidden="true">${badgeContent}</span>
+            <span class="ond-step__meta">
+              <span class="ond-step__title">${escapeHtml(STEP_TITLES[stepId])}</span>
+              ${summary ? `<span class="ond-step__summary">${escapeHtml(summary)}</span>` : ''}
+            </span>
+            ${isCompleted ? '<span class="ond-step__edit-hint">Edit</span>' : ''}
+          </button>
+        </h3>
+        <div
+          id="${stepPanelId}"
+          class="ond-step__panel"
+          role="region"
+          aria-labelledby="${stepTitleId}"
+          ${isActive ? '' : 'hidden'}
+        >
+          ${renderStepBody(stepId, state, siteListId)}
+        </div>
+      </section>
+    `;
+  }).join('');
+
+  return `
+    <div class="ond-page-header">
+      <h2>Order New Delivery</h2>
+      <p>Create a new B2B pallet delivery order via your authenticated CHEP account.</p>
+    </div>
+    ${state.submitError ? `<div class="ond-form-error" role="alert">${escapeHtml(state.submitError)}</div>` : ''}
+    ${renderStepProgressIndicator(state)}
+    <div class="ond-steps" ${state.submitting ? 'aria-busy="true"' : ''}>
+      ${stepCards}
     </div>
   `;
 }
 
+/* ------------------------------------------------------------------
+   Confirmation screen
+   ------------------------------------------------------------------ */
 function renderConfirmation(state) {
   const { order, summary } = state.submitResult;
   const site = summary.site;
+  const address = [site.address1, site.city, site.region, site.postcode, site.countryCode]
+    .filter(Boolean)
+    .join(', ');
+
+  const equipmentItems = summary.equipment
+    .filter((line) => line.sku && Number(line.quantity) > 0)
+    .map((line) => `
+      <li>
+        <span class="ond-equipment-summary__qty">${escapeHtml(String(line.quantity))} ×</span>
+        ${escapeHtml(line.product?.label || line.sku)}
+      </li>
+    `)
+    .join('');
 
   return `
-    <div class="order-new-delivery__confirmation">
-      <div class="order-new-delivery__confirmation-banner">
-        <h2>Order placed successfully</h2>
-        <p>Your Adobe Commerce order number is <strong>${escapeHtml(order.number)}</strong>.</p>
+    <div class="ond-confirmation">
+      <div class="ond-confirmation__success">
+        <div class="ond-confirmation__icon">
+          ${renderCheckIcon()}
+        </div>
+        <h2>Order Submitted</h2>
+        <div class="ond-order-number-badge">
+          Order #${escapeHtml(order.number)}
+        </div>
+        <p class="ond-confirmation__tagline">Your delivery order has been placed successfully. You will receive a confirmation email shortly.</p>
       </div>
-      <div class="order-new-delivery__confirmation-grid">
-        <div>
+
+      <div class="ond-confirmation__details">
+        <div class="ond-detail-card">
           <h3>Order details</h3>
-          <p><strong>Order type:</strong> ${escapeHtml(getStepSummary('orderType', state))}</p>
-          <p><strong>Delivery date:</strong> ${escapeHtml(summary.deliveryDate)}</p>
-          <p><strong>Transport:</strong> ${escapeHtml(getStepSummary('transport', state))}</p>
-          <p><strong>Delivery window:</strong> ${escapeHtml(`${summary.deliveryWindow.from} to ${summary.deliveryWindow.to}`)}</p>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Order type</span>
+            <span class="ond-detail-value">${escapeHtml(getStepSummary('orderType', state))}</span>
+          </div>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Delivery date</span>
+            <span class="ond-detail-value">${escapeHtml(summary.deliveryDate)}</span>
+          </div>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Transport</span>
+            <span class="ond-detail-value">${escapeHtml(getStepSummary('transport', state))}</span>
+          </div>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Time window</span>
+            <span class="ond-detail-value">${escapeHtml(`${summary.deliveryWindow.from} – ${summary.deliveryWindow.to}`)}</span>
+          </div>
         </div>
-        <div>
-          <h3>Site & contact</h3>
-          <p><strong>Site:</strong> ${escapeHtml(site.name)}</p>
-          <p><strong>Address:</strong> ${escapeHtml(`${site.address1}, ${site.city}, ${site.region}, ${site.postcode}, ${site.countryCode}`)}</p>
-          <p><strong>Contact:</strong> ${escapeHtml(summary.contact.name)}</p>
-          <p><strong>Phone:</strong> ${escapeHtml(summary.contact.phone)}</p>
-          <p><strong>Email:</strong> ${escapeHtml(summary.contact.email)}</p>
+
+        <div class="ond-detail-card">
+          <h3>Site &amp; contact</h3>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Site</span>
+            <span class="ond-detail-value">${escapeHtml(site.name)}</span>
+          </div>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Address</span>
+            <span class="ond-detail-value">${escapeHtml(address)}</span>
+          </div>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Contact</span>
+            <span class="ond-detail-value">${escapeHtml(summary.contact.name)}</span>
+          </div>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Phone</span>
+            <span class="ond-detail-value">${escapeHtml(summary.contact.phone)}</span>
+          </div>
+          <div class="ond-detail-row">
+            <span class="ond-detail-label">Email</span>
+            <span class="ond-detail-value">${escapeHtml(summary.contact.email)}</span>
+          </div>
         </div>
       </div>
-      <div class="order-new-delivery__confirmation-items">
+
+      <div class="ond-confirmation__equipment">
         <h3>Equipment ordered</h3>
-        <ul>
-          ${summary.equipment.map((line) => `
-            <li>
-              ${escapeHtml(String(line.quantity))} x ${escapeHtml(line.product?.label || line.sku)}
-            </li>
-          `).join('')}
+        <ul class="ond-equipment-summary">
+          ${equipmentItems}
         </ul>
+      </div>
+
+      <div class="ond-confirmation__actions">
+        <button type="button" class="ond-btn-primary" data-new-order>
+          Create another order ${renderArrowIcon()}
+        </button>
+        <a class="ond-btn-secondary" href="/orders/${escapeHtml(order.number)}">
+          View order
+        </a>
       </div>
     </div>
   `;
 }
 
-function attachInputListeners(block, state) {
-  block.querySelectorAll('[data-open-step]').forEach((button) => {
-    button.addEventListener('click', () => {
-      state.activeStep = button.dataset.openStep;
-      renderBlock(block, state);
+/* ------------------------------------------------------------------
+   Event listeners
+   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   Surgical patch helpers — avoid full re-render for frequent interactions
+   ------------------------------------------------------------------ */
+
+/**
+ * Re-renders only the calendar container (the first div inside .ond-date-layout)
+ * and re-attaches calendar event listeners. Used for month navigation and
+ * day selection so the rest of the wizard never repaints.
+ */
+function patchCalendar(block, state) {
+  const wrapper = block.querySelector('.ond-date-layout > div:first-child');
+  if (!wrapper) {
+    renderBlock(block, state);
+    return;
+  }
+  const errors = getStepErrors(state, 'deliveryDate');
+  wrapper.innerHTML = renderCalendar(state, errors);
+  attachCalendarListeners(block, state);
+}
+
+function attachCalendarListeners(block, state) {
+  block.querySelectorAll('[data-cal-nav-year]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!state.ui) state.ui = {};
+      state.ui.calendarYear = Number(btn.dataset.calNavYear);
+      state.ui.calendarMonth = Number(btn.dataset.calNavMonth);
+      patchCalendar(block, state);
     });
   });
 
+  block.querySelectorAll('[data-cal-date]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const parts = btn.dataset.calDate.split('-');
+      if (!state.ui) state.ui = {};
+      state.ui.calendarYear = Number(parts[0]);
+      state.ui.calendarMonth = Number(parts[1]) - 1;
+      state.data.deliveryDate = btn.dataset.calDate;
+      clearStepError(state, 'deliveryDate');
+      patchCalendar(block, state);
+    });
+  });
+}
+
+function scrollToStep(block, stepId) {
+  const el = block.querySelector(`[data-step-id="${stepId}"]`);
+  if (el) {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
+  }
+}
+
+function attachInputListeners(block, state) {
+  // Navigate to a previously-completed step for editing
+  block.querySelectorAll('[data-open-step]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const stepId = button.dataset.openStep;
+      state.activeStep = stepId;
+      renderBlock(block, state);
+      scrollToStep(block, stepId);
+    });
+  });
+
+  // Radio choices: order type
   block.querySelectorAll('[data-step-input="orderType"]').forEach((input) => {
     input.addEventListener('change', () => {
       state.data.orderType = input.value;
@@ -415,6 +791,7 @@ function attachInputListeners(block, state) {
     });
   });
 
+  // Radio choices: transport
   block.querySelectorAll('[data-step-input="transport"]').forEach((input) => {
     input.addEventListener('change', () => {
       state.data.transport = input.value;
@@ -422,56 +799,133 @@ function attachInputListeners(block, state) {
     });
   });
 
+  // Plain text / email / tel fields
   block.querySelectorAll('[data-field]').forEach((input) => {
     input.addEventListener('change', () => {
       const { field } = input.dataset;
       state.data[field] = input.value;
 
-      if (field === 'siteSearch') {
-        syncSelectedSite(state);
+      if (['contactName', 'contactPhone', 'contactEmail'].includes(field)) {
         clearStepError(state, 'siteContact');
-      } else if (['contactName', 'contactPhone', 'contactEmail'].includes(field)) {
-        clearStepError(state, 'siteContact');
-      } else if (['timeFrom', 'timeTo'].includes(field)) {
-        clearStepError(state, 'deliveryWindow');
-      } else if (field === 'deliveryDate') {
-        clearStepError(state, 'deliveryDate');
       }
     });
   });
 
-  block.querySelectorAll('[data-equipment-index]').forEach((input) => {
-    input.addEventListener('change', () => {
-      const index = Number(input.dataset.equipmentIndex);
-      const field = input.dataset.equipmentField;
+  // Calendar listeners (patch-only — no full re-render)
+  attachCalendarListeners(block, state);
 
-      if (!state.data.equipment[index]) return;
-      state.data.equipment[index][field] = field === 'quantity' ? input.value : input.value;
-      clearStepError(state, 'equipment');
+  // Time stepper: up/down arrows — surgical DOM update only
+  block.querySelectorAll('[data-time-step]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const { timeField, timePart, timeStep } = btn.dataset;
+      const dir = Number(timeStep);
+      const cur = state.data[timeField];
+      const hasVal = cur && cur.includes(':');
+      const h = hasVal ? Number(cur.split(':')[0]) : 8;
+      const m = hasVal ? Number(cur.split(':')[1]) : 0;
+
+      let newH = h;
+      let newM = m;
+
+      if (timePart === 'hour') {
+        newH = ((h + dir) + 24) % 24;
+      } else {
+        const steps = [0, 15, 30, 45];
+        const idx = steps.indexOf(m);
+        const next = idx >= 0 ? (idx + dir + 4) % 4 : (dir > 0 ? 1 : 3);
+        newM = steps[next];
+      }
+
+      state.data[timeField] = `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+      clearStepError(state, 'deliveryWindow');
+
+      // Surgical: update only the two display spans inside this stepper
+      const stepper = btn.closest('.ond-time-stepper');
+      if (stepper) {
+        const displays = stepper.querySelectorAll('.ond-time-display');
+        if (displays[0]) {
+          displays[0].textContent = String(newH).padStart(2, '0');
+          displays[0].classList.remove('is-placeholder');
+        }
+        if (displays[1]) {
+          displays[1].textContent = String(newM).padStart(2, '0');
+          displays[1].classList.remove('is-placeholder');
+        }
+      }
     });
   });
 
-  const addEquipmentButton = block.querySelector('[data-add-equipment]');
-  if (addEquipmentButton) {
-    addEquipmentButton.addEventListener('click', () => {
-      state.data.equipment.push(createEquipmentLine());
-      clearStepError(state, 'equipment');
-      renderBlock(block, state);
-    });
-  }
+  // Site selection radio cards
+  // Site selection radio cards — surgical DOM update
+  block.querySelectorAll('[data-site-id]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      const site = findSiteById(radio.dataset.siteId);
+      if (!site) return;
 
-  block.querySelectorAll('[data-remove-equipment]').forEach((button) => {
+      state.data.siteId = site.id;
+      state.data.siteSearch = getSiteSearchLabel(site);
+      clearStepError(state, 'siteContact');
+
+      // Surgical: toggle is-selected on cards and swap check icon
+      block.querySelectorAll('.ond-site-card').forEach((card) => {
+        const cardRadio = card.querySelector('[data-site-id]');
+        const isNowSelected = cardRadio?.dataset.siteId === site.id;
+        card.classList.toggle('is-selected', isNowSelected);
+        const check = card.querySelector('.ond-site-card__check');
+        if (check) check.innerHTML = isNowSelected ? renderCheckIcon() : '';
+      });
+    });
+  });
+
+  // Equipment product card quantity steppers — surgical DOM update
+  block.querySelectorAll('[data-qty-sku]').forEach((button) => {
     button.addEventListener('click', () => {
-      const index = Number(button.dataset.removeEquipment);
-      state.data.equipment.splice(index, 1);
+      const { qtySku: sku, qtyChange } = button.dataset;
+      const delta = Number(qtyChange);
+
+      state.data.equipment = state.data.equipment.filter((l) => l.sku !== '');
+
+      const existingIndex = state.data.equipment.findIndex((l) => l.sku === sku);
+
+      if (existingIndex >= 0) {
+        const newQty = Number(state.data.equipment[existingIndex].quantity) + delta;
+        if (newQty <= 0) {
+          state.data.equipment.splice(existingIndex, 1);
+        } else {
+          state.data.equipment[existingIndex].quantity = String(newQty);
+        }
+      } else if (delta > 0) {
+        state.data.equipment.push({ sku, quantity: '1' });
+      }
+
       clearStepError(state, 'equipment');
-      renderBlock(block, state);
+
+      // Surgical: update only this card's qty display, minus-button state, and selected class
+      const card = button.closest('.ond-equipment-card');
+      if (card) {
+        const newQty = Number(state.data.equipment.find((l) => l.sku === sku)?.quantity) || 0;
+        const qtyEl = card.querySelector('.ond-qty-value');
+        const minusBtn = card.querySelector('[data-qty-change="-1"]');
+        if (qtyEl) qtyEl.textContent = String(newQty);
+        if (minusBtn) minusBtn.disabled = newQty === 0;
+        card.classList.toggle('is-selected', newQty > 0);
+      }
     });
   });
 
+  // Continue to next step
   block.querySelectorAll('[data-continue-step]').forEach((button) => {
     button.addEventListener('click', () => {
       const stepId = button.dataset.continueStep;
+
+      // For equipment step, ensure no empty-sku lines remain before validation
+      if (stepId === 'equipment') {
+        state.data.equipment = state.data.equipment.filter((l) => l.sku !== '');
+        if (state.data.equipment.length === 0) {
+          state.data.equipment.push(createEquipmentLine());
+        }
+      }
+
       const validation = validateStep(stepId, state);
 
       if (!validation.valid) {
@@ -485,9 +939,13 @@ function attachInputListeners(block, state) {
       markStepCompleted(state, stepId);
       state.activeStep = getNextStep(stepId) || stepId;
       renderBlock(block, state);
+
+      const nextStep = getNextStep(stepId);
+      if (nextStep) scrollToStep(block, nextStep);
     });
   });
 
+  // Submit order
   const submitButton = block.querySelector('[data-submit-order]');
   if (submitButton) {
     submitButton.addEventListener('click', async () => {
@@ -505,22 +963,26 @@ function attachInputListeners(block, state) {
           state.errors = error.validation;
           state.activeStep = error.stepId;
         }
-        state.submitError = error.message || 'Unable to place the order.';
+        state.submitError = error.message || 'Unable to place the order. Please try again.';
       } finally {
         state.submitting = false;
         renderBlock(block, state);
       }
     });
   }
+
 }
 
+/* ------------------------------------------------------------------
+   Main render
+   ------------------------------------------------------------------ */
 function renderBlock(block, state) {
   if (!checkIsAuthenticated()) {
     block.innerHTML = `
-      <div class="order-new-delivery__signin">
+      <div class="ond-signin">
         <h2>Order New Delivery</h2>
         <p>You need an authenticated customer session before placing a delivery order.</p>
-        <a class="button primary" href="${rootLink(CUSTOMER_LOGIN_PATH)}">Sign in</a>
+        <a class="button primary" href="${rootLink(CUSTOMER_LOGIN_PATH)}">Sign in to continue</a>
       </div>
     `;
     return;
@@ -534,14 +996,26 @@ function renderBlock(block, state) {
 
   if (!state.submitResult) {
     attachInputListeners(block, state);
+  } else {
+    // Attach new-order button on confirmation screen
+    const newOrderButton = block.querySelector('[data-new-order]');
+    if (newOrderButton) {
+      newOrderButton.addEventListener('click', () => {
+        const freshState = createInitialState();
+        freshState.ui = {};
+        renderBlock(block, freshState);
+      });
+    }
   }
 }
 
 export default async function decorate(block) {
   block.classList.add('order-new-delivery');
-  block.dataset.siteListId = `order-new-delivery-sites-${Math.random().toString(36).slice(2, 10)}`;
+  block.dataset.siteListId = `ond-sites-${Math.random().toString(36).slice(2, 10)}`;
 
   const state = createInitialState();
+  state.ui = {}; // calendar navigation state — not sent to API
+
   const selectedSite = getSelectedSite(state);
 
   if (selectedSite) {
