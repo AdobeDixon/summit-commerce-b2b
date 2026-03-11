@@ -1,0 +1,7 @@
+mountpoints:
+  /:
+    url: https://content.da.live/adobedixon/mycheps-march-demo/
+    type: markup
+
+folders:
+  /products/: /products/default
