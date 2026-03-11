@@ -712,3 +712,26 @@ main[hidden] {
   background-color: var(--color-positive-200);
   color: var(--color-positive-500);
 }
+
+/* ── Hero text baseline (loaded synchronously, prevents flash) */
+.hero h1,
+.hero h2 {
+  color: var(--color-neutral-50);
+  font-weight: 700;
+  text-shadow:
+    0 2px 16px rgb(0 0 0 / 70%),
+    0 1px 4px  rgb(0 0 0 / 55%);
+}
+
+.hero h1 strong,
+.hero h1 em,
+.hero h2 strong,
+.hero h2 em {
+  color: inherit;
+  font-weight: inherit;
+}
+
+.hero p {
+  color: var(--color-neutral-50);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 60%);
+}
