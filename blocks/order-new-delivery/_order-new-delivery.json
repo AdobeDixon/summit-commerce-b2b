@@ -1,0 +1,15 @@
+{
+  "definitions": [{
+    "title": "Order New Delivery",
+    "id": "order-new-delivery",
+    "model": "order-new-delivery",
+    "plugins": {
+      "da": {
+        "rows": 1,
+        "columns": 1
+      }
+    }
+  }],
+  "models": [],
+  "filters": []
+}
