@@ -129,7 +129,7 @@ function renderEquipmentRows(state, errors) {
       <div class="order-new-delivery__equipment-actions">
         <button
           type="button"
-          class="secondary"
+          class="button secondary"
           data-remove-equipment="${index}"
           ${state.data.equipment.length === 1 ? 'disabled' : ''}
         >
@@ -223,7 +223,7 @@ function renderStepBody(stepId, state, siteListId) {
           ${renderEquipmentRows(state, errors)}
         </div>
         ${renderError(errors.fields.equipment)}
-        <button type="button" class="secondary" data-add-equipment>Add equipment line</button>
+        <button type="button" class="button secondary" data-add-equipment>Add equipment line</button>
       `;
       break;
     case 'siteContact':
@@ -287,7 +287,7 @@ function renderStepBody(stepId, state, siteListId) {
     ? `
       <button
         type="button"
-        class="order-new-delivery__primary-action"
+        class="button order-new-delivery__primary-action"
         data-submit-order
         ${state.submitting ? 'disabled aria-disabled="true"' : ''}
       >
@@ -297,7 +297,7 @@ function renderStepBody(stepId, state, siteListId) {
     : `
       <button
         type="button"
-        class="order-new-delivery__primary-action"
+        class="button order-new-delivery__primary-action"
         data-continue-step="${escapeHtml(stepId)}"
       >
         Continue
