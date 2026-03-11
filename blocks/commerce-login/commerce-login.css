@@ -1,5 +1,94 @@
+/* ── Commerce Login ──────────────────────────────────────── */
 main .commerce-login-container {
-    max-width: 700px;
-    margin: 40px auto;
-    width: 100%;
+  max-width: 480px;
+  margin: var(--spacing-xxbig) auto;
+  width: 100%;
+  background-color: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  box-shadow: var(--shape-shadow-2);
+  overflow: hidden;
+}
+
+/* Top brand accent line */
+main .commerce-login-container::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-teal-500));
+}
+
+main .commerce-login-container > * {
+  padding: var(--spacing-big);
+}
+
+/* Login form headline */
+main .commerce-login-container h1,
+main .commerce-login-container h2,
+main .commerce-login-container .dropin-header-container__title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--color-neutral-800);
+  margin-bottom: var(--spacing-small);
+}
+
+/* Subtitle / description */
+main .commerce-login-container p,
+main .commerce-login-container .dropin-header-container__description {
+  color: var(--color-neutral-600);
+  font: var(--type-body-2-default-font);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-medium);
+}
+
+/* Inputs inside login */
+main .commerce-login-container input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75em 1em;
+  border: 1.5px solid var(--color-neutral-400);
+  border-radius: var(--shape-border-radius-2);
+  font: var(--type-body-1-default-font);
+  color: var(--color-neutral-800);
+  background-color: var(--color-neutral-50);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  margin-bottom: var(--spacing-small);
+}
+
+main .commerce-login-container input:focus {
+  outline: none;
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgb(0 48 135 / 12%);
+}
+
+/* Submit button */
+main .commerce-login-container button[type="submit"],
+main .commerce-login-container .dropin-button--primary {
+  width: 100%;
+  margin-top: var(--spacing-small);
+  background-color: var(--color-brand-500);
+  color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-2);
+  padding: 0.8em 1.5em;
+  font: var(--type-button-2-font);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+main .commerce-login-container button[type="submit"]:hover,
+main .commerce-login-container .dropin-button--primary:hover {
+  background-color: var(--color-brand-600);
+}
+
+/* Divider / or */
+main .commerce-login-container .dropin-divider {
+  border-color: var(--color-neutral-300);
+  margin: var(--spacing-medium) 0;
+}
+
+/* Links */
+main .commerce-login-container a {
+  color: var(--color-brand-500);
+  font-weight: 600;
 }

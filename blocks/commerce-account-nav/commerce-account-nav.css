@@ -1,59 +1,93 @@
+/* ── Account Nav ─────────────────────────────────────────── */
 .commerce-account-nav-container:has(> .commerce-account-nav-wrapper) {
-    border: var(--shape-border-width-2) solid var(--color-neutral-400);
-    border-radius: var(--shape-border-radius-2);
-    overflow: hidden;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  overflow: hidden;
+  box-shadow: var(--shape-shadow-card);
+  background-color: var(--color-neutral-50);
 }
 
 .commerce-account-nav {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .commerce-account-nav-wrapper:not(:last-of-type) {
-    border-bottom: var(--shape-border-width-2) solid var(--color-neutral-300);
+  border-bottom: 1px solid var(--color-neutral-200);
 }
 
+/* Individual nav item */
 .commerce-account-nav__item {
-    display: grid;
-    grid-template-areas:
-        'title'
-        'description';
-    grid-template-columns: 1fr;
-    gap: 0 var(--spacing-small);
-    align-items: center;
-    padding: var(--spacing-xsmall) var(--spacing-small);
+  display: grid;
+  grid-template-areas:
+    'title'
+    'description';
+  grid-template-columns: 1fr;
+  gap: 2px var(--spacing-small);
+  align-items: center;
+  padding: var(--spacing-small) var(--spacing-medium);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
 }
 
 .commerce-account-nav__item--has-icon {
-    grid-template-areas:
-        'icon title'
-        'icon description';
-    grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'icon title'
+    'icon description';
+  grid-template-columns: 32px 1fr;
 }
 
 .commerce-account-nav__item:hover {
-    text-decoration: none ! important;
+  text-decoration: none !important;
+  background-color: var(--color-neutral-100);
 }
 
 .commerce-account-nav__item__title {
-    grid-area: title;
-    font: var(--type-button-3-font);
+  grid-area: title;
+  font: var(--type-body-2-strong-font);
+  color: var(--color-neutral-800);
+  transition: color 0.15s ease;
+}
+
+.commerce-account-nav__item:hover .commerce-account-nav__item__title {
+  color: var(--color-brand-500);
 }
 
 .commerce-account-nav__item__icon {
-    grid-area: icon;
+  grid-area: icon;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-neutral-500);
+  transition: color 0.15s ease;
+}
+
+.commerce-account-nav__item:hover .commerce-account-nav__item__icon {
+  color: var(--color-brand-500);
 }
 
 .commerce-account-nav__item__description {
-    grid-area: description;
-    font: var(--type-body-2-default-font);
-    text-decoration: none;
+  grid-area: description;
+  font: var(--type-details-caption-2-font);
+  color: var(--color-neutral-600);
+  text-decoration: none;
 }
 
 .commerce-account-nav__item:hover:not(.commerce-account-nav__item--active) {
-    background-color: var(--color-neutral-100);
+  background-color: var(--color-neutral-100);
 }
 
+/* Active state */
 .commerce-account-nav__item--active {
-    background-color: var(--color-neutral-200);
+  background-color: var(--color-informational-200);
+  border-left: 3px solid var(--color-brand-500);
+}
+
+.commerce-account-nav__item--active .commerce-account-nav__item__title {
+  color: var(--color-brand-500);
+  font-weight: 700;
+}
+
+.commerce-account-nav__item--active .commerce-account-nav__item__icon {
+  color: var(--color-brand-500);
 }

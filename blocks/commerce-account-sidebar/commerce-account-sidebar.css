@@ -1,53 +1,109 @@
+/* ── Account Sidebar ─────────────────────────────────────── */
+.commerce-account-sidebar-wrapper .commerce-account-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxsmall);
+}
+
 .commerce-account-sidebar-wrapper .commerce-account-sidebar .commerce-account-sidebar-item {
-    display: flex;
-    align-items: center;
-    padding: var(--spacing-medium);
-    margin-bottom: var(--spacing-small);
-    border: var(--shape-border-width-2) solid var(--color-neutral-400);
-    border-radius: var(--shape-border-radius-2);
-    text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-small) var(--spacing-medium);
+  border: 1px solid transparent;
+  border-radius: var(--shape-border-radius-2);
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  gap: var(--spacing-small);
+  background-color: transparent;
+}
+
+.commerce-account-sidebar-wrapper .commerce-account-sidebar .commerce-account-sidebar-item:hover {
+  background-color: var(--color-neutral-100);
+  border-color: var(--color-neutral-300);
+  text-decoration: none;
 }
 
 .commerce-account-sidebar-wrapper .commerce-account-sidebar .commerce-account-sidebar-item-active {
-    border-color: var(--color-neutral-800);
-    background-color: var(--color-neutral-200);
+  background-color: var(--color-informational-200);
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-500);
 }
 
 .commerce-account-sidebar-item-icon {
-    flex: 0 0 auto;
-    margin-right: var(--spacing-small);
+  flex: 0 0 auto;
+  color: var(--color-neutral-500);
+  transition: color 0.15s ease;
+}
+
+.commerce-account-sidebar-item-active .commerce-account-sidebar-item-icon {
+  color: var(--color-brand-500);
 }
 
 .commerce-account-sidebar-item-icon > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
 }
 
 .commerce-account-sidebar-item-content {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .commerce-account-sidebar-item-title {
-    font: var(--type-button-1-font);
-    margin: 0 0 var(--spacing-xxsmall);
-    border: none;
-    text-decoration: none;
+  font: var(--type-body-2-strong-font);
+  margin: 0;
+  border: none;
+  text-decoration: none;
+  color: var(--color-neutral-800);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commerce-account-sidebar-item-active .commerce-account-sidebar-item-title {
+  color: var(--color-brand-500);
+  font-weight: 700;
 }
 
 .commerce-account-sidebar-item-subtitle {
-    font: var(--type-button-2-font);
-    margin: 0;
-    text-decoration: none;
+  font: var(--type-details-caption-2-font);
+  margin: 0;
+  text-decoration: none;
+  color: var(--color-neutral-600);
+  margin-top: 2px;
 }
 
 .commerce-account-sidebar-item-arrow {
-    flex: 0 0 auto;
-    margin-left: var(--spacing-small);
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--color-neutral-400);
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.commerce-account-sidebar-item:hover .commerce-account-sidebar-item-arrow {
+  color: var(--color-brand-500);
+  transform: translateX(2px);
+}
+
+.commerce-account-sidebar-item-active .commerce-account-sidebar-item-arrow {
+  color: var(--color-brand-500);
 }
 
 .commerce-account-sidebar-item-arrow > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Section label within sidebar ───────────────────────── */
+.commerce-account-sidebar-section-label {
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-neutral-500);
+  padding: var(--spacing-medium) var(--spacing-medium) var(--spacing-xxsmall);
+  margin: 0;
 }

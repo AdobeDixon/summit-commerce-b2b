@@ -1,3 +1,58 @@
+/* ── Account Header ──────────────────────────────────────── */
 body.columns main > .section > div.commerce-account-header-wrapper {
-    margin-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* Premium portal page header */
+.commerce-account-header {
+  background: linear-gradient(135deg, var(--color-surface-dark) 0%, var(--color-brand-500) 100%);
+  color: var(--color-neutral-50);
+  padding: var(--spacing-big) var(--spacing-big);
+  border-radius: var(--shape-border-radius-card);
+  margin-bottom: var(--spacing-big);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle decorative element */
+.commerce-account-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-500), var(--color-teal-500));
+}
+
+.commerce-account-header h1,
+.commerce-account-header h2,
+.commerce-account-header p {
+  color: var(--color-neutral-50);
+  margin: 0;
+}
+
+.commerce-account-header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.commerce-account-header p {
+  color: rgb(255 255 255 / 75%);
+  font: var(--type-body-2-default-font);
+  margin-top: var(--spacing-xxsmall);
+}
+
+/* Dropin account header title styles */
+.commerce-account-header .dropin-header-container__title {
+  color: var(--color-neutral-50);
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.commerce-account-header .dropin-header-container__description {
+  color: rgb(255 255 255 / 75%);
+  font: var(--type-body-2-default-font);
 }

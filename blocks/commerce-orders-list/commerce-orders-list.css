@@ -1,1 +1,112 @@
-/* stylelint-disable no-empty-source */
+/* ── Orders List ─────────────────────────────────────────── */
+
+/* Table wrapper */
+.commerce-orders-list .dropin-table,
+.commerce-orders-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-card);
+  overflow: hidden;
+  box-shadow: var(--shape-shadow-card);
+  border: 1px solid var(--color-neutral-300);
+}
+
+/* Header row */
+.commerce-orders-list .dropin-table thead th,
+.commerce-orders-list table thead th {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+  padding: var(--spacing-small) var(--spacing-medium);
+  text-align: left;
+  border-bottom: 1.5px solid var(--color-neutral-300);
+  white-space: nowrap;
+}
+
+/* Data rows */
+.commerce-orders-list .dropin-table tbody tr,
+.commerce-orders-list table tbody tr {
+  border-bottom: 1px solid var(--color-neutral-200);
+  transition: background-color 0.12s ease;
+}
+
+.commerce-orders-list .dropin-table tbody tr:last-child,
+.commerce-orders-list table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.commerce-orders-list .dropin-table tbody tr:hover,
+.commerce-orders-list table tbody tr:hover {
+  background-color: var(--color-neutral-100);
+}
+
+.commerce-orders-list .dropin-table tbody td,
+.commerce-orders-list table tbody td {
+  padding: var(--spacing-small) var(--spacing-medium);
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-700);
+  vertical-align: middle;
+}
+
+/* First column (order number / link) */
+.commerce-orders-list .dropin-table tbody td:first-child a,
+.commerce-orders-list table tbody td:first-child a {
+  color: var(--color-brand-500);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.commerce-orders-list .dropin-table tbody td:first-child a:hover,
+.commerce-orders-list table tbody td:first-child a:hover {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Status badges */
+.commerce-orders-list .dropin-badge,
+.commerce-orders-list .order-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.65em;
+  border-radius: 3px;
+  font: var(--type-details-caption-1-font);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Status color mapping */
+.commerce-orders-list [data-status="complete"],
+.commerce-orders-list [data-status="Complete"] {
+  background-color: var(--color-positive-200);
+  color: var(--color-positive-500);
+}
+
+.commerce-orders-list [data-status="processing"],
+.commerce-orders-list [data-status="Processing"],
+.commerce-orders-list [data-status="pending"],
+.commerce-orders-list [data-status="Pending"] {
+  background-color: var(--color-informational-200);
+  color: var(--color-informational-500);
+}
+
+.commerce-orders-list [data-status="canceled"],
+.commerce-orders-list [data-status="Canceled"] {
+  background-color: var(--color-alert-200);
+  color: var(--color-alert-500);
+}
+
+/* Mobile: horizontal scroll */
+@media (max-width: 767px) {
+  .commerce-orders-list .dropin-table,
+  .commerce-orders-list table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

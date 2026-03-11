@@ -26,6 +26,28 @@
     margin: 0;
 }
 
+/* Premium checkout container styling */
+.checkout__main,
+.checkout__aside {
+    box-sizing: border-box;
+}
+
+.checkout__aside .dropin-card,
+.checkout__aside > * {
+    background-color: var(--color-neutral-50);
+    border: 1px solid var(--color-neutral-300);
+    border-radius: var(--shape-border-radius-card);
+    box-shadow: var(--shape-shadow-card);
+    overflow: hidden;
+}
+
+/* Section headings in checkout */
+.checkout-header h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--color-neutral-800);
+}
+
 /* Block dividers */
 .checkout__block.checkout__heading .dropin-header-container {
     gap: var(--spacing-xsmall);
@@ -207,8 +229,8 @@
 .checkout__shipping-form .dropin-header-container__title,
 .checkout__billing-form .account-address-form-wrapper__title,
 .checkout__billing-form .dropin-header-container__title {
-    font: var(--type-headline-2-default-font);
-    letter-spacing: var(--type-headline-2-default-letter-spacing);
+    font: var(--type-headline-2-strong-font);
+    letter-spacing: var(--type-headline-2-strong-letter-spacing);
     color: var(--color-neutral-800);
     margin: 0 0 var(--spacing-medium) 0;
 }

@@ -1,93 +1,136 @@
-
+/* ── Product List Page ───────────────────────────────────── */
 .block.product-list-page .search__wrapper {
-    display: grid;
-    margin-block: var(--spacing-small);
-    grid-template-areas:
-        "result-info"
-        "view-facets"
-        "facets"
-        "product-sort"
-        "product-list"
-        "pagination";
+  display: grid;
+  margin-block: var(--spacing-medium);
+  gap: var(--spacing-medium);
+  grid-template-areas:
+    "result-info"
+    "view-facets"
+    "facets"
+    "product-sort"
+    "product-list"
+    "pagination";
 }
 
+/* ── Result Info ─────────────────────────────────────────── */
 .block.product-list-page .search__result-info {
-    grid-area: result-info;
-    align-self: center;
-    margin-block-end: var(--spacing-small);
+  grid-area: result-info;
+  align-self: center;
+  margin-block-end: 0;
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-600);
+  padding: var(--spacing-xsmall) 0;
 }
 
 .block.product-list-page .search__result-info strong {
-    font-weight: 600;
+  font-weight: 600;
+  color: var(--color-neutral-800);
 }
 
+/* ── Filter Toggle (mobile) ──────────────────────────────── */
 .block.product-list-page .search__view-facets {
-    grid-area: view-facets;
-    margin-block-end: var(--spacing-small);
+  grid-area: view-facets;
+  margin-block-end: 0;
 }
 
 .block.product-list-page .search__view-facets button {
-    justify-content: start;
-    width: 100%;
-    position: relative;
+  justify-content: start;
+  width: 100%;
+  position: relative;
+  background-color: var(--color-neutral-50);
+  border: 1.5px solid var(--color-neutral-400);
+  border-radius: var(--shape-border-radius-2);
+  color: var(--color-neutral-800);
+  padding: 0.7em 1em;
+  font: var(--type-body-2-strong-font);
+  transition: border-color 0.15s ease;
+}
+
+.block.product-list-page .search__view-facets button:hover {
+  border-color: var(--color-brand-500);
+  background-color: var(--color-neutral-50);
 }
 
 .block.product-list-page .search__view-facets button[data-count]::after {
-    align-items: center;
-    background-color: var(--color-brand-700);
-    border-radius: 50%;
-    color: var(--color-neutral-100);
-    content: attr(data-count);
-    display: flex;
-    font-size: 0.8em;
-    height: 1.75em;
-    justify-content: center;
-    line-height: 1;
-    position: absolute;
-    right: 0.5em;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1.75em;
+  align-items: center;
+  background-color: var(--color-brand-500);
+  border-radius: 50%;
+  color: var(--color-neutral-50);
+  content: attr(data-count);
+  display: flex;
+  font-size: 0.75em;
+  font-weight: 700;
+  height: 1.8em;
+  justify-content: center;
+  line-height: 1;
+  position: absolute;
+  right: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.8em;
 }
 
+/* ── Facets Sidebar ──────────────────────────────────────── */
 .block.product-list-page .search__facets {
-    grid-area: facets;
-    margin-block-end: var(--spacing-small);
-    display: none;
+  grid-area: facets;
+  margin-block-end: 0;
+  display: none;
 }
 
 .block.product-list-page .search__facets--visible {
-    display: block;
+  display: block;
 }
 
+/* ── Sort Control ────────────────────────────────────────── */
 .block.product-list-page .search__product-sort {
-    grid-area: product-sort;
-    margin-block-end: var(--spacing-small);
+  grid-area: product-sort;
+  margin-block-end: 0;
 }
 
+/* ── Product Grid ────────────────────────────────────────── */
 .block.product-list-page .search__product-list {
-    grid-area: product-list;
-    margin-block-end: var(--spacing-small);
+  grid-area: product-list;
+  margin-block-end: 0;
 }
 
+/* Product item cards in PLP */
+.block.product-list-page .dropin-product-item-card,
+.block.product-list-page .product-discovery--product-item {
+  background-color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid var(--color-neutral-300);
+  box-shadow: var(--shape-shadow-card);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.block.product-list-page .dropin-product-item-card:hover,
+.block.product-list-page .product-discovery--product-item:hover {
+  box-shadow: var(--shape-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* ── Pagination ──────────────────────────────────────────── */
 .block.product-list-page .search__pagination {
-    grid-area: pagination;
-    margin-block-end: var(--spacing-small);
+  grid-area: pagination;
+  margin-block-end: 0;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-medium);
 }
 
+/* ── Product Actions ─────────────────────────────────────── */
 .block.product-list-page .product-discovery-product-actions {
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-xxsmall);
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-xxsmall);
+  position: relative;
 }
 
-/* Empty State */
-
+/* ── Empty State ─────────────────────────────────────────── */
 .block.product-list-page.product-list-page--empty .search__wrapper {
-    grid-template-areas:
-        "product-list";
-    grid-template-columns: 1fr;
+  grid-template-areas: "product-list";
+  grid-template-columns: 1fr;
 }
 
 .block.product-list-page.product-list-page--empty .search__result-info,
@@ -95,45 +138,65 @@
 .block.product-list-page.product-list-page--empty .search__facets,
 .block.product-list-page.product-list-page--empty .search__product-sort,
 .block.product-list-page.product-list-page--empty .search__pagination {
-    display: none;
+  display: none;
 }
 
+/* Styled empty state */
+.block.product-list-page .product-discovery--empty-state,
+.block.product-list-page .dropin-empty-list {
+  text-align: center;
+  padding: var(--spacing-xxhuge) var(--spacing-medium);
+  color: var(--color-neutral-600);
+}
+
+/* ── Requisition List ────────────────────────────────────── */
 .product-discovery-product-actions .requisition-list-names {
-    position: static;
+  position: static;
 }
 
 .product-discovery-product-actions .requisition-list-names .requisition-list-selector__picker {
-    width: var(--spacing-xlarge);
+  width: var(--spacing-xlarge);
 }
 
 .product-discovery-product-actions .requisition-list-names .dropin-card {
-    left: 0;
-    position: absolute;
-    width: 100%;
-    z-index: 2;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 2;
 }
 
-/* Media Queries */
+/* ── Desktop Layout ──────────────────────────────────────── */
 @media only screen and (min-width: 768px) {
-    .block.product-list-page .search__wrapper {
-        grid-template-areas:
-            "result-info product-sort"
-            "facets product-list"
-            ". pagination";
-        grid-template-columns: 270px 1fr;
-    }
+  .block.product-list-page .search__wrapper {
+    grid-template-areas:
+      "result-info product-sort"
+      "facets product-list"
+      ". pagination";
+    grid-template-columns: 260px 1fr;
+    column-gap: var(--spacing-big);
+  }
 
-    .block.product-list-page .search__view-facets {
-        display: none;
-    }
+  .block.product-list-page .search__view-facets {
+    display: none;
+  }
 
-    .block.product-list-page .search__facets {
-        display: unset;
-        margin-right: var(--spacing-small);
-    }
+  .block.product-list-page .search__facets {
+    display: block;
+    margin-right: 0;
+  }
 
-    .block.product-list-page .search__product-sort {
-        display: flex;
-        justify-content: flex-end;
-    }
+  /* Facets panel styled as sidebar card */
+  .block.product-list-page .search__facets > * {
+    background-color: var(--color-neutral-50);
+    border: 1px solid var(--color-neutral-300);
+    border-radius: var(--shape-border-radius-card);
+    padding: var(--spacing-medium);
+    box-shadow: var(--shape-shadow-card);
+  }
+
+  .block.product-list-page .search__product-sort {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 }

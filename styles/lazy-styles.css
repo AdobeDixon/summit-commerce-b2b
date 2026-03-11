@@ -1,1 +1,436 @@
-/* add global styles that can be loaded post LCP here */
+/* ============================================================
+   MYCHEP LAZY STYLES
+   Global post-LCP polish, dropin overrides, content modules
+   ============================================================ */
+
+/* ── Global Dropin Design System Alignment ───────────────── */
+
+/* Input / field refinements applied globally to dropin forms */
+.dropin-design input[type="text"],
+.dropin-design input[type="email"],
+.dropin-design input[type="password"],
+.dropin-design input[type="number"],
+.dropin-design input[type="tel"],
+.dropin-design input[type="search"],
+.dropin-design textarea,
+.dropin-design select {
+  border-radius: var(--shape-border-radius-2) !important;
+  border-color: var(--color-neutral-400) !important;
+  font: var(--type-body-1-default-font) !important;
+  color: var(--color-neutral-800) !important;
+  background-color: var(--color-neutral-50) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.dropin-design input:focus,
+.dropin-design textarea:focus,
+.dropin-design select:focus {
+  border-color: var(--color-brand-500) !important;
+  box-shadow: 0 0 0 3px rgb(0 48 135 / 12%) !important;
+  outline: none !important;
+}
+
+/* Labels */
+.dropin-design label,
+.dropin-design .dropin-field__label {
+  font: var(--type-body-2-strong-font) !important;
+  color: var(--color-neutral-700) !important;
+  margin-bottom: 4px !important;
+}
+
+/* Error states */
+.dropin-design .dropin-field--invalid input,
+.dropin-design .dropin-field--invalid textarea,
+.dropin-design .dropin-field--invalid select {
+  border-color: var(--color-alert-500) !important;
+}
+
+.dropin-design .dropin-field__error {
+  color: var(--color-alert-500) !important;
+  font: var(--type-details-caption-1-font) !important;
+  margin-top: 4px !important;
+}
+
+/* Primary buttons in dropins */
+.dropin-design .dropin-button--primary {
+  background-color: var(--color-brand-500) !important;
+  border-color: var(--color-brand-500) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+  font: var(--type-button-2-font) !important;
+  letter-spacing: var(--type-button-2-letter-spacing) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.dropin-design .dropin-button--primary:hover {
+  background-color: var(--color-brand-600) !important;
+  border-color: var(--color-brand-600) !important;
+}
+
+/* Secondary buttons */
+.dropin-design .dropin-button--secondary {
+  border-color: var(--color-brand-500) !important;
+  color: var(--color-brand-500) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+  font: var(--type-button-2-font) !important;
+}
+
+.dropin-design .dropin-button--secondary:hover {
+  background-color: var(--color-brand-500) !important;
+  color: var(--color-neutral-50) !important;
+}
+
+/* Cards */
+.dropin-design .dropin-card {
+  border-radius: var(--shape-border-radius-card) !important;
+  border: 1px solid var(--color-neutral-300) !important;
+  box-shadow: var(--shape-shadow-card) !important;
+}
+
+/* Dropin dividers */
+.dropin-design .dropin-divider {
+  border-color: var(--color-neutral-200) !important;
+}
+
+/* Dropin alerts */
+.dropin-design .dropin-in-line-alert--info {
+  background-color: var(--color-informational-200) !important;
+  border-color: var(--color-informational-500) !important;
+  color: var(--color-informational-800) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+}
+
+.dropin-design .dropin-in-line-alert--success {
+  background-color: var(--color-positive-200) !important;
+  border-color: var(--color-positive-500) !important;
+  color: var(--color-positive-800) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+}
+
+.dropin-design .dropin-in-line-alert--warning {
+  background-color: var(--color-warning-200) !important;
+  border-color: var(--color-warning-500) !important;
+  color: var(--color-warning-800) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+}
+
+.dropin-design .dropin-in-line-alert--error {
+  background-color: var(--color-alert-200) !important;
+  border-color: var(--color-alert-500) !important;
+  color: var(--color-alert-800) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+}
+
+/* Price display */
+.dropin-design .dropin-price {
+  color: var(--color-neutral-800) !important;
+  font-weight: 700 !important;
+}
+
+/* Product item cards in dropins */
+.dropin-design .dropin-product-item-card {
+  border-radius: var(--shape-border-radius-card) !important;
+  overflow: hidden !important;
+  transition: box-shadow 0.2s ease !important;
+}
+
+/* ── Global Table Styles ─────────────────────────────────── */
+main table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-card);
+  overflow: hidden;
+  box-shadow: var(--shape-shadow-card);
+  border: 1px solid var(--color-neutral-300);
+  font: var(--type-body-2-default-font);
+}
+
+main table thead th {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+  padding: var(--spacing-small) var(--spacing-medium);
+  text-align: left;
+  border-bottom: 1.5px solid var(--color-neutral-300);
+  white-space: nowrap;
+}
+
+main table tbody tr {
+  border-bottom: 1px solid var(--color-neutral-200);
+  transition: background-color 0.1s ease;
+}
+
+main table tbody tr:last-child {
+  border-bottom: none;
+}
+
+main table tbody tr:hover {
+  background-color: var(--color-neutral-100);
+}
+
+main table tbody td {
+  padding: var(--spacing-small) var(--spacing-medium);
+  color: var(--color-neutral-700);
+  vertical-align: middle;
+}
+
+main table tfoot td {
+  padding: var(--spacing-small) var(--spacing-medium);
+  font-weight: 600;
+  color: var(--color-neutral-800);
+  border-top: 1.5px solid var(--color-neutral-300);
+  background-color: var(--color-neutral-100);
+}
+
+@media (max-width: 767px) {
+  main table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ── Modal / Dialog polish ───────────────────────────────── */
+.modal-wrapper,
+dialog,
+[role="dialog"] {
+  border-radius: var(--shape-border-radius-modal) !important;
+  box-shadow: var(--shape-shadow-hover) !important;
+  border: none !important;
+}
+
+/* ── Content Module: Value Proposition Row ───────────────── */
+.section.value-props > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-big);
+}
+
+.section.value-props .default-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-big);
+}
+
+@media (min-width: 768px) {
+  .section.value-props > div,
+  .section.value-props .default-content-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Content Module: Stats Row ───────────────────────────── */
+.section.stats {
+  background-color: var(--color-neutral-100);
+  padding: var(--spacing-xxbig) 0;
+  margin: 0;
+}
+
+.section.stats > div {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-big);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .section.stats > div {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.section.stats h2,
+.section.stats h3 {
+  font-size: 5.6rem;
+  font-weight: 700;
+  color: var(--color-brand-500);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: var(--spacing-xsmall);
+}
+
+.section.stats p {
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-600);
+  margin: 0;
+}
+
+/* ── Content Module: Callout / CTA Banner ─────────────────── */
+.section.callout {
+  background: linear-gradient(135deg, var(--color-surface-dark) 0%, var(--color-brand-500) 100%);
+  margin: 0;
+  padding: var(--spacing-xxbig) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.section.callout::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-500), var(--color-teal-500));
+}
+
+.section.callout h2,
+.section.callout h3 {
+  color: var(--color-neutral-50);
+  font-weight: 700;
+  margin-top: 0;
+}
+
+.section.callout p {
+  color: rgb(255 255 255 / 80%);
+  max-width: 680px;
+}
+
+.section.callout a.button:any-link {
+  background-color: var(--color-accent-500);
+  color: var(--color-neutral-50);
+  border-color: transparent;
+}
+
+.section.callout a.button:hover {
+  background-color: var(--color-accent-600);
+}
+
+/* ── Feature Icon Block ──────────────────────────────────── */
+.section .feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-small);
+  padding: var(--spacing-big);
+  background-color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid var(--color-neutral-200);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.section .feature-item:hover {
+  box-shadow: var(--shape-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.section .feature-item-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-informational-200);
+  border-radius: var(--shape-border-radius-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brand-500);
+}
+
+.section .feature-item h3,
+.section .feature-item h4 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-neutral-800);
+}
+
+.section .feature-item p {
+  margin: 0;
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-600);
+  line-height: 1.65;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────────── */
+.breadcrumb,
+nav[aria-label="Breadcrumb"] {
+  padding: var(--spacing-small) 0;
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-500);
+}
+
+.breadcrumb a,
+nav[aria-label="Breadcrumb"] a {
+  color: var(--color-neutral-600);
+  text-decoration: none;
+  font: var(--type-body-2-default-font);
+  font-weight: 400;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb a:hover,
+nav[aria-label="Breadcrumb"] a:hover {
+  color: var(--color-brand-500);
+}
+
+/* ── Pagination ──────────────────────────────────────────── */
+.dropin-design .dropin-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xxsmall);
+  justify-content: center;
+}
+
+.dropin-design .dropin-pagination button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--shape-border-radius-1);
+  border: 1px solid var(--color-neutral-300);
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+  font-weight: 500;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.dropin-design .dropin-pagination button:hover {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-500);
+}
+
+.dropin-design .dropin-pagination button[disabled],
+.dropin-design .dropin-pagination button[aria-current="page"] {
+  background-color: var(--color-brand-500);
+  border-color: var(--color-brand-500);
+  color: var(--color-neutral-50);
+}
+
+/* ── Tooltip ─────────────────────────────────────────────── */
+.dropin-design .dropin-tooltip {
+  border-radius: var(--shape-border-radius-1) !important;
+  font: var(--type-details-caption-1-font) !important;
+  background-color: var(--color-neutral-800) !important;
+}
+
+/* ── Loading skeletons ───────────────────────────────────── */
+.dropin-design .dropin-skeleton-row,
+.dropin-design .dropin-skeleton-block {
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-200) 0%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--shape-border-radius-1);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Print adjustments ───────────────────────────────────── */
+@media print {
+  header .nav-wrapper,
+  footer {
+    display: none;
+  }
+
+  main {
+    padding: 0;
+  }
+}

@@ -1,5 +1,38 @@
+/* ── Create Account ──────────────────────────────────────── */
 main .commerce-create-account-container {
-    max-width: 700px;
-    margin: 40px auto;
-    width: 100%;
+  max-width: 560px;
+  margin: var(--spacing-xxbig) auto;
+  width: 100%;
+  background-color: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  box-shadow: var(--shape-shadow-2);
+  overflow: hidden;
+}
+
+main .commerce-create-account-container::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-teal-500));
+}
+
+main .commerce-create-account-container > * {
+  padding: var(--spacing-big);
+}
+
+main .commerce-create-account-container h1,
+main .commerce-create-account-container h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--color-neutral-800);
+  margin-bottom: var(--spacing-small);
+  margin-top: 0;
+}
+
+main .commerce-create-account-container p {
+  color: var(--color-neutral-600);
+  font: var(--type-body-2-default-font);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-medium);
 }
