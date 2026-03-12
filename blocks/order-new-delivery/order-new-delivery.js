@@ -299,6 +299,175 @@ function renderChoiceCard({ name, value, label, checked, stepId }) {
 }
 
 /* ------------------------------------------------------------------
+   Truck capacity estimation (26 pallet spaces per UK 13.6m trailer)
+   ------------------------------------------------------------------ */
+const PALLET_SPACES_PER_TRAILER = 26;
+
+/**
+ * Calculates estimated truck capacity metrics from equipment quantities.
+ * @param {Object} state - Wizard state with data.equipment
+ * @returns {{ totalPallets: number, truckCountEstimate: number, fullTruckCount: number, lastTruckPercent: number }}
+ */
+function calculateTruckCapacity(state) {
+  const totalPallets = (state.data.equipment || [])
+    .filter((l) => l.sku && l.sku !== '')
+    .reduce((sum, l) => sum + (Number(l.quantity) || 0), 0);
+
+  const truckCountEstimate = totalPallets > 0
+    ? Math.ceil(totalPallets / PALLET_SPACES_PER_TRAILER)
+    : 0;
+
+  const remainder = totalPallets % PALLET_SPACES_PER_TRAILER;
+  const fullTruckCount = remainder === 0 && totalPallets > 0
+    ? truckCountEstimate
+    : Math.floor(totalPallets / PALLET_SPACES_PER_TRAILER);
+  const lastTruckPallets = remainder === 0 ? PALLET_SPACES_PER_TRAILER : remainder;
+  const lastTruckPercent = Math.round((lastTruckPallets / PALLET_SPACES_PER_TRAILER) * 100);
+
+  return { totalPallets, truckCountEstimate, fullTruckCount, lastTruckPercent };
+}
+
+/**
+ * Returns a state class for the capacity card based on fill percentage (per truck).
+ * 0–50% = calm, 51–85% = healthy, 86–100% = near-full, >1 truck = overflow
+ */
+function getCapacityStateClass(lastTruckPercent, truckCount) {
+  if (truckCount <= 0) return 'ond-capacity--empty';
+  if (truckCount > 1) return 'ond-capacity--overflow';
+  if (lastTruckPercent <= 50) return 'ond-capacity--calm';
+  if (lastTruckPercent <= 85) return 'ond-capacity--healthy';
+  return 'ond-capacity--near-full';
+}
+
+/* Trailer fill bounds (corrected for this truck PNG):
+ * fill starts 26%, ends 91% → max fillable width = 65%
+ * visibleFillWidth = fillRatio × 65% of image width
+ */
+const FILL_LEFT_PCT = 26;
+const FILL_MAX_WIDTH_PCT = 65; /* 91 - 26 */
+
+const TRUCK_CAPACITY_IMG = '/images/truck-capacity.png';
+
+/**
+ * Truck capacity visual: PNG foreground, blue fill behind (through transparent trailer).
+ * Fill bounds: 26%–91% horizontal.
+ */
+function renderTruckCapacityVisual(totalPallets) {
+  const truckCount = Math.ceil(totalPallets / PALLET_SPACES_PER_TRAILER) || 1;
+
+  const trucks = [];
+  for (let t = 0; t < truckCount; t++) {
+    const palletsForTruck = Math.min(PALLET_SPACES_PER_TRAILER, Math.max(0, totalPallets - t * PALLET_SPACES_PER_TRAILER));
+    const capacityRatio = Math.min(1, palletsForTruck / PALLET_SPACES_PER_TRAILER);
+    trucks.push(renderTruckWithFill(t, capacityRatio));
+  }
+
+  return `
+    <div class="ond-capacity__truck-visual" role="img" aria-label="Truck capacity: ${totalPallets} pallets across ${truckCount} truck${truckCount > 1 ? 's' : ''}">
+      <div class="ond-capacity__trucks">
+        ${trucks.join('')}
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Renders one truck: PNG foreground (z-index 2), blue fill behind (z-index 1).
+ * visibleFillWidth = min(pallets/26, 1) × 65% of image width.
+ */
+function renderTruckWithFill(truckIndex, capacityRatio) {
+  const ratio = Math.min(1, Math.max(0, capacityRatio));
+  const fillWidthPct = ratio * FILL_MAX_WIDTH_PCT;
+  return `
+    <div class="ond-capacity__truck truck-capacity-wrapper" data-truck-index="${truckIndex}">
+      <div class="truck-capacity-void"></div>
+      <div class="truck-capacity-fill" style="--fill-width-pct: ${fillWidthPct};"></div>
+      <img class="truck-capacity-image" src="${TRUCK_CAPACITY_IMG}" alt="" width="1024" height="400" />
+    </div>
+  `;
+}
+
+function renderCapacityCard(state) {
+  const { totalPallets, truckCountEstimate, fullTruckCount, lastTruckPercent } = calculateTruckCapacity(state);
+  const stateClass = getCapacityStateClass(lastTruckPercent, truckCountEstimate);
+  const isEmpty = totalPallets === 0;
+
+  if (isEmpty) {
+    return `
+      <div class="ond-capacity ond-capacity--empty" data-capacity-card>
+        <h4 class="ond-capacity__title">Estimated truck capacity</h4>
+        <p class="ond-capacity__copy">Based on a standard trailer carrying approximately 26 pallet spaces.</p>
+        <div class="ond-capacity__empty-state">
+          <p class="ond-capacity__empty-text">Add equipment to estimate delivery vehicle capacity.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  const spacesLabel = 'Pallet spaces';
+  const spacesValue = `${totalPallets} used (${PALLET_SPACES_PER_TRAILER} per truck)`;
+
+  let capacityLabel = 'Capacity';
+  let capacityValue;
+  if (truckCountEstimate === 1) {
+    capacityValue = `Approx. ${lastTruckPercent}% full`;
+  } else if (fullTruckCount === truckCountEstimate) {
+    capacityValue = `${fullTruckCount} trucks at 100%`;
+  } else {
+    const partialCount = truckCountEstimate - fullTruckCount;
+    capacityValue = fullTruckCount > 0
+      ? `${fullTruckCount} truck${fullTruckCount > 1 ? 's' : ''} at 100%, ${partialCount} truck${partialCount > 1 ? 's' : ''} at ${lastTruckPercent}%`
+      : `Approx. ${lastTruckPercent}% full`;
+  }
+
+  const trucksLabel = 'Trucks required';
+  const trucksValue = truckCountEstimate <= 1
+    ? `Approx. ${truckCountEstimate} truck required`
+    : `Approx. ${truckCountEstimate} trucks may be required`;
+
+  return `
+    <div class="ond-capacity ${stateClass}" data-capacity-card>
+      <h4 class="ond-capacity__title">Estimated truck capacity</h4>
+      <p class="ond-capacity__copy">Based on a standard trailer carrying approximately 26 pallet spaces.</p>
+      ${renderTruckCapacityVisual(totalPallets)}
+      <div class="ond-capacity__metrics">
+        <div class="ond-capacity__stat">
+          <span class="ond-capacity__stat-label">${escapeHtml(spacesLabel)}</span>
+          <span class="ond-capacity__stat-value">${escapeHtml(spacesValue)}</span>
+        </div>
+        <div class="ond-capacity__stat">
+          <span class="ond-capacity__stat-label">${escapeHtml(capacityLabel)}</span>
+          <span class="ond-capacity__stat-value">${escapeHtml(capacityValue)}</span>
+        </div>
+        <div class="ond-capacity__stat">
+          <span class="ond-capacity__stat-label">${escapeHtml(trucksLabel)}</span>
+          <span class="ond-capacity__stat-value">${escapeHtml(trucksValue)}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Patches only the capacity card DOM when equipment quantities change.
+ * Used for live updates without full step re-render.
+ */
+function patchCapacityCard(block, state) {
+  const card = block?.querySelector('[data-capacity-card]');
+  if (!card) return;
+
+  const parent = card.parentElement;
+  if (!parent) return;
+
+  const newCard = document.createElement('div');
+  newCard.innerHTML = renderCapacityCard(state).trim();
+  const newCardEl = newCard.firstElementChild;
+  if (newCardEl) {
+    parent.replaceChild(newCardEl, card);
+  }
+}
+
+/* ------------------------------------------------------------------
    Equipment product cards
    ------------------------------------------------------------------ */
 function getEquipmentQuantity(state, sku) {
@@ -344,7 +513,16 @@ function renderEquipmentCards(state, errors) {
               aria-label="Decrease quantity for ${escapeHtml(shortName)}"
               ${qty === 0 ? 'disabled' : ''}
             >−</button>
-            <span class="ond-qty-value" aria-live="polite" aria-atomic="true">${qty}</span>
+            <input
+              type="number"
+              class="ond-qty-value"
+              data-qty-sku="${escapeHtml(product.sku)}"
+              value="${qty}"
+              min="0"
+              step="1"
+              aria-label="Quantity for ${escapeHtml(shortName)}"
+              inputmode="numeric"
+            >
             <button
               type="button"
               class="ond-qty-btn"
@@ -469,6 +647,7 @@ function renderStepBody(stepId, state, siteListId) {
       content = `
         ${renderStepMessage(errors.summary)}
         ${renderEquipmentCards(state, errors)}
+        ${renderCapacityCard(state)}
       `;
       break;
 
@@ -908,10 +1087,44 @@ function attachInputListeners(block, state) {
         const newQty = Number(state.data.equipment.find((l) => l.sku === sku)?.quantity) || 0;
         const qtyEl = card.querySelector('.ond-qty-value');
         const minusBtn = card.querySelector('[data-qty-change="-1"]');
-        if (qtyEl) qtyEl.textContent = String(newQty);
+        if (qtyEl) qtyEl.value = String(newQty);
         if (minusBtn) minusBtn.disabled = newQty === 0;
         card.classList.toggle('is-selected', newQty > 0);
       }
+
+      patchCapacityCard(block, state);
+    });
+  });
+
+  // Equipment quantity input — sync typed value to state
+  block.querySelectorAll('input.ond-qty-value[data-qty-sku]').forEach((input) => {
+    input.addEventListener('change', () => {
+      const sku = input.dataset.qtySku;
+      let val = parseInt(input.value, 10);
+      if (Number.isNaN(val) || val < 0) val = 0;
+      input.value = String(val);
+
+      state.data.equipment = state.data.equipment.filter((l) => l.sku !== '');
+      const existingIndex = state.data.equipment.findIndex((l) => l.sku === sku);
+
+      if (val === 0) {
+        if (existingIndex >= 0) state.data.equipment.splice(existingIndex, 1);
+      } else if (existingIndex >= 0) {
+        state.data.equipment[existingIndex].quantity = String(val);
+      } else {
+        state.data.equipment.push({ sku, quantity: String(val) });
+      }
+
+      clearStepError(state, 'equipment');
+
+      const card = input.closest('.ond-equipment-card');
+      if (card) {
+        const minusBtn = card.querySelector('[data-qty-change="-1"]');
+        if (minusBtn) minusBtn.disabled = val === 0;
+        card.classList.toggle('is-selected', val > 0);
+      }
+
+      patchCapacityCard(block, state);
     });
   });
 
