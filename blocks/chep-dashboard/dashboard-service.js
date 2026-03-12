@@ -19,6 +19,25 @@ import { FEATURED_EQUIPMENT_SKUS } from './dashboard-config.js';
 /** Demo: artificially show this SKU as low stock on the dashboard */
 const DEMO_LOW_STOCK_SKU = 'CHEP-UK-WOOD-1200X1000-01';
 
+/** Demo: fake order for delivery today — shown in Recent Orders, KPI, and Recent Deliveries */
+function getDemoOrderForDeliveryToday() {
+  const today = new Date().toISOString().slice(0, 10);
+  return {
+    number: '1002899',
+    orderDate: `${today}T09:00:00.000Z`,
+    status: 'processing',
+    statusLabel: 'Processing',
+    location: 'Manchester DC – Manchester',
+    city: 'Manchester',
+    items: [
+      { name: 'CHEP Standard Pallet', sku: 'CHEP-UK-WOOD-1200X1000-01', qty: 50 },
+      { name: 'European Wooden Pallet', sku: 'CHEP-EU-WOOD-1200X800-03', qty: 25 },
+    ],
+    primaryEquipment: 'CHEP Standard Pallet',
+    total: { value: 1250, currency: 'GBP' },
+  };
+}
+
 function getSyntheticLowStockItem() {
   return {
     sku: DEMO_LOW_STOCK_SKU,
@@ -286,6 +305,9 @@ export const DashboardService = {
 
     const rawOrders = customer.orders?.items ?? [];
     const totalCount = customer.orders?.total_count ?? 0;
+    const normalisedOrders = rawOrders.map(normaliseOrder);
+    // Only show demo enriched data (delivery today, etc.) when customer has real orders
+    const orders = totalCount > 0 ? [getDemoOrderForDeliveryToday(), ...normalisedOrders] : normalisedOrders;
 
     return {
       customer: {
@@ -294,7 +316,7 @@ export const DashboardService = {
         email: customer.email ?? '',
       },
       totalCount,
-      orders: rawOrders.map(normaliseOrder),
+      orders,
     };
   },
 

@@ -59,7 +59,7 @@ function buildAccountTopBar(navElement, pageTitle = 'My Account') {
 
 function getPageTitleFromPath() {
   const { pathname } = window.location;
-  if (pathname.includes('/orders')) return 'Your orders';
+  if (pathname.includes('/orders') || pathname.includes('/order-list')) return 'Your orders';
   if (pathname.includes('/address')) return 'Addresses';
   if (pathname.includes('/returns')) return 'Returns';
   if (pathname.includes('/requisition-lists')) return 'Requisition Lists';

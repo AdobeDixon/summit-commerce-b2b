@@ -87,7 +87,7 @@ function buildWelcomeBanner(customerName) {
       </h1>
       <p class="dashboard-welcome__sub">Your logistics control centre</p>
     </div>
-    <a href="${rootLink('/order-new-delivery')}" class="dashboard-welcome__cta">
+    <a href="${rootLink('/order')}" class="dashboard-welcome__cta">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="12" y1="5" x2="12" y2="19"/>
         <line x1="5" y1="12" x2="19" y2="12"/>
@@ -162,7 +162,7 @@ function buildAccountDropdown(isAuthenticated) {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
         My Orders
       </a>
-      <a href="${rootLink('/order-new-delivery')}" class="topbar-account-dropdown__item" role="menuitem">
+      <a href="${rootLink('/order')}" class="topbar-account-dropdown__item" role="menuitem">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New Order
       </a>
@@ -177,8 +177,8 @@ function buildAccountDropdown(isAuthenticated) {
     dropdown.querySelector('.topbar-account-dropdown__item--signout')
       .addEventListener('click', async () => {
         try {
-          const { signOut } = await import('@dropins/storefront-auth/api.js');
-          await signOut();
+          const { revokeCustomerToken } = await import('@dropins/storefront-auth/api.js');
+          await revokeCustomerToken();
           window.location.href = rootLink(CUSTOMER_LOGIN_PATH);
         } catch {
           window.location.href = rootLink(CUSTOMER_LOGIN_PATH);
@@ -272,7 +272,7 @@ function buildTopBar(navElement) {
   const searchInput = topBar.querySelector('.chep-topbar__search-input');
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && searchInput.value.trim()) {
-      window.location.href = rootLink(`/customer/orders?q=${encodeURIComponent(searchInput.value.trim())}`);
+      window.location.href = rootLink(`/order-list?q=${encodeURIComponent(searchInput.value.trim())}`);
     }
   });
 

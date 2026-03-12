@@ -10,6 +10,22 @@ main .commerce-create-account-container {
   overflow: hidden;
 }
 
+/* Auth-page: form inside auth-split, no extra card chrome */
+body.auth-page .auth-split__form .commerce-create-account-container,
+body.auth-page .auth-split__form .dropin-design {
+  max-width: 100%;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+body.auth-page .auth-split__form .commerce-create-account-container::before,
+body.auth-page .auth-split__form .dropin-design::before {
+  display: none;
+}
+
 main .commerce-create-account-container::before {
   content: '';
   display: block;
@@ -35,4 +51,77 @@ main .commerce-create-account-container p {
   font: var(--type-body-2-default-font);
   line-height: 1.6;
   margin-bottom: var(--spacing-medium);
+}
+
+/* ── Sign up form: align inputs and labels (Last Name / Email row) ─── */
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form {
+  align-items: flex-start;
+}
+
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-top: 0;
+}
+
+/* Labels — consistent styling (matches login page) */
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-field__label,
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input__label--floating,
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-field label {
+  color: #1f2933;
+  font-weight: 500;
+  font-size: 14px;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  margin-top: 0;
+  display: block;
+}
+
+/* Consistent label + input structure for all fields (including password) */
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field .dropin-field,
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field .dropin-input,
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field .dropin-input-password {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field .dropin-field__label,
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field .dropin-input__label--floating,
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field label {
+  flex-shrink: 0;
+}
+
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field .dropin-field__content,
+body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__field input {
+  flex-shrink: 0;
+}
+
+/* ── Password field: match other fields, single composed control ─────── */
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password {
+  /* Same layout participation as dropin-field */
+}
+
+/* Input container: no padding/margin — aligns with other fields */
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password .dropin-input-container {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Override Dropin icon-left padding — password input aligns with email */
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password .dropin-input.dropin-input--icon-left,
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password input {
+  padding-left: 16px !important;
+}
+
+/* Floating label: match other fields (same left alignment as email) */
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password .dropin-input__label--floating,
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password .dropin-input-label-container {
+  padding-left: 16px;
 }

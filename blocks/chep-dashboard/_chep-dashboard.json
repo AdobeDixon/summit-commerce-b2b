@@ -1,0 +1,17 @@
+{
+  "definitions": [{
+    "title": "CHEP Dashboard",
+    "id": "chep-dashboard",
+    "model": "chep-dashboard",
+    "plugins": {
+      "da": {
+        "type": "key-value-block"
+      }
+    }
+  }],
+  "models": [{
+    "id": "chep-dashboard",
+    "fields": []
+  }],
+  "filters": []
+}

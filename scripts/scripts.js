@@ -19,9 +19,11 @@ import {
   decorateLinks,
   loadErrorPage,
   decorateSections,
+  ensureCreateAccountPage,
   IS_UE,
   IS_DA,
 } from './commerce.js';
+import { runAuthGate, isAuthOnlyPath } from './auth-gate.js';
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -60,6 +62,8 @@ async function loadFonts() {
  */
 function buildAutoBlocks(main) {
   try {
+    ensureCreateAccountPage(main);
+
     // auto load `*/fragments/*` references
     const fragments = [...main.querySelectorAll('a[href*="/fragments/"]')].filter((f) => !f.closest('.fragment'));
     if (fragments.length > 0) {
@@ -109,6 +113,16 @@ async function loadEager(doc) {
   if (main) {
     try {
       await initializeCommerce();
+
+      /* Site-wide auth gate: redirect before any protected content renders */
+      const shouldContinue = await runAuthGate();
+      if (!shouldContinue) return;
+
+      /* Apply auth-page layout for login/create-account/forgot-password screens */
+      if (isAuthOnlyPath()) {
+        document.body.classList.add('auth-page');
+      }
+
       decorateMain(main);
       applyTemplates(doc);
       await loadCommerceEager();
@@ -117,7 +131,10 @@ async function loadEager(doc) {
       loadErrorPage(418);
     }
     document.body.classList.add('appear');
-    await loadSection(main.querySelector('.section'), waitForFirstImage);
+    const firstSection = main.querySelector('.section');
+    if (firstSection) {
+      await loadSection(firstSection, waitForFirstImage);
+    }
   }
 
   try {

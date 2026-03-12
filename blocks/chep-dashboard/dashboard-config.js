@@ -68,8 +68,8 @@ export const NAV_ITEMS = [
   {
     id: 'orders',
     label: 'Orders',
-    href: '/customer/orders',
-    matchPaths: ['/customer/orders', '/customer/order-details'],
+    href: '/order-list',
+    matchPaths: ['/order-list', '/customer/orders', '/customer/order-details'],
     icon: 'orders',
   },
   {
@@ -89,8 +89,8 @@ export const NAV_ITEMS = [
   {
     id: 'equipment',
     label: 'Equipment',
-    href: '/order-new-delivery',
-    matchPaths: ['/order-new-delivery', '/equipment'],
+    href: '/order',
+    matchPaths: ['/order', '/order-new-delivery', '/equipment'],
     icon: 'equipment',
   },
   {
@@ -103,7 +103,7 @@ export const NAV_ITEMS = [
   {
     id: 'reports',
     label: 'Reports',
-    href: '/customer/orders',
+    href: '/order-list',
     matchPaths: ['/reports'],
     icon: 'reports',
   },
@@ -124,7 +124,7 @@ export const QUICK_ACTIONS = [
   {
     id: 'create-order',
     label: 'Create New Order',
-    href: '/order-new-delivery',
+    href: '/order',
     icon: 'plus',
     primary: true,
   },
@@ -137,7 +137,7 @@ export const QUICK_ACTIONS = [
   {
     id: 'view-orders',
     label: 'View All Orders',
-    href: '/customer/orders',
+    href: '/order-list',
     icon: 'orders',
   },
   {

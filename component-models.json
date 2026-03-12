@@ -340,6 +340,16 @@
     ]
   },
   {
+    "id": "chep-orders-list",
+    "fields": [
+      {
+        "component": "number",
+        "name": "page-size",
+        "label": "Page Size"
+      }
+    ]
+  },
+  {
     "id": "commerce-mini-cart",
     "fields": [
       {

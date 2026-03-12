@@ -251,6 +251,16 @@
           }
         },
         {
+          "title": "CHEP Dashboard",
+          "id": "chep-dashboard",
+          "model": "chep-dashboard",
+          "plugins": {
+            "da": {
+              "type": "key-value-block"
+            }
+          }
+        },
+        {
           "title": "Targeted Block",
           "id": "targeted-block",
           "model": "targeted-block",
@@ -425,6 +435,16 @@
           "title": "Commerce Invoices List",
           "id": "commerce-invoices-list",
           "model": "commerce-invoices-list",
+          "plugins": {
+            "da": {
+              "type": "key-value-block"
+            }
+          }
+        },
+        {
+          "title": "CHEP Orders List",
+          "id": "chep-orders-list",
+          "model": "chep-orders-list",
           "plugins": {
             "da": {
               "type": "key-value-block"

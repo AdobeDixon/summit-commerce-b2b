@@ -83,6 +83,9 @@ export const CUSTOMER_RETURNS_PATH = `${CUSTOMER_PATH}/returns`;
 export const CUSTOMER_ADDRESS_PATH = `${CUSTOMER_PATH}/address`;
 export const CUSTOMER_LOGIN_PATH = `${CUSTOMER_PATH}/login`;
 export const CUSTOMER_ACCOUNT_PATH = `${CUSTOMER_PATH}/account`;
+export const CUSTOMER_CREATE_ACCOUNT_PATH = `${CUSTOMER_PATH}/create-account`;
+/** Create account form — embedded in auth page */
+export const CUSTOMER_CREATE_PATH = `${CUSTOMER_PATH}/create`;
 export const CUSTOMER_FORGOTPASSWORD_PATH = `${CUSTOMER_PATH}/forgotpassword`;
 export const SALES_ORDER_VIEW_PATH = '/sales/order/view/';
 export const CUSTOMER_REQUISITION_LISTS_PATH = `${CUSTOMER_PATH}/requisition-lists`;
@@ -360,6 +363,36 @@ export async function initializeCommerce() {
   CS_FETCH_GRAPHQL.setFetchGraphQlHeaders((prev) => ({ ...prev, ...getHeaders('cs') }));
 
   return initializeDropins();
+}
+
+/**
+ * Injects the create account block into main when path is /customer/create.
+ * Ensures the create form is embedded in the auth page at that path.
+ * @param {Element} main - The main element
+ */
+export function ensureCreateAccountPage(main) {
+  if (!main) return;
+  try {
+    const root = getRootPath().replace(/\/$/, '');
+    const pathname = window.location.pathname;
+    const effectivePath = (root && pathname.startsWith(root))
+      ? (pathname.slice(root.length) || '/')
+      : pathname;
+    const isCreatePath = effectivePath === '/customer/create' || effectivePath.startsWith('/customer/create/');
+    if (!isCreatePath) return;
+    if (main.querySelector('.commerce-create-account')) return;
+
+    main.innerHTML = '';
+    const section = document.createElement('div');
+    const wrapper = document.createElement('div');
+    const block = document.createElement('div');
+    block.className = 'commerce-create-account';
+    wrapper.appendChild(block);
+    section.appendChild(wrapper);
+    main.appendChild(section);
+  } catch {
+    // Config may not be initialized yet
+  }
 }
 
 /**

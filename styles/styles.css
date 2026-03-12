@@ -763,3 +763,320 @@ main[hidden] {
   font-weight: 700 !important;
   text-transform: none !important;
 }
+
+/* ==========================================================================
+   Auth Page — Full-screen login/create-account/forgot-password layout
+   Premium B2B portal authentication experience
+   ========================================================================== */
+
+body.auth-page {
+  display: block;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: #f6f8fa;
+  font-family: adobe-clean, Inter, -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1f2933;
+}
+
+body.auth-page > header,
+body.auth-page > footer {
+  display: none !important;
+}
+
+body.auth-page > main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: var(--spacing-medium) 0;
+  margin: 0;
+  box-sizing: border-box;
+  max-width: 100vw;
+}
+
+@media (min-width: 600px) {
+  body.auth-page > main {
+    padding: var(--spacing-big) 0;
+  }
+}
+
+body.auth-page main > .section {
+  display: flex !important;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  min-width: 0;
+}
+
+body.auth-page main .section > div {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Auth split layout: brand panel (left) + form card (right) on desktop */
+.auth-split {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-height: 560px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 12%);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Two-column layout only when viewport has room for both panels */
+@media (min-width: 1024px) {
+  .auth-split {
+    flex-direction: row;
+    min-height: 560px;
+  }
+}
+
+/* Brand panel — full height, matches chep-nav gradient */
+.auth-split__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-xxbig);
+  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  color: #fff;
+  min-height: 280px;
+}
+
+@media (min-width: 1024px) {
+  .auth-split__brand {
+    flex: 1 1 380px;
+    min-width: 0;
+    max-width: 50%;
+    min-height: 560px;
+    padding: var(--spacing-xxbig) var(--spacing-xhuge);
+  }
+}
+
+.auth-split__logo {
+  display: block;
+  margin-bottom: var(--spacing-medium);
+  max-width: 160px;
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: lighten;
+}
+
+.auth-split__desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgb(255 255 255 / 95%);
+  margin: 0;
+}
+
+.auth-split__brand h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--spacing-small);
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.auth-split__brand p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgb(255 255 255 / 95%);
+  margin: 0;
+}
+
+.auth-split__form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxbig);
+  min-width: 0;
+  background: #f6f8fa;
+  overflow-x: hidden;
+}
+
+.auth-split__form-inner {
+  align-self: stretch;
+  width: 100%;
+  max-width: 480px;
+  min-width: 320px;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .auth-split__form {
+    flex: 1 1 480px;
+    min-width: 0;
+    min-height: 560px;
+    padding: var(--spacing-xxbig) var(--spacing-xhuge);
+  }
+
+  .auth-split__form-inner {
+    width: 100%;
+    max-width: 420px;
+    min-width: 360px;
+  }
+}
+
+/* Shared auth form — matches dashboard typography and inputs */
+body.auth-page .auth-split__form {
+  font-family: adobe-clean, Inter, -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+}
+
+body.auth-page .auth-split__form input {
+  background-color: #fff;
+  border: 1px solid #e4e7eb;
+  color: #1f2933;
+  font-family: inherit;
+}
+
+body.auth-page .auth-split__form input:focus {
+  border-color: #005eb8;
+  box-shadow: 0 0 0 3px rgb(0 94 184 / 18%);
+  outline: none;
+}
+
+body.auth-page .auth-split__form h1,
+body.auth-page .auth-split__form h2,
+body.auth-page .auth-split__form .dropin-header-container__title {
+  color: #1f2933;
+  font-weight: 700;
+  font-family: inherit;
+}
+
+/* Shared auth form overrides for SignUp, ResetPassword */
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-header-container__title,
+body.auth-page .auth-split__form .auth-reset-password-form .dropin-header-container__title {
+  font-size: 32px;
+  margin: 0 0 24px;
+  white-space: nowrap;
+}
+
+body.auth-page .auth-split__form .auth-sign-up-form input,
+body.auth-page .auth-split__form .auth-reset-password-form input,
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input,
+body.auth-page .auth-split__form .auth-reset-password-form .dropin-input {
+  background-color: #ffffff !important;
+  min-height: 48px !important;
+  border-radius: 8px !important;
+  padding: 0 16px !important;
+  box-sizing: border-box !important;
+}
+
+body.auth-page .auth-split__form .auth-sign-up-form button[type="submit"],
+body.auth-page .auth-split__form .auth-reset-password-form button[type="submit"],
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-button--primary,
+body.auth-page .auth-split__form .auth-reset-password-form .dropin-button--primary {
+  width: 100%;
+  height: 48px;
+  border-radius: 8px;
+}
+
+/* Shared auth: input layout, labels, password field (SignIn, SignUp, ResetPassword) */
+body.auth-page .auth-split__form .dropin-input,
+body.auth-page .auth-split__form input {
+  width: 100% !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 14px 16px !important;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e4e7eb !important;
+  text-align: left !important;
+}
+
+/* Password field: same layout participation as other form fields */
+body.auth-page .auth-split__form .dropin-input-password {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Input container: sole positioning context, no extra padding/margin */
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container,
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container.dropin-input-container--primary,
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container.dropin-input-container--floating {
+  position: relative !important;
+  display: flex !important;
+  align-items: center;
+  min-height: 48px;
+  height: 48px;
+  width: 100% !important;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0 !important;
+  margin: 0 !important;
+  pointer-events: none;
+}
+
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container .dropin-input-label-container,
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container input {
+  pointer-events: auto;
+}
+
+/* Padlock icon: hidden — password input extends to same left edge as email */
+body.auth-page .auth-split__form .dropin-input-password .dropin-input__field-icon--left {
+  display: none !important;
+}
+
+/* Right eye toggle: inside input, right edge, vertically centered */
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container .dropin-input-password__eye-icon {
+  position: absolute !important;
+  right: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  left: auto !important;
+  margin: 0 !important;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Fallback when eye is not yet moved into container (JS pending) */
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-password__eye-icon {
+  position: absolute !important;
+  right: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  left: auto !important;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Input padding: match other fields (16px left), override Dropin icon-left padding */
+body.auth-page .auth-split__form .dropin-input-password input,
+body.auth-page .auth-split__form .dropin-input-password .dropin-input,
+body.auth-page .auth-split__form .dropin-input-password .dropin-input.dropin-input--icon-left {
+  padding-left: 16px !important;
+  padding-right: 48px !important;
+  margin-left: 0 !important;
+}
+
+/* Floating label: align with input text (same as other fields) */
+body.auth-page .auth-split__form .dropin-input-password .dropin-input__label--floating,
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-label-container {
+  padding-left: 16px;
+}
+
+/* Label alignment: 16px for fields without icon */
+body.auth-page .auth-split__form .dropin-field .dropin-input__label--floating,
+body.auth-page .auth-split__form .dropin-field label {
+  padding-left: 16px;
+}

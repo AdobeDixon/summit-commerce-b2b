@@ -10,6 +10,43 @@ main .commerce-login-container {
   overflow: hidden;
 }
 
+/* Auth-page: no card chrome — form sits inside auth-split */
+body.auth-page .auth-split__form .commerce-login-container,
+body.auth-page .auth-split__form .dropin-design,
+body.auth-page .auth-split__form .auth-sign-in,
+body.auth-page .auth-split__form .auth-sign-in-form {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+/* Form content full width within form-inner — ensures Sign in and Create account buttons match */
+body.auth-page .auth-split__form-inner .auth-sign-in,
+body.auth-page .auth-split__form-inner .auth-sign-in-form,
+body.auth-page .auth-split__form-inner .auth-sign-in-form__form,
+body.auth-page .auth-split__form-inner .auth-sign-in-form__form__buttons,
+body.auth-page .auth-split__form-inner form {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Center form content horizontally */
+body.auth-page .auth-split__form-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+body.auth-page .auth-split__form .commerce-login-container::before,
+body.auth-page .auth-split__form .dropin-design::before {
+  display: none;
+}
+
 /* Top brand accent line */
 main .commerce-login-container::before {
   content: '';
@@ -120,4 +157,179 @@ main .commerce-login-container .dropin-divider {
 main .commerce-login-container a {
   color: var(--color-brand-500);
   font-weight: 600;
+}
+
+/* ==========================================================================
+   Auth-page form overrides — premium B2B portal styling
+   ========================================================================== */
+
+/* Form title — 32px, single line where space allows, 24px below */
+body.auth-page .auth-split__form .auth-sign-in-form__title,
+body.auth-page .auth-split__form .dropin-header-container__title,
+body.auth-page .auth-split__form h1,
+body.auth-page .auth-split__form h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2933;
+  margin: 0 0 24px;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  body.auth-page .auth-split__form .auth-sign-in-form__title,
+  body.auth-page .auth-split__form .dropin-header-container__title,
+  body.auth-page .auth-split__form h1,
+  body.auth-page .auth-split__form h2 {
+    font-size: 28px;
+    white-space: normal;
+  }
+}
+
+/* Labels — strong contrast, align with input text (16px matches input padding) */
+body.auth-page .auth-split__form .dropin-field__label {
+  color: #1f2933;
+  font-weight: 500;
+  font-size: 14px;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Align label text with input content — both use 16px from left edge */
+body.auth-page .auth-split__form .dropin-field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+body.auth-page .auth-split__form .dropin-field__content,
+body.auth-page .auth-split__form .dropin-field > input {
+  width: 100%;
+}
+
+/* Form layout — vertical spacing per spec */
+body.auth-page .auth-split__form .auth-sign-in-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+body.auth-page .auth-split__form .auth-sign-in-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* 16px between inputs */
+body.auth-page .auth-split__form .auth-sign-in-form__form > * + * {
+  margin-top: 16px;
+}
+
+body.auth-page .auth-split__form .dropin-field {
+  margin-bottom: 0;
+}
+
+body.auth-page .auth-split__form .dropin-field input {
+  text-align: left !important;
+}
+
+/* Inputs: full width, 48px height, white, padding, rounded */
+body.auth-page .auth-split__form .auth-sign-in-form__form__password,
+body.auth-page .auth-split__form .dropin-field {
+  width: 100%;
+}
+
+/* Password field label above input — align with email field */
+body.auth-page .auth-split__form .dropin-input-password > div:first-child {
+  padding-left: 0;
+  margin-bottom: 6px;
+}
+
+/* Button row — Forgot password link + Sign in button */
+body.auth-page .auth-split__form .auth-sign-in-form__form__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 12px;  /* 12px before Forgot password */
+}
+
+body.auth-page .auth-split__form .auth-sign-in-form__form__buttons__combine {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  flex-wrap: wrap;
+}
+
+body.auth-page .auth-split__form .auth-sign-in-form__form__buttons .auth-sign-in-form__button--submit {
+  margin-top: 24px;  /* 24px before Sign in button */
+}
+
+
+/* Forgot password link — strong brand blue, high contrast */
+body.auth-page .auth-split__form .auth-sign-in-form__button--forgot {
+  font-size: 14px;
+  font-weight: 600;
+  color: #005eb8;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+body.auth-page .auth-split__form .auth-sign-in-form__button--forgot:hover {
+  color: #0051a0;
+  text-decoration: underline;
+}
+
+/* Primary Sign in button — matches dashboard-welcome__cta */
+body.auth-page .auth-split__form .auth-sign-in-form__button--submit,
+body.auth-page .auth-split__form button[type="submit"],
+body.auth-page .auth-split__form .dropin-button--primary {
+  width: 100%;
+  height: 48px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #005eb8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 6px rgb(0 94 184 / 30%);
+}
+
+body.auth-page .auth-split__form .auth-sign-in-form__button--submit:hover,
+body.auth-page .auth-split__form button[type="submit"]:hover,
+body.auth-page .auth-split__form .dropin-button--primary:hover {
+  background: #0051a0;
+  box-shadow: 0 4px 12px rgb(0 94 184 / 40%);
+}
+
+/* Registration / Create account button — same size as Sign in */
+.auth-split__form-inner .auth-registration-btn {
+  display: block;
+  width: 100%;
+  min-width: 100%;
+  height: 48px;
+  margin-top: 24px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  line-height: 48px;
+  color: #005eb8;
+  background: #fff;
+  border: 2px solid #005eb8;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.auth-split__form-inner .auth-registration-btn:hover {
+  background: #005eb8;
+  color: #fff;
+  border-color: #005eb8;
 }

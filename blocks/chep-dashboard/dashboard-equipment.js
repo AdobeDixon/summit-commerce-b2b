@@ -11,6 +11,7 @@
  *   Falls back to capacity-relative display when qty is unavailable.
  */
 
+import { rootLink } from '../../scripts/commerce.js';
 import { EQUIPMENT_DISPLAY_NAMES, EQUIPMENT_STOCK_CAPACITY, FEATURED_EQUIPMENT_SKUS } from './dashboard-config.js';
 
 /* ── Equipment type icons (material-based) ─────────────────────────────── */
@@ -110,7 +111,7 @@ function buildEquipmentCard(product) {
       <div class="equip-card__bar-track">
         ${buildMiniStockBar(product)}
       </div>
-      <a href="/order-new-delivery" class="equip-card__cta">Order now</a>
+      <a href="${rootLink('/order')}" class="equip-card__cta">Order now</a>
     </div>
   `;
 
@@ -150,7 +151,7 @@ export function buildEquipmentSection() {
   header.className = 'panel-header';
   header.innerHTML = `
     <h2 class="panel-header__title">Equipment Overview</h2>
-    <a href="/order-new-delivery" class="panel-header__view-all">
+    <a href="${rootLink('/order')}" class="panel-header__view-all">
       Order Equipment
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="9 18 15 12 9 6"/>

@@ -12,7 +12,6 @@
 import { ORDER_STATUS_MAP } from './dashboard-config.js';
 import {
   rootLink,
-  CUSTOMER_ORDERS_PATH,
   CUSTOMER_ORDER_DETAILS_PATH,
   CUSTOMER_LOGIN_PATH,
 } from '../../scripts/commerce.js';
@@ -147,7 +146,7 @@ export function buildOrdersSection() {
   section.className = 'dashboard-panel dashboard-orders';
   section.setAttribute('aria-label', 'Recent orders');
 
-  const header = buildPanelHeader(rootLink(CUSTOMER_ORDERS_PATH));
+  const header = buildPanelHeader(rootLink('/order-list'));
   section.appendChild(header);
 
   /* Skeleton table */
@@ -201,7 +200,7 @@ export function updateOrdersSection(section, ordersData, isAuthenticated) {
       buildEmptyState(
         'No orders found. Start by creating a new delivery order.',
         'Create Order',
-        rootLink('/order-new-delivery'),
+        rootLink('/order'),
       ),
     );
     return;

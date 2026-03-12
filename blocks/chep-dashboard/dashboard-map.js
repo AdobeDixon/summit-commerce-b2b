@@ -7,7 +7,7 @@
  * - Nonce is read from the page's existing nonce scripts for CSP compatibility
  * - Falls back to a clean site list if Leaflet cannot load
  *
- * TILE URL: https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png
+ * TILE URL: https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png
  * CARTO free tier: up to 75k tile requests/day — ample for a B2B dashboard.
  *
  * DELIVERIES PANEL:
@@ -29,7 +29,7 @@ const LEAFLET_JS = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.
 const LEAFLET_CSS = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css';
 
 /** CARTO Voyager — clean, modern, no API key, excellent reliability */
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png';
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
 const TILE_SUBDOMAINS = 'abcd';
 

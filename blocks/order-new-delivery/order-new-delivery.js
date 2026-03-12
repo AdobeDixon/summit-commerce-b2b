@@ -1,8 +1,10 @@
 import {
+  CUSTOMER_ACCOUNT_PATH,
   CUSTOMER_LOGIN_PATH,
   checkIsAuthenticated,
   rootLink,
 } from '../../scripts/commerce.js';
+import { buildNav, toggleNav } from '../chep-dashboard/dashboard-nav.js';
 import { EQUIPMENT_PRODUCTS } from './equipment-products.js';
 import { DELIVERY_SITES, findSiteById, getSiteSearchLabel } from './sites.js';
 import {
@@ -974,11 +976,70 @@ function attachInputListeners(block, state) {
 }
 
 /* ------------------------------------------------------------------
+   Shell (nav + topbar + content) — matches orders/invoices/dashboard layout
+   ------------------------------------------------------------------ */
+function buildTopBar(navElement) {
+  const topBar = document.createElement('div');
+  topBar.className = 'order-new-delivery__topbar';
+  topBar.innerHTML = `
+    <button class="order-new-delivery__menu-btn" aria-label="Toggle navigation" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <div class="order-new-delivery__topbar-copy">
+      <span class="order-new-delivery__eyebrow">Customer Portal</span>
+      <h1 class="order-new-delivery__page-title">Order New Delivery</h1>
+    </div>
+    <a class="order-new-delivery__account-link" href="${rootLink(CUSTOMER_ACCOUNT_PATH)}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span class="order-new-delivery__account-name">My Account</span>
+    </a>
+  `;
+
+  topBar.querySelector('.order-new-delivery__menu-btn')
+    .addEventListener('click', () => toggleNav(navElement));
+
+  return topBar;
+}
+
+function renderShell(block) {
+  document.body.classList.add('dashboard-page');
+  block.innerHTML = '';
+  block.classList.add('order-new-delivery', 'order-new-delivery-shell');
+
+  const nav = buildNav(window.location.pathname);
+  block.appendChild(nav);
+
+  const main = document.createElement('div');
+  main.className = 'order-new-delivery__main';
+
+  const topBar = buildTopBar(nav);
+  main.appendChild(topBar);
+
+  const page = document.createElement('div');
+  page.className = 'order-new-delivery__page';
+  const wizardContainer = document.createElement('div');
+  wizardContainer.className = 'order-new-delivery__wizard order-new-delivery-container';
+  wizardContainer.dataset.siteListId = block.dataset.siteListId;
+  page.appendChild(wizardContainer);
+  main.appendChild(page);
+  block.appendChild(main);
+
+  return wizardContainer;
+}
+
+/* ------------------------------------------------------------------
    Main render
    ------------------------------------------------------------------ */
-function renderBlock(block, state) {
+function renderBlock(wizardContainer, state) {
   if (!checkIsAuthenticated()) {
-    block.innerHTML = `
+    wizardContainer.innerHTML = `
       <div class="ond-signin">
         <h2>Order New Delivery</h2>
         <p>You need an authenticated customer session before placing a delivery order.</p>
@@ -988,22 +1049,22 @@ function renderBlock(block, state) {
     return;
   }
 
-  const siteListId = block.dataset.siteListId;
+  const siteListId = wizardContainer.dataset.siteListId;
 
-  block.innerHTML = state.submitResult
+  wizardContainer.innerHTML = state.submitResult
     ? renderConfirmation(state)
     : renderWizard(state, siteListId);
 
   if (!state.submitResult) {
-    attachInputListeners(block, state);
+    attachInputListeners(wizardContainer, state);
   } else {
     // Attach new-order button on confirmation screen
-    const newOrderButton = block.querySelector('[data-new-order]');
+    const newOrderButton = wizardContainer.querySelector('[data-new-order]');
     if (newOrderButton) {
       newOrderButton.addEventListener('click', () => {
         const freshState = createInitialState();
         freshState.ui = {};
-        renderBlock(block, freshState);
+        renderBlock(wizardContainer, freshState);
       });
     }
   }
@@ -1022,5 +1083,6 @@ export default async function decorate(block) {
     state.data.siteSearch = getSiteSearchLabel(selectedSite);
   }
 
-  renderBlock(block, state);
+  const wizardContainer = renderShell(block);
+  renderBlock(wizardContainer, state);
 }

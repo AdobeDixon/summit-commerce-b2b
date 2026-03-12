@@ -65,7 +65,7 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       label: 'Active Orders',
       value: isAuthenticated ? kpis.activeOrders : '—',
       subtitle: 'orders',
-      href: '/customer/orders',
+      href: '/order-list',
     },
     {
       id: 'delivering-today',
@@ -75,7 +75,7 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       value: isAuthenticated ? kpis.deliveringToday : '—',
       subtitle: 'deliveries',
       note: 'proxy: processing orders today',
-      href: '/customer/orders',
+      href: '/order-list',
     },
     {
       id: 'pickup-orders',
@@ -85,7 +85,7 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       value: isAuthenticated ? kpis.pickupOrders : '—',
       subtitle: 'pending equipment',
       note: 'proxy: pending status orders',
-      href: '/customer/orders',
+      href: '/order-list',
     },
     {
       id: 'low-stock',
@@ -103,7 +103,7 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       label: 'Equipment Types',
       value: kpis.equipmentTypes,
       subtitle: 'pallet formats',
-      href: '/order-new-delivery',
+      href: '/order',
     },
   ];
 }

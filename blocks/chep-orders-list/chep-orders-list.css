@@ -1,0 +1,642 @@
+/* Shared dashboard shell – matches invoices block theme */
+.dashboard-page {
+  display: block;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+body.dashboard-page > header,
+body.dashboard-page > footer {
+  display: none !important;
+}
+
+body.dashboard-page > main {
+  display: flex;
+  height: 100dvh;
+  width: 100%;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  grid-row: unset;
+}
+
+body.dashboard-page main > .section {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100%;
+}
+
+body.dashboard-page main > .section > div {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.chep-orders-list-shell {
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #f0f2f5;
+  color: #1f2933;
+  font-family: adobe-clean, Inter, -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chep-orders-list-shell *,
+.chep-orders-list-shell *::before,
+.chep-orders-list-shell *::after {
+  box-sizing: border-box;
+}
+
+.chep-orders-list__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chep-orders-list__topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e4e7eb;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+  flex-shrink: 0;
+}
+
+.chep-orders-list__menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+}
+
+.chep-orders-list__menu-btn:hover {
+  background: #f0f2f5;
+  color: #005eb8;
+}
+
+.chep-orders-list__topbar-copy {
+  min-width: 0;
+}
+
+.chep-orders-list__eyebrow {
+  display: block;
+  color: #6b7785;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chep-orders-list__page-title {
+  margin: 0;
+  color: #1f2933;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.chep-orders-list__account-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #475569;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chep-orders-list__account-link:hover {
+  color: #005eb8;
+}
+
+.chep-orders-list__page {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+}
+
+.chep-nav {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  min-width: 240px;
+  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  overflow: hidden auto;
+  flex-shrink: 0;
+  z-index: 200;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 20%) transparent;
+}
+
+.chep-nav__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  z-index: 199;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.chep-nav__overlay--visible {
+  opacity: 1;
+}
+
+.chep-nav__logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chep-nav__logo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+.chep-nav__logo-link:hover,
+.chep-nav__logo-link:focus {
+  opacity: 1;
+  background: transparent !important;
+  outline: none;
+}
+
+.chep-nav__logo-img {
+  display: block;
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+  max-height: 88px;
+  object-fit: contain;
+  mix-blend-mode: lighten;
+}
+
+.chep-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0;
+  flex: 1;
+}
+
+.chep-nav__item {
+  margin: 2px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chep-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: rgb(255 255 255 / 75%) !important;
+  text-decoration: none !important;
+  font-size: 14px;
+  transition: background 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+
+.chep-nav__link:hover {
+  background: rgb(255 255 255 / 10%);
+  color: #fff !important;
+}
+
+.chep-nav__item--active .chep-nav__link {
+  background: rgb(255 255 255 / 15%);
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.chep-nav__item--active .chep-nav__link::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 28px;
+  background: #f07800;
+  border-radius: 0 3px 3px 0;
+}
+
+.chep-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.chep-nav__label {
+  flex: 1;
+}
+
+.chep-nav__active-indicator {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.chep-nav__footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+}
+
+.chep-nav__footer-text {
+  display: block;
+  color: rgb(255 255 255 / 50%);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chep-nav__footer-sub {
+  display: block;
+  margin-top: 3px;
+  color: rgb(255 255 255 / 35%);
+  font-size: 11px;
+}
+
+.chep-orders-list {
+  width: 100%;
+}
+
+.chep-orders-list__card {
+  background: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  box-shadow: var(--shape-shadow-card);
+  overflow: hidden;
+}
+
+.chep-orders-list__hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-medium);
+  overflow: hidden;
+  padding: var(--spacing-medium) var(--spacing-big);
+  border-radius: var(--shape-border-radius-card) var(--shape-border-radius-card) 0 0;
+  background:
+    radial-gradient(circle at top right, rgb(255 255 255 / 10%), transparent 32%),
+    linear-gradient(135deg, var(--color-surface-dark) 0%, var(--color-brand-600) 58%, var(--color-brand-500) 100%);
+  color: var(--color-neutral-50);
+  box-shadow: var(--shape-shadow-card);
+}
+
+.chep-orders-list__hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-500), var(--color-teal-500));
+}
+
+.chep-orders-list__hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.chep-orders-list__hero-eyebrow {
+  display: inline-flex;
+  margin-bottom: var(--spacing-xxsmall);
+  color: rgb(255 255 255 / 75%);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+}
+
+.chep-orders-list__hero-title {
+  margin: 0;
+  color: var(--color-neutral-50);
+  font-size: 2.6rem;
+  line-height: 1.15;
+}
+
+.chep-orders-list__hero-text {
+  max-width: 68ch;
+  margin: var(--spacing-xsmall) 0 0;
+  color: rgb(255 255 255 / 78%);
+  font: var(--type-body-2-default-font);
+}
+
+.chep-orders-list__hero-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 8%);
+  color: var(--color-neutral-50);
+  font: var(--type-details-caption-1-font);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.chep-orders-list__content {
+  background: var(--color-neutral-50);
+}
+
+.chep-orders-list__table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chep-orders-list__table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.chep-orders-list__table thead th {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+  padding: var(--spacing-small) var(--spacing-medium);
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+
+.chep-orders-list__row {
+  border-bottom: 1px solid var(--color-neutral-200);
+  transition: background-color 0.12s ease;
+}
+
+.chep-orders-list__row:last-child {
+  border-bottom: none;
+}
+
+.chep-orders-list__row:hover {
+  background: var(--color-neutral-100);
+}
+
+.chep-orders-list__row td {
+  padding: var(--spacing-small) var(--spacing-medium);
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+  vertical-align: middle;
+}
+
+.chep-orders-list__order-link {
+  color: var(--color-brand-500);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.chep-orders-list__order-link:hover {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chep-orders-list__location {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.chep-orders-list__product-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chep-orders-list__pallet-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.chep-orders-list__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.65em;
+  border-radius: 999px;
+  font: var(--type-details-caption-1-font);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chep-orders-list__status[data-status="positive"],
+.chep-orders-list__status[data-status="complete"] {
+  background: var(--color-positive-200);
+  color: var(--color-positive-500);
+}
+
+.chep-orders-list__status[data-status="warning"],
+.chep-orders-list__status[data-status="pending"] {
+  background: var(--color-informational-200);
+  color: var(--color-informational-500);
+}
+
+.chep-orders-list__status[data-status="info"] {
+  background: var(--color-informational-200);
+  color: var(--color-informational-500);
+}
+
+.chep-orders-list__status[data-status="alert"],
+.chep-orders-list__status[data-status="canceled"] {
+  background: var(--color-alert-200);
+  color: var(--color-alert-500);
+}
+
+.chep-orders-list__status[data-status="neutral"] {
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-700);
+}
+
+.chep-orders-list__view,
+.chep-orders-list__load-more,
+.chep-orders-list__retry,
+.chep-orders-list__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-neutral-300);
+  background: var(--color-neutral-50);
+  color: var(--color-brand-500);
+  cursor: pointer;
+  font: var(--type-button-2-font);
+  text-decoration: none;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.chep-orders-list__view:hover,
+.chep-orders-list__load-more:hover,
+.chep-orders-list__retry:hover,
+.chep-orders-list__cta:hover {
+  background: var(--color-neutral-100);
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-600);
+}
+
+.chep-orders-list__load-more:disabled,
+.chep-orders-list__retry:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.chep-orders-list__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-small);
+  flex-wrap: wrap;
+  padding: var(--spacing-medium) var(--spacing-large);
+  border-top: 1px solid var(--color-neutral-300);
+}
+
+.chep-orders-list__footer-message {
+  margin: 0;
+  color: var(--color-alert-500);
+  font: var(--type-details-caption-2-font);
+}
+
+.chep-orders-list__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-small);
+  min-height: 220px;
+  padding: var(--spacing-large);
+  text-align: center;
+}
+
+.chep-orders-list__state-message {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+}
+
+.chep-orders-list__skeleton-line {
+  display: block;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--color-neutral-200) 25%,
+      var(--color-neutral-100) 50%,
+      var(--color-neutral-200) 75%
+    );
+  background-size: 200% 100%;
+  animation: chep-orders-list-shimmer 1.3s infinite linear;
+  width: 70%;
+  height: 0.9rem;
+}
+
+@keyframes chep-orders-list-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.chep-orders-list__view:focus-visible,
+.chep-orders-list__load-more:focus-visible,
+.chep-orders-list__retry:focus-visible,
+.chep-orders-list__order-link:focus-visible,
+.chep-orders-list__cta:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  .chep-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    transform: translateX(-100%);
+  }
+
+  .chep-nav--open {
+    transform: translateX(0);
+  }
+
+  .chep-nav__overlay {
+    display: block;
+  }
+
+  .chep-orders-list__menu-btn {
+    display: inline-flex;
+  }
+
+  .chep-orders-list__topbar {
+    padding: 0 16px;
+  }
+
+  .chep-orders-list__page {
+    padding: 16px;
+  }
+
+  .chep-orders-list__hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chep-orders-list__table {
+    min-width: 680px;
+  }
+
+  .chep-orders-list__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chep-orders-list__account-name {
+    display: none;
+  }
+}
