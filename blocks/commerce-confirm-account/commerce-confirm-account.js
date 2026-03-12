@@ -4,7 +4,6 @@ import * as authApi from '@dropins/storefront-auth/api.js';
 import { render as authRenderer } from '@dropins/storefront-auth/render.js';
 import { Button, provider as UI } from '@dropins/tools/components.js';
 import {
-  CUSTOMER_ACCOUNT_PATH,
   CUSTOMER_FORGOTPASSWORD_PATH,
   checkIsAuthenticated,
   rootLink,
@@ -15,7 +14,7 @@ import '../../scripts/initializers/auth.js';
 
 export default async function decorate(block) {
   if (checkIsAuthenticated()) {
-    window.location.href = rootLink(CUSTOMER_ACCOUNT_PATH);
+    window.location.href = rootLink('/');
   } else {
     await authRenderer.render(SignIn, {
       enableEmailConfirmation: true,
@@ -36,10 +35,10 @@ export default async function decorate(block) {
                 const primaryBtn = document.createElement('div');
 
                 UI.render(Button, {
-                  children: 'My Account',
+                  children: 'Home',
 
                   onClick: () => {
-                    window.location.href = rootLink(CUSTOMER_ACCOUNT_PATH);
+                    window.location.href = rootLink('/');
                   },
                 })(primaryBtn);
 

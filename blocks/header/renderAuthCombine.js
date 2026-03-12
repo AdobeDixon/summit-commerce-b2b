@@ -16,6 +16,7 @@ import {
 const signInFormConfig = {
   renderSignUpLink: true,
   routeForgotPassword: () => rootLink(CUSTOMER_FORGOTPASSWORD_PATH),
+  routeRedirectOnSignIn: () => rootLink('/'),
   slots: {
     SuccessNotification: (ctx) => {
       const userName = ctx?.isSuccessful?.userName || '';
@@ -32,10 +33,10 @@ const signInFormConfig = {
             const primaryBtn = document.createElement('div');
 
             UI.render(Button, {
-              children: 'My Account',
+              children: 'Home',
 
               onClick: () => {
-                window.location.href = rootLink(CUSTOMER_ACCOUNT_PATH);
+                window.location.href = rootLink('/');
               },
             })(primaryBtn);
 
@@ -67,7 +68,7 @@ const signInFormConfig = {
 
 const signUpFormConfig = {
   routeSignIn: () => rootLink(CUSTOMER_LOGIN_PATH),
-  routeRedirectOnSignIn: () => rootLink(CUSTOMER_ACCOUNT_PATH),
+  routeRedirectOnSignIn: () => rootLink('/'),
   isAutoSignInEnabled: false,
   slots: {
     SuccessNotification: (ctx) => {

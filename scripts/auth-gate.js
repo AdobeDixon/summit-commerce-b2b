@@ -3,7 +3,7 @@
  *
  * Runs before any protected content is rendered. Unauthenticated users
  * attempting to access protected paths are redirected to login with returnUrl.
- * Authenticated users on auth pages are redirected to the dashboard.
+ * Authenticated users on auth pages are redirected to the home page.
  */
 
 import { getRootPath } from '@dropins/tools/lib/aem/configs.js';
@@ -11,7 +11,6 @@ import {
   checkIsAuthenticated,
   rootLink,
   CUSTOMER_LOGIN_PATH,
-  CUSTOMER_ACCOUNT_PATH,
   CUSTOMER_FORGOTPASSWORD_PATH,
 } from './commerce.js';
 
@@ -141,7 +140,7 @@ export function isAuthOnlyPath() {
 }
 
 /**
- * Gets the redirect URL after successful login (returnUrl or dashboard).
+ * Gets the redirect URL after successful login (returnUrl or home page).
  * @returns {string}
  */
 export function getPostLoginRedirectUrl() {
@@ -150,7 +149,7 @@ export function getPostLoginRedirectUrl() {
   if (returnUrl && returnUrl.startsWith('/') && !returnUrl.includes('/customer/login')) {
     return rootLink(returnUrl);
   }
-  return rootLink(CUSTOMER_ACCOUNT_PATH);
+  return rootLink('/');
 }
 
 /**

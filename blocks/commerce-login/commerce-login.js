@@ -1,7 +1,6 @@
 import { SignIn } from '@dropins/storefront-auth/containers/SignIn.js';
 import { render as authRenderer } from '@dropins/storefront-auth/render.js';
 import {
-  CUSTOMER_ACCOUNT_PATH,
   CUSTOMER_CREATE_PATH,
   CUSTOMER_FORGOTPASSWORD_PATH,
   checkIsAuthenticated,
@@ -38,7 +37,7 @@ function buildAuthSplitLayout(block) {
 
 export default async function decorate(block) {
   if (checkIsAuthenticated()) {
-    window.location.href = rootLink(CUSTOMER_ACCOUNT_PATH);
+    window.location.href = rootLink('/');
     return;
   }
 
