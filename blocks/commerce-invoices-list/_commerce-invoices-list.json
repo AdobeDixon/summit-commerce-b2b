@@ -1,0 +1,23 @@
+{
+  "definitions": [{
+    "title": "Commerce Invoices List",
+    "id": "commerce-invoices-list",
+    "model": "commerce-invoices-list",
+    "plugins": {
+      "da": {
+        "type": "key-value-block"
+      }
+    }
+  }],
+  "models": [{
+    "id": "commerce-invoices-list",
+    "fields": [
+      {
+        "component": "number",
+        "name": "page-size",
+        "label": "Page Size"
+      }
+    ]
+  }],
+  "filters": []
+}

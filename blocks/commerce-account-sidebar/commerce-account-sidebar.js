@@ -1,9 +1,17 @@
 import { Icon, provider as UI } from '@dropins/tools/components.js';
 import { render as accountRenderer } from '@dropins/storefront-account/render.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { loadCSS } from '../../scripts/aem.js';
 import { CUSTOMER_ORDERS_PATH, rootLink } from '../../scripts/commerce.js';
+import { isAccountPage, isAccountLayoutApplied, applyAccountLayout } from '../commerce-account-header/account-layout.js';
 
 export default async function decorate(block) {
+  /* Apply dashboard-style layout on customer pages (fallback when header not present) */
+  if (isAccountPage() && !isAccountLayoutApplied()) {
+    await loadCSS(`${window.hlx.codeBasePath}/blocks/commerce-account-header/commerce-account-header.css`);
+    await applyAccountLayout();
+  }
+
   const fragment = await loadFragment('/customer/sidebar-fragment');
   const sidebarItemsConfig = fragment.querySelectorAll('.default-content-wrapper > ol > li');
   const sidebarItems = Array.from(sidebarItemsConfig).map((item) => {

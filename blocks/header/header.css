@@ -177,10 +177,14 @@ header nav .nav-brand a:hover {
   color: var(--color-brand-600);
 }
 
-header nav .nav-brand img {
-  width: 140px;
+header nav .nav-brand img,
+header nav .nav-brand .nav-brand-logo {
+  width: 220px;
   height: auto;
-  /* No filter — logo renders at its natural colour on white background */
+  max-height: 72px;
+  object-fit: contain;
+  display: block;
+  filter: invert(1); /* Inverts white-on-black logo to black-on-transparent for light header */
 }
 
 li.nav-drop img {

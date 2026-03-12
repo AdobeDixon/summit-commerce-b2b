@@ -1,31 +1,43 @@
 /* ── Account Sidebar ─────────────────────────────────────── */
+
+/* Sidebar card container */
+.commerce-account-sidebar-wrapper {
+  background-color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: var(--shape-shadow-card);
+  overflow: hidden;
+  padding: var(--spacing-small) 0;
+}
+
 .commerce-account-sidebar-wrapper .commerce-account-sidebar {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xxsmall);
+  gap: 2px;
 }
 
 .commerce-account-sidebar-wrapper .commerce-account-sidebar .commerce-account-sidebar-item {
   display: flex;
   align-items: center;
   padding: var(--spacing-small) var(--spacing-medium);
-  border: 1px solid transparent;
-  border-radius: var(--shape-border-radius-2);
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 0;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
   gap: var(--spacing-small);
   background-color: transparent;
 }
 
 .commerce-account-sidebar-wrapper .commerce-account-sidebar .commerce-account-sidebar-item:hover {
   background-color: var(--color-neutral-100);
-  border-color: var(--color-neutral-300);
+  border-left-color: var(--color-neutral-300);
   text-decoration: none;
 }
 
 .commerce-account-sidebar-wrapper .commerce-account-sidebar .commerce-account-sidebar-item-active {
   background-color: var(--color-informational-200);
-  border-color: var(--color-brand-500);
+  border-left-color: var(--color-brand-500);
   color: var(--color-brand-500);
 }
 

@@ -1,20 +1,28 @@
 /* ── Account Header ──────────────────────────────────────── */
 body.columns main > .section > div.commerce-account-header-wrapper {
   margin-bottom: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
-/* Premium portal page header */
+/* Portal page header — compact dashboard style */
 .commerce-account-header {
-  background: linear-gradient(135deg, var(--color-surface-dark) 0%, var(--color-brand-500) 100%);
+  background: linear-gradient(135deg, var(--color-surface-dark) 0%, var(--color-brand-600) 60%, var(--color-brand-500) 100%);
   color: var(--color-neutral-50);
-  padding: var(--spacing-big) var(--spacing-big);
+  padding: var(--spacing-medium) var(--spacing-big);
   border-radius: var(--shape-border-radius-card);
-  margin-bottom: var(--spacing-big);
+  margin-bottom: var(--spacing-medium);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 96px;
 }
 
-/* Subtle decorative element */
+/* Decorative accent stripe */
 .commerce-account-header::after {
   content: '';
   position: absolute;
@@ -25,6 +33,19 @@ body.columns main > .section > div.commerce-account-header-wrapper {
   background: linear-gradient(90deg, var(--color-accent-500), var(--color-teal-500));
 }
 
+/* Subtle geometric texture */
+.commerce-account-header::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 4%);
+  pointer-events: none;
+}
+
 .commerce-account-header h1,
 .commerce-account-header h2,
 .commerce-account-header p {
@@ -33,26 +54,353 @@ body.columns main > .section > div.commerce-account-header-wrapper {
 }
 
 .commerce-account-header h1 {
-  font-size: 2.4rem;
+  font-size: 2.8rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.01em;
+  color: #fff;
+  text-transform: none;
+}
+
+.commerce-account-header h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
 }
 
 .commerce-account-header p {
-  color: rgb(255 255 255 / 75%);
+  color: rgb(255 255 255 / 72%);
   font: var(--type-body-2-default-font);
-  margin-top: var(--spacing-xxsmall);
+  margin-top: 4px;
 }
 
 /* Dropin account header title styles */
 .commerce-account-header .dropin-header-container__title {
   color: var(--color-neutral-50);
-  font-size: 2.4rem;
+  font-size: 2.8rem;
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .commerce-account-header .dropin-header-container__description {
-  color: rgb(255 255 255 / 75%);
+  color: rgb(255 255 255 / 72%);
   font: var(--type-body-2-default-font);
+  margin-top: 4px;
+}
+
+/* ── Account Page Shell (dashboard layout with My Account nav only) ──────── */
+
+body.account-page {
+  display: block;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+body.account-page > header,
+body.account-page > footer {
+  display: none !important;
+}
+
+body.account-page main {
+  display: flex;
+  flex-direction: row;
+  height: 100dvh;
+  width: 100%;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.account-page main > .chep-nav {
+  flex-shrink: 0;
+}
+
+body.account-page .commerce-account-shell__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+body.account-page .commerce-account-shell__topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e4e7eb;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+  flex-shrink: 0;
+}
+
+body.account-page .commerce-account-shell__menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+}
+
+body.account-page .commerce-account-shell__menu-btn:hover {
+  background: #f0f2f5;
+  color: #005eb8;
+}
+
+body.account-page .commerce-account-shell__eyebrow {
+  display: block;
+  color: #6b7785;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.account-page .commerce-account-shell__page-title {
+  margin: 0;
+  color: #1f2933;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+body.account-page .commerce-account-shell__account-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #475569;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+body.account-page .commerce-account-shell__account-link:hover {
+  color: #005eb8;
+}
+
+body.account-page .commerce-account-shell__content {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+  background: #f0f2f5;
+}
+
+/* Hide the old sidebar and account nav – left nav is the only navigation */
+body.account-page .commerce-account-sidebar-wrapper,
+body.account-page .commerce-account-nav-wrapper,
+body.account-page .commerce-account-nav {
+  display: none !important;
+}
+
+/* Content area sections – single column layout */
+body.account-page .commerce-account-shell__content .section {
+  flex: 1;
+  min-width: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100%;
+}
+
+body.account-page .commerce-account-shell__content .section > div {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  body.account-page .commerce-account-shell__menu-btn {
+    display: inline-flex;
+  }
+
+  body.account-page .commerce-account-shell__topbar {
+    padding: 0 16px;
+  }
+
+  body.account-page .commerce-account-shell__content {
+    padding: 16px;
+  }
+
+  body.account-page .commerce-account-shell__account-name {
+    display: none;
+  }
+}
+
+/* ── chep-nav (shared with dashboard/company-users – needed when they don't load) ── */
+
+body.account-page .chep-nav {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  min-width: 240px;
+  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  overflow: hidden auto;
+  flex-shrink: 0;
+  z-index: 200;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 20%) transparent;
+}
+
+body.account-page .chep-nav__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  z-index: 199;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+body.account-page .chep-nav__overlay--visible {
+  opacity: 1;
+}
+
+body.account-page .chep-nav__logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.account-page .chep-nav__logo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+body.account-page .chep-nav__logo-link:hover,
+body.account-page .chep-nav__logo-link:focus {
+  opacity: 1;
+  background: transparent !important;
+  outline: none;
+}
+
+body.account-page .chep-nav__logo-img {
+  display: block;
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+  max-height: 88px;
+  object-fit: contain;
+  mix-blend-mode: lighten; /* Makes black background transparent, white logo visible */
+}
+
+body.account-page .chep-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0;
+  flex: 1;
+}
+
+body.account-page .chep-nav__item {
+  margin: 2px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+body.account-page .chep-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: rgb(255 255 255 / 75%) !important;
+  text-decoration: none !important;
+  font-size: 14px;
+  transition: background 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+
+body.account-page .chep-nav__link:hover {
+  background: rgb(255 255 255 / 10%);
+  color: #fff !important;
+}
+
+body.account-page .chep-nav__item--active .chep-nav__link {
+  background: rgb(255 255 255 / 15%);
+  color: #fff !important;
+  font-weight: 600;
+}
+
+body.account-page .chep-nav__item--active .chep-nav__link::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 28px;
+  background: #f07800;
+  border-radius: 0 3px 3px 0;
+}
+
+body.account-page .chep-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+body.account-page .chep-nav__label {
+  flex: 1;
+}
+
+body.account-page .chep-nav__active-indicator {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+body.account-page .chep-nav__footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+}
+
+body.account-page .chep-nav__footer-text {
+  display: block;
+  color: rgb(255 255 255 / 50%);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.account-page .chep-nav__footer-sub {
+  display: block;
+  margin-top: 3px;
+  color: rgb(255 255 255 / 35%);
+  font-size: 11px;
+}
+
+@media (max-width: 767px) {
+  body.account-page .chep-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    transform: translateX(-100%);
+  }
+
+  body.account-page .chep-nav--open {
+    transform: translateX(0);
+  }
+
+  body.account-page .chep-nav__overlay {
+    display: block;
+  }
 }

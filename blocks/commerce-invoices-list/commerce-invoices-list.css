@@ -1,0 +1,626 @@
+.dashboard-page {
+  display: block;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+body.dashboard-page > header,
+body.dashboard-page > footer {
+  display: none !important;
+}
+
+body.dashboard-page > main {
+  display: flex;
+  height: 100dvh;
+  width: 100%;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  grid-row: unset;
+}
+
+body.dashboard-page main > .section {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100%;
+}
+
+body.dashboard-page main > .section > div {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.commerce-invoices-shell {
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #f0f2f5;
+  color: #1f2933;
+  font-family: adobe-clean, Inter, -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.commerce-invoices-shell *,
+.commerce-invoices-shell *::before,
+.commerce-invoices-shell *::after {
+  box-sizing: border-box;
+}
+
+.commerce-invoices-shell__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.commerce-invoices-shell__topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e4e7eb;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+  flex-shrink: 0;
+}
+
+.commerce-invoices-shell__menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+}
+
+.commerce-invoices-shell__menu-btn:hover {
+  background: #f0f2f5;
+  color: #005eb8;
+}
+
+.commerce-invoices-shell__topbar-copy {
+  min-width: 0;
+}
+
+.commerce-invoices-shell__eyebrow {
+  display: block;
+  color: #6b7785;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.commerce-invoices-shell__page-title {
+  margin: 0;
+  color: #1f2933;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.commerce-invoices-shell__account-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #475569;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.commerce-invoices-shell__account-link:hover {
+  color: #005eb8;
+}
+
+.commerce-invoices-shell__page {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+}
+
+.chep-nav {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  min-width: 240px;
+  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  overflow: hidden auto;
+  flex-shrink: 0;
+  z-index: 200;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 20%) transparent;
+}
+
+.chep-nav__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  z-index: 199;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.chep-nav__overlay--visible {
+  opacity: 1;
+}
+
+.chep-nav__logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chep-nav__logo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+.chep-nav__logo-link:hover,
+.chep-nav__logo-link:focus {
+  opacity: 1;
+  background: transparent !important;
+  outline: none;
+}
+
+.chep-nav__logo-img {
+  display: block;
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+  max-height: 88px;
+  object-fit: contain;
+  mix-blend-mode: lighten; /* Makes black background transparent, white logo visible */
+}
+
+.chep-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0;
+  flex: 1;
+}
+
+.chep-nav__item {
+  margin: 2px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chep-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: rgb(255 255 255 / 75%) !important;
+  text-decoration: none !important;
+  font-size: 14px;
+  transition: background 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+
+.chep-nav__link:hover {
+  background: rgb(255 255 255 / 10%);
+  color: #fff !important;
+}
+
+.chep-nav__item--active .chep-nav__link {
+  background: rgb(255 255 255 / 15%);
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.chep-nav__item--active .chep-nav__link::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 28px;
+  background: #f07800;
+  border-radius: 0 3px 3px 0;
+}
+
+.chep-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.chep-nav__label {
+  flex: 1;
+}
+
+.chep-nav__active-indicator {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.chep-nav__footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+}
+
+.chep-nav__footer-text {
+  display: block;
+  color: rgb(255 255 255 / 50%);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chep-nav__footer-sub {
+  display: block;
+  margin-top: 3px;
+  color: rgb(255 255 255 / 35%);
+  font-size: 11px;
+}
+
+.commerce-invoices-list {
+  width: 100%;
+}
+
+.commerce-invoices-list__card {
+  background: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  box-shadow: var(--shape-shadow-card);
+  overflow: hidden;
+}
+
+.commerce-invoices-list__hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-medium);
+  overflow: hidden;
+  padding: var(--spacing-medium) var(--spacing-big);
+  border-radius: var(--shape-border-radius-card) var(--shape-border-radius-card) 0 0;
+  background:
+    radial-gradient(circle at top right, rgb(255 255 255 / 10%), transparent 32%),
+    linear-gradient(135deg, var(--color-surface-dark) 0%, var(--color-brand-600) 58%, var(--color-brand-500) 100%);
+  color: var(--color-neutral-50);
+  box-shadow: var(--shape-shadow-card);
+}
+
+.commerce-invoices-list__hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-500), var(--color-teal-500));
+}
+
+.commerce-invoices-list__hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.commerce-invoices-list__hero-eyebrow {
+  display: inline-flex;
+  margin-bottom: var(--spacing-xxsmall);
+  color: rgb(255 255 255 / 75%);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+}
+
+.commerce-invoices-list__hero-title {
+  margin: 0;
+  color: var(--color-neutral-50);
+  font-size: 2.6rem;
+  line-height: 1.15;
+}
+
+.commerce-invoices-list__hero-text {
+  max-width: 68ch;
+  margin: var(--spacing-xsmall) 0 0;
+  color: rgb(255 255 255 / 78%);
+  font: var(--type-body-2-default-font);
+}
+
+.commerce-invoices-list__hero-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 8%);
+  color: var(--color-neutral-50);
+  font: var(--type-details-caption-1-font);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.commerce-invoices-list__content {
+  background: var(--color-neutral-50);
+}
+
+.commerce-invoices-list__table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.commerce-invoices-list__table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.commerce-invoices-list__table thead th {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+  padding: var(--spacing-small) var(--spacing-medium);
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+
+.commerce-invoices-list__row {
+  border-bottom: 1px solid var(--color-neutral-200);
+  transition: background-color 0.12s ease;
+}
+
+.commerce-invoices-list__row:last-child {
+  border-bottom: none;
+}
+
+.commerce-invoices-list__row:hover {
+  background: var(--color-neutral-100);
+}
+
+.commerce-invoices-list__row td {
+  padding: var(--spacing-small) var(--spacing-medium);
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+  vertical-align: middle;
+}
+
+.commerce-invoices-list__invoice-number,
+.commerce-invoices-list__order-link {
+  color: var(--color-brand-500);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.commerce-invoices-list__order-link:hover {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.commerce-invoices-list__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.65em;
+  border-radius: 999px;
+  font: var(--type-details-caption-1-font);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.commerce-invoices-list__status[data-status="complete"] {
+  background: var(--color-positive-200);
+  color: var(--color-positive-500);
+}
+
+.commerce-invoices-list__status[data-status="pending"] {
+  background: var(--color-informational-200);
+  color: var(--color-informational-500);
+}
+
+.commerce-invoices-list__status[data-status="canceled"] {
+  background: var(--color-alert-200);
+  color: var(--color-alert-500);
+}
+
+.commerce-invoices-list__status[data-status="neutral"] {
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-700);
+}
+
+.commerce-invoices-list__download,
+.commerce-invoices-list__load-more,
+.commerce-invoices-list__retry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-neutral-300);
+  background: var(--color-neutral-50);
+  color: var(--color-brand-500);
+  cursor: pointer;
+  font: var(--type-button-2-font);
+  text-decoration: none;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.commerce-invoices-list__download:hover,
+.commerce-invoices-list__load-more:hover,
+.commerce-invoices-list__retry:hover {
+  background: var(--color-neutral-100);
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-600);
+}
+
+.commerce-invoices-list__download:disabled,
+.commerce-invoices-list__load-more:disabled,
+.commerce-invoices-list__retry:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.commerce-invoices-list__action-disabled {
+  color: var(--color-neutral-600);
+  font: var(--type-details-caption-1-font);
+}
+
+.commerce-invoices-list__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-small);
+  flex-wrap: wrap;
+  padding: var(--spacing-medium) var(--spacing-large);
+  border-top: 1px solid var(--color-neutral-300);
+}
+
+.commerce-invoices-list__footer-message {
+  margin: 0;
+  color: var(--color-alert-500);
+  font: var(--type-details-caption-2-font);
+}
+
+.commerce-invoices-list__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-small);
+  min-height: 220px;
+  padding: var(--spacing-large);
+  text-align: center;
+}
+
+.commerce-invoices-list__state-message {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+}
+
+.commerce-invoices-list__skeleton-line,
+.commerce-invoices-list__skeleton-button {
+  display: block;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--color-neutral-200) 25%,
+      var(--color-neutral-100) 50%,
+      var(--color-neutral-200) 75%
+    );
+  background-size: 200% 100%;
+  animation: commerce-invoices-list-shimmer 1.3s infinite linear;
+}
+
+.commerce-invoices-list__skeleton-line {
+  width: 70%;
+  height: 0.9rem;
+}
+
+.commerce-invoices-list__skeleton-button {
+  width: 7rem;
+  height: 2.25rem;
+}
+
+@keyframes commerce-invoices-list-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.commerce-invoices-list__download:focus-visible,
+.commerce-invoices-list__load-more:focus-visible,
+.commerce-invoices-list__retry:focus-visible,
+.commerce-invoices-list__order-link:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  .chep-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    transform: translateX(-100%);
+  }
+
+  .chep-nav--open {
+    transform: translateX(0);
+  }
+
+  .chep-nav__overlay {
+    display: block;
+  }
+
+  .commerce-invoices-shell__menu-btn {
+    display: inline-flex;
+  }
+
+  .commerce-invoices-shell__topbar {
+    padding: 0 16px;
+  }
+
+  .commerce-invoices-shell__page {
+    padding: 16px;
+  }
+
+  .commerce-invoices-list__hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .commerce-invoices-list__table {
+    min-width: 680px;
+  }
+
+  .commerce-invoices-list__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .commerce-invoices-shell__account-name {
+    display: none;
+  }
+}

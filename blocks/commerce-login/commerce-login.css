@@ -4,7 +4,7 @@ main .commerce-login-container {
   margin: var(--spacing-xxbig) auto;
   width: 100%;
   background-color: var(--color-neutral-50);
-  border: 1px solid var(--color-neutral-300);
+  border: 1px solid var(--color-neutral-200);
   border-radius: var(--shape-border-radius-card);
   box-shadow: var(--shape-shadow-2);
   overflow: hidden;
@@ -52,13 +52,42 @@ main .commerce-login-container input {
   color: var(--color-neutral-800);
   background-color: var(--color-neutral-50);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  margin-bottom: var(--spacing-small);
+  margin-bottom: 0;
 }
 
 main .commerce-login-container input:focus {
   outline: none;
   border-color: var(--color-brand-500);
   box-shadow: 0 0 0 3px rgb(0 48 135 / 12%);
+}
+
+main .commerce-login-container .dropin-field {
+  position: relative;
+  margin-bottom: var(--spacing-medium);
+}
+
+/* Keep typed values clear of floating labels and field icons. */
+main .commerce-login-container .dropin-field input,
+main .commerce-login-container .dropin-field textarea,
+main .commerce-login-container .dropin-field select {
+  min-height: 60px;
+  padding: 1.55rem 3rem 0.45rem 1rem;
+  line-height: 1.2;
+}
+
+main .commerce-login-container .dropin-field input[type="password"] {
+  padding-top: 1.7rem;
+  padding-right: 3.25rem;
+  padding-left: 2.75rem;
+}
+
+main .commerce-login-container .dropin-field__label {
+  margin-bottom: 0 !important;
+  pointer-events: none;
+}
+
+main .commerce-login-container .dropin-field__error {
+  margin-top: 6px !important;
 }
 
 /* Submit button */

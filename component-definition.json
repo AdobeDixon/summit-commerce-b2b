@@ -324,6 +324,16 @@
           }
         },
         {
+          "title": "Commerce Company Users",
+          "id": "commerce-company-users",
+          "model": "commerce-company-users",
+          "plugins": {
+            "da": {
+              "type": "key-value-block"
+            }
+          }
+        },
+        {
           "title": "Commerce Confirm Account",
           "id": "commerce-confirm-account",
           "model": "commerce-confirm-account",
@@ -408,6 +418,16 @@
             "da": {
               "rows": 1,
               "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Commerce Invoices List",
+          "id": "commerce-invoices-list",
+          "model": "commerce-invoices-list",
+          "plugins": {
+            "da": {
+              "type": "key-value-block"
             }
           }
         },

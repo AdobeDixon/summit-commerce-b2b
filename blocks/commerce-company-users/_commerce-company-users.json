@@ -1,0 +1,17 @@
+{
+  "definitions": [{
+    "title": "Commerce Company Users",
+    "id": "commerce-company-users",
+    "model": "commerce-company-users",
+    "plugins": {
+      "da": {
+        "type": "key-value-block"
+      }
+    }
+  }],
+  "models": [{
+    "id": "commerce-company-users",
+    "fields": []
+  }],
+  "filters": []
+}

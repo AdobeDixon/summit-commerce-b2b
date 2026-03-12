@@ -423,6 +423,200 @@ nav[aria-label="Breadcrumb"] a:hover {
   100% { background-position: -200% 0; }
 }
 
+/* ── Portal Panel Section ────────────────────────────────── */
+
+/* White card section on the gray portal background */
+main .section.portal-panel {
+  margin: 0 0 var(--spacing-medium);
+  padding: 0;
+  background: none;
+}
+
+main .section.portal-panel > div {
+  background-color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: var(--shape-shadow-card);
+  padding: var(--spacing-big);
+  max-width: 100%;
+}
+
+/* Section title inside portal-panel */
+main .section.portal-panel > div > h2,
+main .section.portal-panel > div > h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-neutral-800);
+  margin: 0 0 var(--spacing-medium);
+  padding-bottom: var(--spacing-small);
+  border-bottom: 1.5px solid var(--color-neutral-200);
+}
+
+/* ── Portal Dashboard Grid ───────────────────────────────── */
+main .section.portal-dashboard > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-medium);
+  max-width: 100%;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  main .section.portal-dashboard > div {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  main .section.portal-dashboard > div {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Portal Metric / KPI Card ────────────────────────────── */
+main .section.portal-kpis {
+  background: none;
+  margin: 0 0 var(--spacing-medium);
+  padding: 0;
+}
+
+main .section.portal-kpis > div {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-medium);
+  max-width: 100%;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  main .section.portal-kpis > div {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+main .section.portal-kpis .default-content-wrapper {
+  background-color: var(--color-neutral-50);
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: var(--shape-shadow-card);
+  padding: var(--spacing-medium);
+  text-align: center;
+}
+
+main .section.portal-kpis h3,
+main .section.portal-kpis h4 {
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--color-brand-500);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 var(--spacing-xxsmall);
+}
+
+main .section.portal-kpis p {
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-600);
+  margin: 0;
+}
+
+/* Dropin section headings */
+.dropin-design .dropin-section__heading,
+.dropin-design .dropin-heading {
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: var(--color-neutral-800) !important;
+  margin-bottom: var(--spacing-small) !important;
+  padding-bottom: var(--spacing-small) !important;
+  border-bottom: 1.5px solid var(--color-neutral-200) !important;
+}
+
+/* Dropin panel blocks — give a card treatment */
+.dropin-design .dropin-panel,
+.dropin-design .dropin-cart__header,
+.dropin-design .dropin-order-summary__title {
+  font: var(--type-body-1-strong-font) !important;
+  color: var(--color-neutral-800) !important;
+  letter-spacing: 0 !important;
+}
+
+/* ── Dropin Table Enhancements ───────────────────────────── */
+
+/* Dropin-rendered tables (scoped to table element, not loose th/td to avoid collisions) */
+.dropin-design table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-neutral-50);
+  font: var(--type-body-2-default-font);
+  border-radius: var(--shape-border-radius-card);
+  overflow: hidden;
+}
+
+.dropin-design table thead th {
+  background-color: var(--color-neutral-100) !important;
+  color: var(--color-neutral-600) !important;
+  font: var(--type-details-overline-font) !important;
+  letter-spacing: var(--type-details-overline-letter-spacing) !important;
+  text-transform: uppercase !important;
+  padding: var(--spacing-small) var(--spacing-medium) !important;
+  text-align: left !important;
+  border-bottom: 1.5px solid var(--color-neutral-200) !important;
+  white-space: nowrap;
+}
+
+.dropin-design table tbody tr {
+  border-bottom: 1px solid var(--color-neutral-200);
+  transition: background-color 0.1s ease;
+}
+
+.dropin-design table tbody tr:hover {
+  background-color: var(--color-neutral-100);
+}
+
+.dropin-design table tbody td {
+  padding: var(--spacing-small) var(--spacing-medium) !important;
+  color: var(--color-neutral-700) !important;
+  vertical-align: middle !important;
+}
+
+/* ── Status Tags (dropin badge / status pill) ────────────── */
+.dropin-design [class*="status"],
+.dropin-design [class*="badge"] {
+  border-radius: 4px !important;
+  font: var(--type-details-caption-1-font) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* ── Dropin Alert / Notification banner ──────────────────── */
+.dropin-design .dropin-banner,
+.dropin-design .dropin-notification {
+  border-radius: var(--shape-border-radius-2) !important;
+  border: none !important;
+  padding: var(--spacing-small) var(--spacing-medium) !important;
+}
+
+/* ── Section Separator Utility ───────────────────────────── */
+.section-divider {
+  border: none;
+  border-top: 1.5px solid var(--color-neutral-200);
+  margin: var(--spacing-medium) 0;
+}
+
+/* ── Portal Page Heading (dashboard welcome) ─────────────── */
+.portal-page-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--color-neutral-800);
+  margin: 0 0 var(--spacing-xxsmall);
+  letter-spacing: -0.01em;
+}
+
+.portal-page-subtitle {
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-600);
+  margin: 0;
+}
+
 /* ── Print adjustments ───────────────────────────────────── */
 @media print {
   header .nav-wrapper,

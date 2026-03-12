@@ -173,7 +173,8 @@
 
   /* ── Additional tokens ──────────────────────────────────── */
   --type-fixed-font-family: "Roboto Mono", menlo, consolas, "Liberation Mono", monospace;
-  --background-color: var(--color-neutral-50);
+  --background-color: var(--color-neutral-100);
+  --surface-elevated: var(--color-neutral-50);
 
   /* ── Layout ─────────────────────────────────────────────── */
   --nav-height: 6.8rem;
@@ -502,7 +503,7 @@ main img {
 
 /* ── Sections ────────────────────────────────────────────── */
 main > .section {
-  margin: var(--spacing-xxbig) 0;
+  margin: var(--spacing-big) 0;
 }
 
 .section:empty {
@@ -528,7 +529,7 @@ main > .section:first-of-type {
 /* ── Section Variants ────────────────────────────────────── */
 main .section.light,
 main .section.highlight {
-  background-color: var(--color-neutral-100);
+  background-color: var(--color-neutral-50);
   margin: 0;
   padding: var(--spacing-xxbig) 0;
 }
@@ -602,9 +603,9 @@ body.columns main {
   width: 100%;
   max-width: 1264px;
   margin: 0 auto;
-  padding: var(--spacing-large) var(--spacing-small);
+  padding: var(--spacing-medium) var(--spacing-small);
   box-sizing: border-box;
-  gap: var(--grid-4-gutters);
+  gap: var(--spacing-medium);
 }
 
 body.columns main > .section {
@@ -630,7 +631,7 @@ body.columns main > .section:empty {
 
 @media (min-width: 600px) {
   body.columns main {
-    padding: var(--spacing-large) var(--spacing-big);
+    padding: var(--spacing-medium) var(--spacing-big);
   }
 }
 
@@ -713,6 +714,15 @@ main[hidden] {
   color: var(--color-positive-500);
 }
 
+/* ── Portal Card Utility ─────────────────────────────────── */
+.portal-card {
+  background-color: var(--surface-elevated);
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: var(--shape-shadow-card);
+  padding: var(--spacing-big);
+}
+
 /* ── Hero text baseline (loaded synchronously, prevents flash) */
 .hero h1,
 .hero h2 {
@@ -734,4 +744,22 @@ main[hidden] {
 .hero p {
   color: var(--color-neutral-50);
   text-shadow: 0 1px 8px rgb(0 0 0 / 60%);
+}
+
+/* ── Page title: myCHEP ──────────────────────────────────── */
+#mychep {
+  color: #fff !important;
+  font-size: 8rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  text-transform: none !important;
+  margin-top: 0 !important;
+  margin-bottom: var(--spacing-medium) !important;
+}
+
+#mychep strong {
+  color: #fff !important;
+  font-size: inherit !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
 }

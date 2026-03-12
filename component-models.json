@@ -326,6 +326,20 @@
     ]
   },
   {
+    "id": "commerce-company-users",
+    "fields": []
+  },
+  {
+    "id": "commerce-invoices-list",
+    "fields": [
+      {
+        "component": "number",
+        "name": "page-size",
+        "label": "Page Size"
+      }
+    ]
+  },
+  {
     "id": "commerce-mini-cart",
     "fields": [
       {

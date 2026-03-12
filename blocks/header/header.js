@@ -181,10 +181,17 @@ export default async function decorate(block) {
   });
 
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
-  if (brandLink) {
+  const brandLink = navBrand?.querySelector('.button') || navBrand?.querySelector('a');
+  if (navBrand && brandLink) {
     brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
+    brandLink.closest('.button-container')?.classList.remove('button-container');
+    /* Replace text logo with myCHEP image */
+    brandLink.textContent = '';
+    const logoImg = document.createElement('img');
+    logoImg.src = '/images/mychep-logo.png';
+    logoImg.alt = 'myCHEP - Smart. Simple. Fast.';
+    logoImg.className = 'nav-brand-logo';
+    brandLink.appendChild(logoImg);
   }
 
   const navSections = nav.querySelector('.nav-sections');

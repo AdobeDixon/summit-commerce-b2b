@@ -14,4 +14,837 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Adobe.
  ****************************************************************** */
-/* stylelint-disable no-empty-source */
+
+/* ── Dashboard shell (left nav + main) ──────────────────────────────────── */
+
+.dashboard-page {
+  display: block;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+body.dashboard-page > header,
+body.dashboard-page > footer,
+body.dashboard-page footer {
+  display: none !important;
+}
+
+body.dashboard-page > main {
+  display: flex;
+  height: 100dvh;
+  width: 100%;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  grid-row: unset;
+}
+
+body.dashboard-page main > .section {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100%;
+}
+
+body.dashboard-page main > .section > div {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* When company users block is present, hide other sections so our shell takes full main */
+body.dashboard-page main > .section:not(:has(.commerce-company-users)) {
+  display: none !important;
+}
+
+body.dashboard-page main > .section:has(.commerce-company-users) {
+  flex: 1 1 100%;
+}
+
+.commerce-company-users-shell {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+/* Override .commerce-company-users flex-direction:column when shell is active */
+.commerce-company-users.commerce-company-users-shell {
+  flex-direction: row;
+  gap: 0;
+}
+
+.commerce-company-users-shell__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.commerce-company-users-shell__topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e4e7eb;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+  flex-shrink: 0;
+}
+
+.commerce-company-users-shell__menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+}
+
+.commerce-company-users-shell__menu-btn:hover {
+  background: #f0f2f5;
+  color: #005eb8;
+}
+
+.commerce-company-users-shell__topbar-copy {
+  min-width: 0;
+}
+
+.commerce-company-users-shell__eyebrow {
+  display: block;
+  color: #6b7785;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.commerce-company-users-shell__page-title {
+  margin: 0;
+  color: #1f2933;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.commerce-company-users-shell__account-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #475569;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.commerce-company-users-shell__account-link:hover {
+  color: #005eb8;
+}
+
+.commerce-company-users-shell__page {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+}
+
+/* Left nav (chep-nav) – shared with invoices/dashboard blocks */
+.chep-nav {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  min-width: 240px;
+  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  overflow: hidden auto;
+  flex-shrink: 0;
+  z-index: 200;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 20%) transparent;
+}
+
+.chep-nav__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  z-index: 199;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.chep-nav__overlay--visible {
+  opacity: 1;
+}
+
+.chep-nav__logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chep-nav__logo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+.chep-nav__logo-link:hover,
+.chep-nav__logo-link:focus {
+  opacity: 1;
+  background: transparent !important;
+  outline: none;
+}
+
+.chep-nav__logo-img {
+  display: block;
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+  max-height: 88px;
+  object-fit: contain;
+  mix-blend-mode: lighten; /* Makes black background transparent, white logo visible */
+}
+
+.chep-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0;
+  flex: 1;
+}
+
+.chep-nav__item {
+  margin: 2px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chep-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: rgb(255 255 255 / 75%) !important;
+  text-decoration: none !important;
+  font-size: 14px;
+  transition: background 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+
+.chep-nav__link:hover {
+  background: rgb(255 255 255 / 10%);
+  color: #fff !important;
+}
+
+.chep-nav__item--active .chep-nav__link {
+  background: rgb(255 255 255 / 15%);
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.chep-nav__item--active .chep-nav__link::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 28px;
+  background: #f07800;
+  border-radius: 0 3px 3px 0;
+}
+
+.chep-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.chep-nav__label {
+  flex: 1;
+}
+
+.chep-nav__active-indicator {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.chep-nav__footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+  flex-shrink: 0;
+}
+
+.chep-nav__footer-text {
+  display: block;
+  color: rgb(255 255 255 / 50%);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chep-nav__footer-sub {
+  display: block;
+  margin-top: 3px;
+  color: rgb(255 255 255 / 35%);
+  font-size: 11px;
+}
+
+@media (max-width: 767px) {
+  .chep-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    transform: translateX(-100%);
+  }
+
+  .chep-nav--open {
+    transform: translateX(0);
+  }
+
+  .chep-nav__overlay {
+    display: block;
+  }
+
+  .commerce-company-users-shell__menu-btn {
+    display: inline-flex;
+  }
+
+  .commerce-company-users-shell__topbar {
+    padding: 0 16px;
+  }
+
+  .commerce-company-users-shell__page {
+    padding: 16px;
+  }
+
+  .commerce-company-users-shell__account-name {
+    display: none;
+  }
+}
+
+.commerce-company-users {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+}
+
+.commerce-company-users__hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-medium);
+  overflow: hidden;
+  padding: var(--spacing-medium) var(--spacing-big);
+  border-radius: var(--shape-border-radius-card);
+  background:
+    radial-gradient(circle at top right, rgb(255 255 255 / 10%), transparent 32%),
+    linear-gradient(135deg, var(--color-surface-dark) 0%, var(--color-brand-600) 58%, var(--color-brand-500) 100%);
+  color: var(--color-neutral-50);
+  box-shadow: var(--shape-shadow-card);
+}
+
+.commerce-company-users__hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-500), var(--color-teal-500));
+}
+
+.commerce-company-users__hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.commerce-company-users__hero-eyebrow,
+.commerce-company-users__section-eyebrow,
+.commerce-company-users__state-eyebrow {
+  display: inline-flex;
+  margin-bottom: var(--spacing-xxsmall);
+  color: rgb(255 255 255 / 75%);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+}
+
+.commerce-company-users__hero-title {
+  margin: 0;
+  color: var(--color-neutral-50);
+  font-size: 2.6rem;
+  line-height: 1.15;
+}
+
+.commerce-company-users__hero-text {
+  max-width: 68ch;
+  margin: var(--spacing-xsmall) 0 0;
+  color: rgb(255 255 255 / 78%);
+  font: var(--type-body-2-default-font);
+}
+
+.commerce-company-users__hero-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 8%);
+  color: var(--color-neutral-50);
+  font: var(--type-details-caption-1-font);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.commerce-company-users__module {
+  overflow: hidden;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: var(--color-neutral-50);
+  box-shadow: var(--shape-shadow-card);
+}
+
+.commerce-company-users__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-medium);
+  padding: var(--spacing-medium) var(--spacing-large);
+  border-bottom: 1px solid var(--color-neutral-300);
+  background: linear-gradient(180deg, rgb(0 94 184 / 3%), transparent);
+}
+
+.commerce-company-users__tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-small);
+}
+
+.commerce-company-users__tab {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 14rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 1rem;
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-700);
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.commerce-company-users__tab:hover {
+  border-color: var(--color-brand-500);
+  transform: translateY(-1px);
+}
+
+.commerce-company-users__tab[aria-selected="true"],
+.commerce-company-users__tab.is-active {
+  border-color: var(--color-brand-500);
+  background: rgb(0 94 184 / 6%);
+  box-shadow: inset 0 0 0 1px rgb(0 94 184 / 14%);
+}
+
+.commerce-company-users__tab-label {
+  color: var(--color-neutral-900);
+  font: var(--type-body-2-strong-font);
+}
+
+.commerce-company-users__tab-copy {
+  color: var(--color-neutral-600);
+  font: var(--type-details-caption-2-font);
+}
+
+.commerce-company-users__primary-action,
+.commerce-company-users .edit-user-button,
+.commerce-company-users .manage-user-button,
+.commerce-company-users .role-action-button,
+.commerce-company-users .filterButtons :is(button, .dropin-button),
+.commerce-company-users .addUserButtonContainer :is(button, .dropin-button),
+.commerce-company-users .add-role-section :is(button, .dropin-button),
+.commerce-company-users .company-management-company-users-management-modal__actions button,
+body.company-users-page .delete-role-modal__actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.625rem;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 999px;
+  background: var(--color-neutral-50);
+  color: var(--color-brand-500);
+  font: var(--type-button-2-font);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.commerce-company-users__primary-action {
+  background: var(--color-brand-500);
+  border-color: var(--color-brand-500);
+  color: var(--color-neutral-50);
+}
+
+.commerce-company-users__primary-action:hover {
+  background: var(--color-brand-600);
+  border-color: var(--color-brand-600);
+  color: var(--color-neutral-50);
+}
+
+.commerce-company-users .edit-user-button:hover,
+.commerce-company-users .manage-user-button:hover,
+.commerce-company-users .role-action-button:hover,
+.commerce-company-users .filterButtons :is(button, .dropin-button):hover,
+.commerce-company-users .addUserButtonContainer :is(button, .dropin-button):hover,
+.commerce-company-users .add-role-section :is(button, .dropin-button):hover,
+.commerce-company-users .company-management-company-users-management-modal__actions button:hover,
+body.company-users-page .delete-role-modal__actions button:hover {
+  border-color: var(--color-brand-500);
+  background: var(--color-neutral-100);
+  color: #0051a0 !important; /* CHEP brand hover – overrides dropin-design */
+}
+
+.commerce-company-users__section-intro {
+  padding: var(--spacing-medium) var(--spacing-large) var(--spacing-small);
+}
+
+.commerce-company-users__section-eyebrow,
+.commerce-company-users__state-eyebrow {
+  color: var(--color-brand-500);
+}
+
+.commerce-company-users__section-title,
+.commerce-company-users__state-title {
+  margin: 0;
+  color: var(--color-neutral-900);
+  font: var(--type-headline-2-strong-font);
+}
+
+.commerce-company-users__section-description,
+.commerce-company-users__state-message {
+  max-width: 70ch;
+  margin: var(--spacing-xsmall) 0 0;
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+}
+
+.commerce-company-users__panels {
+  padding: 0 var(--spacing-large) var(--spacing-large);
+}
+
+.commerce-company-users__panel {
+  display: none;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: var(--color-neutral-50);
+  padding: var(--spacing-medium);
+}
+
+.commerce-company-users__panel.is-active {
+  display: block;
+}
+
+.commerce-company-users__panel-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  min-height: 10rem;
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+}
+
+.commerce-company-users__panel-loading p {
+  margin: 0;
+}
+
+.commerce-company-users__loading-dot {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background: var(--color-brand-500);
+  box-shadow: 0 0 0 0 rgb(0 94 184 / 30%);
+  animation: commerce-company-users-pulse 1.4s infinite;
+}
+
+.commerce-company-users .filterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xsmall);
+  margin-bottom: var(--spacing-medium);
+}
+
+.commerce-company-users .companyUsersTable,
+.commerce-company-users .company-management-role-and-permission-table {
+  width: 100%;
+}
+
+.commerce-company-users .dropin-table__table {
+  width: 100%;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.commerce-company-users .dropin-table__header__row {
+  border-bottom: 0;
+}
+
+.commerce-company-users .dropin-table__header__cell,
+.commerce-company-users .dropin-table__body__cell {
+  padding: var(--spacing-small) var(--spacing-medium);
+  border-bottom: 1px solid var(--color-neutral-300);
+  vertical-align: middle;
+}
+
+.commerce-company-users .dropin-table__header__cell {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+}
+
+.commerce-company-users .dropin-table__body__row {
+  transition: background-color 0.12s ease;
+}
+
+.commerce-company-users .dropin-table__body__row:nth-child(even) {
+  background: var(--color-neutral-100);
+}
+
+.commerce-company-users .dropin-table__body__row:hover {
+  background: rgb(0 94 184 / 4%);
+}
+
+.commerce-company-users .dropin-table__body__cell {
+  color: var(--color-neutral-800);
+  font: var(--type-body-2-default-font);
+}
+
+.commerce-company-users .paginationContainer,
+.commerce-company-users .table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-small);
+  margin-top: var(--spacing-medium);
+  padding-top: var(--spacing-medium);
+  border-top: 1px solid var(--color-neutral-300);
+  flex-wrap: wrap;
+}
+
+.commerce-company-users .pageSizeSelector,
+.commerce-company-users .pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xsmall);
+}
+
+.commerce-company-users .companyUsersTable__empty,
+.commerce-company-users .roles-and-permissions-no-access,
+.commerce-company-users .roles-and-permissions-error {
+  border: 1px dashed var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: var(--color-neutral-100);
+  padding: var(--spacing-large);
+}
+
+.commerce-company-users .company-users__alert,
+.commerce-company-users .dropin-inline-alert,
+.commerce-company-users .dropin-alert {
+  margin-bottom: var(--spacing-medium);
+}
+
+.commerce-company-users .user-actions,
+.commerce-company-users .roles-actions,
+.commerce-company-users .role-actions-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xsmall);
+}
+
+.commerce-company-users .addUserButtonContainer,
+.commerce-company-users .add-role-section {
+  margin-top: var(--spacing-medium);
+}
+
+/* Ensure Add New User / Add New Role button text matches branded typography */
+.commerce-company-users .addUserButtonContainer :is(button, .dropin-button),
+.commerce-company-users .add-role-section :is(button, .dropin-button) {
+  font: var(--type-button-2-font) !important;
+  letter-spacing: var(--type-button-2-letter-spacing);
+}
+
+/* Primary dropin buttons (Add New User, Add New Role) – white text on CHEP blue */
+.commerce-company-users .dropin-button--primary,
+.commerce-company-users .dropin-button--primary span {
+  color: #fff !important;
+  background-color: #005eb8 !important;
+  border-color: #005eb8 !important;
+}
+
+.commerce-company-users .dropin-button--primary:hover,
+.commerce-company-users .dropin-button--primary:hover span {
+  color: #fff !important;
+  background-color: #0051a0 !important;
+  border-color: #0051a0 !important;
+}
+
+.commerce-company-users .addUserButtonContainer :is(button, .dropin-button) *,
+.commerce-company-users .add-role-section :is(button, .dropin-button) * {
+  font: inherit !important;
+  letter-spacing: inherit;
+}
+
+.commerce-company-users .dropin-picker__button {
+  min-height: 2.5rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 999px;
+  background: var(--color-neutral-50);
+}
+
+.commerce-company-users .company-management-company-users-management-modal,
+body.company-users-page .delete-role-modal,
+body.company-users-page .dropin-modal .company-user-form__card,
+body.company-users-page .dropin-modal .edit-role-and-permission {
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 60px rgb(15 23 42 / 18%);
+}
+
+.commerce-company-users .company-management-company-users-management-modal__header {
+  border-bottom-color: var(--color-neutral-300);
+}
+
+body.company-users-page .dropin-modal .company-user-form__card,
+body.company-users-page .dropin-modal .edit-role-and-permission {
+  background: var(--color-neutral-50);
+}
+
+.commerce-company-users__state-card {
+  padding: var(--spacing-large);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: var(--color-neutral-50);
+  box-shadow: var(--shape-shadow-card);
+}
+
+.commerce-company-users__state-action {
+  display: inline-flex;
+  margin-top: var(--spacing-medium);
+  color: var(--color-brand-500);
+  font: var(--type-body-2-strong-font);
+  text-decoration: none;
+}
+
+.commerce-company-users__state-action:hover {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+@keyframes commerce-company-users-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(0 94 184 / 30%);
+  }
+
+  70% {
+    box-shadow: 0 0 0 0.65rem rgb(0 94 184 / 0%);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgb(0 94 184 / 0%);
+  }
+}
+
+@media (max-width: 900px) {
+  .commerce-company-users__hero,
+  .commerce-company-users__toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .commerce-company-users__primary-action {
+    width: 100%;
+  }
+
+  .commerce-company-users__tabs {
+    width: 100%;
+  }
+
+  .commerce-company-users__tab {
+    flex: 1 1 16rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .commerce-company-users__hero {
+    padding: var(--spacing-medium);
+  }
+
+  .commerce-company-users__hero-title {
+    font-size: 2.1rem;
+  }
+
+  .commerce-company-users__toolbar,
+  .commerce-company-users__section-intro,
+  .commerce-company-users__panels {
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+  }
+
+  .commerce-company-users__panel {
+    padding: var(--spacing-small);
+  }
+
+  .commerce-company-users .paginationContainer,
+  .commerce-company-users .table-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .commerce-company-users .dropin-table__body__cell,
+  .commerce-company-users .dropin-table__header__cell {
+    padding-left: var(--spacing-small);
+    padding-right: var(--spacing-small);
+  }
+}
