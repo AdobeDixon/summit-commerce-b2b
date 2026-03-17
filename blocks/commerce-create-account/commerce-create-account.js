@@ -52,25 +52,17 @@ export default async function decorate(block) {
     },
   })(formContainer);
 
-  /* Fix password field: move eye icon into input container so it anchors inside the field */
-  const fixPasswordField = () => {
-    formContainer.querySelectorAll('.dropin-input-password').forEach((pwdWrapper) => {
-      const labelContainer = pwdWrapper.querySelector('.dropin-input-label-container');
-      const inputContainer = pwdWrapper.querySelector('.dropin-input-container');
-      const eyeIcon = pwdWrapper.querySelector('.dropin-input-password__eye-icon');
-      if (labelContainer && !pwdWrapper.dataset.labelClickFixed) {
-        labelContainer.addEventListener('click', (e) => e.stopPropagation());
-        pwdWrapper.dataset.labelClickFixed = 'true';
-      }
-      /* Move eye into container so it positions relative to the input, not the full form */
-      if (inputContainer && eyeIcon && !inputContainer.contains(eyeIcon)) {
-        inputContainer.appendChild(eyeIcon);
-      }
-    });
-  };
-  fixPasswordField();
-  const observer = new MutationObserver(fixPasswordField);
-  observer.observe(formContainer, { childList: true, subtree: true });
-  [50, 200, 500, 1000, 2000].forEach((ms) => setTimeout(fixPasswordField, ms));
-  setTimeout(() => observer.disconnect(), 2500);
+  /* Inject input overrides after Dropin — ensure validation icon never overlaps text */
+  const style = document.createElement('style');
+  style.textContent = `
+    body.auth-page .auth-split__form .dropin-input,
+    body.auth-page .auth-split__form .dropin-input-container input,
+    body.auth-page .auth-split__form input {
+      padding-right: 56px !important;
+    }
+    body.auth-page .auth-split__form .dropin-input-password input {
+      padding-right: 56px !important;
+    }
+  `;
+  document.head.appendChild(style);
 }

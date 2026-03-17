@@ -48,21 +48,16 @@ export default async function decorate(block) {
     routeSignIn: () => rootLink(CUSTOMER_LOGIN_PATH),
   })(formContainer);
 
-  /* Prevent password show/hide toggle when clicking input — only the eye icon should toggle */
-  const fixPasswordToggleClick = () => {
-    formContainer.querySelectorAll('.dropin-input-password').forEach((pwdWrapper) => {
-      if (pwdWrapper.dataset.toggleClickFixed) return;
-      const labelContainer = pwdWrapper.querySelector('.dropin-input-label-container');
-      if (labelContainer) {
-        pwdWrapper.dataset.toggleClickFixed = 'true';
-        labelContainer.addEventListener('click', (e) => e.stopPropagation());
-      }
-    });
-  };
-  fixPasswordToggleClick();
-  const observer = new MutationObserver(fixPasswordToggleClick);
-  observer.observe(formContainer, { childList: true, subtree: true });
-  setTimeout(() => { fixPasswordToggleClick(); observer.disconnect(); }, 800);
+  /* Inject input overrides after Dropin — ensure validation icon never overlaps text */
+  const style = document.createElement('style');
+  style.textContent = `
+    body.auth-page .auth-split__form .dropin-input,
+    body.auth-page .auth-split__form .dropin-input-container input,
+    body.auth-page .auth-split__form input {
+      padding-right: 56px !important;
+    }
+  `;
+  document.head.appendChild(style);
 
   events.on('authenticated', (authenticated) => {
     if (authenticated) window.location.href = getPostLoginRedirectUrl();

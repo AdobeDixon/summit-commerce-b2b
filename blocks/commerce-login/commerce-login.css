@@ -46,7 +46,6 @@ body.auth-page .auth-split__form .commerce-login-container::before,
 body.auth-page .auth-split__form .dropin-design::before {
   display: none;
 }
-
 /* Top brand accent line */
 main .commerce-login-container::before {
   content: '';
@@ -191,7 +190,7 @@ body.auth-page .auth-split__form .dropin-field__label {
   font-weight: 500;
   font-size: 14px;
   padding-left: 16px;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
   display: block;
 }
 
@@ -239,9 +238,16 @@ body.auth-page .auth-split__form .dropin-field {
   width: 100%;
 }
 
+/* Password field: no indent — align with email field */
+body.auth-page .auth-split__form .auth-sign-in-form__form__password {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
 /* Password field label above input — align with email field */
 body.auth-page .auth-split__form .dropin-input-password > div:first-child {
-  padding-left: 0;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
   margin-bottom: 6px;
 }
 
@@ -333,3 +339,4 @@ body.auth-page .auth-split__form .dropin-button--primary:hover {
   color: #fff;
   border-color: #005eb8;
 }
+

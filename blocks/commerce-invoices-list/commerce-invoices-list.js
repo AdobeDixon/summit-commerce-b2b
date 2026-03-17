@@ -141,6 +141,12 @@ function renderShell(block) {
         </div>
         <span class="commerce-invoices-list__hero-badge" aria-live="polite">Loading…</span>
       </div>
+      <div class="commerce-invoices-list__filters">
+        <label for="commerce-invoices-month-filter" class="commerce-invoices-list__filter-label">Month</label>
+        <select id="commerce-invoices-month-filter" class="commerce-invoices-list__month-select" aria-label="Filter by month">
+          <option value="">All months</option>
+        </select>
+      </div>
       <div class="commerce-invoices-list__content">
         <div class="commerce-invoices-list__table-wrap">
           <table class="commerce-invoices-list__table">
@@ -328,7 +334,8 @@ function buildDownloadButton(invoice) {
 }
 
 function renderTable(block, state) {
-  const tbody = state.invoices.map((invoice) => {
+  const filteredInvoices = filterInvoicesByMonth(state.invoices, state.selectedMonthFilter);
+  const tbody = filteredInvoices.map((invoice) => {
     const status = formatInvoiceStatus(invoice.invoiceStatus);
     const orderHref = invoice.orderNumber
       ? rootLink(`${CUSTOMER_ORDER_DETAILS_PATH}?orderRef=${invoice.orderNumber}`)
@@ -430,6 +437,72 @@ function dedupeInvoices(invoices) {
   });
 }
 
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'];
+
+function getUniqueMonthsFromInvoices(invoices) {
+  const monthSet = new Map();
+
+  invoices.forEach((invoice) => {
+    if (!invoice.invoiceDate) return;
+    const date = new Date(invoice.invoiceDate);
+    if (Number.isNaN(date.getTime())) return;
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    if (!monthSet.has(key)) {
+      monthSet.set(key, {
+        value: key,
+        label: `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`,
+      });
+    }
+  });
+
+  return Array.from(monthSet.values())
+    .sort((a, b) => b.value.localeCompare(a.value));
+}
+
+function filterInvoicesByMonth(invoices, monthFilter) {
+  if (!monthFilter) return invoices;
+  const [year, month] = monthFilter.split('-').map(Number);
+  return invoices.filter((invoice) => {
+    if (!invoice.invoiceDate) return false;
+    const date = new Date(invoice.invoiceDate);
+    if (Number.isNaN(date.getTime())) return false;
+    return date.getFullYear() === year && date.getMonth() + 1 === month;
+  });
+}
+
+function renderMonthFilter(block, state) {
+  const filterWrap = block.querySelector('.commerce-invoices-list__filters');
+  const select = filterWrap?.querySelector('.commerce-invoices-list__month-select');
+  if (!select) return;
+
+  const months = getUniqueMonthsFromInvoices(state.invoices);
+  select.innerHTML = `
+    <option value="">All months</option>
+    ${months.map((m) => `<option value="${m.value}">${m.label}</option>`).join('')}
+  `;
+  select.value = state.selectedMonthFilter || '';
+
+  if (!select.dataset.monthFilterBound) {
+    select.dataset.monthFilterBound = 'true';
+    select.addEventListener('change', () => {
+      state.selectedMonthFilter = select.value || null;
+      const filtered = filterInvoicesByMonth(state.invoices, state.selectedMonthFilter);
+      setMeta(
+        block,
+        filtered.length
+          ? `${filtered.length} invoice${filtered.length === 1 ? '' : 's'}`
+          : 'No invoices',
+      );
+      if (filtered.length === 0) {
+        renderEmptyState(block, state.selectedMonthFilter ? 'No invoices for this month.' : 'No invoices available yet.');
+      } else {
+        renderTable(block, state);
+      }
+    });
+  }
+}
+
 export default async function decorate(block) {
   block.classList.add('commerce-invoices-list');
 
@@ -448,6 +521,7 @@ export default async function decorate(block) {
     pageSize: getPageSize(block),
     loadingMore: false,
     footerError: '',
+    selectedMonthFilter: null,
     async loadInitial() {
       const result = await fetchInvoicesPage(1, state.pageSize);
 
@@ -465,15 +539,23 @@ export default async function decorate(block) {
 
       setTopBarCustomerName(block, state.customer);
 
+      renderMonthFilter(block, state);
+
+      const filtered = filterInvoicesByMonth(state.invoices, state.selectedMonthFilter);
       setMeta(
         block,
-        state.invoices.length
-          ? `${state.invoices.length} invoice${state.invoices.length === 1 ? '' : 's'}`
+        filtered.length
+          ? `${filtered.length} invoice${filtered.length === 1 ? '' : 's'}`
           : 'No invoices',
       );
 
       if (!state.invoices.length) {
         renderEmptyState(block, 'No invoices available yet.');
+        return;
+      }
+
+      if (filtered.length === 0) {
+        renderEmptyState(block, state.selectedMonthFilter ? 'No invoices for this month.' : 'No invoices available yet.');
         return;
       }
 
@@ -500,7 +582,10 @@ export default async function decorate(block) {
       state.totalPages = result.pagination.totalPages;
       state.invoices = dedupeInvoices([...state.invoices, ...result.invoices]);
 
-      setMeta(block, `${state.invoices.length} invoice${state.invoices.length === 1 ? '' : 's'}`);
+      renderMonthFilter(block, state);
+
+      const filtered = filterInvoicesByMonth(state.invoices, state.selectedMonthFilter);
+      setMeta(block, `${filtered.length} invoice${filtered.length === 1 ? '' : 's'}`);
       renderTable(block, state);
     },
   };

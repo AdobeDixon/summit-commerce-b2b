@@ -1,0 +1,13 @@
+{
+  "status": "failed",
+  "customerEmail": "matt@adobedemo.com",
+  "commerceEndpoint": "https://na1-sandbox.api.commerce.adobe.com/NkZoCREALDbP4m7dczt5xA/graphql",
+  "startedAt": "2026-03-17T12:51:22.911Z",
+  "companyContext": null,
+  "orders": [],
+  "failedAt": "2026-03-17T12:51:23.778Z",
+  "error": {
+    "message": "generateCustomerToken failed: The account sign-in was incorrect or your account is disabled temporarily. Please wait and try again later.",
+    "stack": "Error: generateCustomerToken failed: The account sign-in was incorrect or your account is disabled temporarily. Please wait and try again later.\n    at expectNoGraphQlErrors (file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:664:11)\n    at authenticateCustomer (file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:725:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async main (file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:972:26)\n    at async file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:1069:1"
+  }
+}

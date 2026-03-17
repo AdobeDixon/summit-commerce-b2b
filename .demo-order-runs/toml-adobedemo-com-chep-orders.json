@@ -1,0 +1,18 @@
+{
+  "status": "failed",
+  "customerEmail": "toml@adobedemo.com",
+  "commerceEndpoint": "https://na1-sandbox.api.commerce.adobe.com/NkZoCREALDbP4m7dczt5xA/graphql",
+  "startedAt": "2026-03-17T09:49:50.842Z",
+  "companyContext": null,
+  "orders": [],
+  "customer": {
+    "firstname": "Tom",
+    "lastname": "Lapelt",
+    "email": "toml@adobedemo.com"
+  },
+  "failedAt": "2026-03-17T09:49:57.314Z",
+  "error": {
+    "message": "setPaymentMethodOnCart failed: The requested Payment Method is not available.",
+    "stack": "Error: setPaymentMethodOnCart failed: The requested Payment Method is not available.\n    at expectNoGraphQlErrors (file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:615:11)\n    at setPaymentMethod (file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:826:3)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async main (file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:933:7)\n    at async file:///Users/alexanderd/mycheps-march-demo/scripts/create-chep-demo-orders.mjs:1009:1"
+  }
+}

@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+/**
+ * Create CHEP demo orders via Adobe Commerce API.
+ *
+ * Env vars:
+ *   CHEP_DEMO_CUSTOMER_EMAIL    - Customer email (default: matt@adobedemo.com)
+ *   CHEP_DEMO_CUSTOMER_PASSWORD - Customer password (default: Password1)
+ *   CHEP_DEMO_MAX_PALLETS=40    - Use 10 orders with max 40 pallets each
+ *   CHEP_DEMO_SKIP_COMPANY=true - Skip company context (if products not in company catalog)
+ *   CHEP_DEMO_SKUS=SKU1,SKU2   - Override product SKUs (use when CHEP products not in catalog)
+ *   CHEP_DEMO_FREE_SHIPPING=true - Use free shipping (freeshipping/freeshipping) instead of flatrate
+ *
+ * B2B: Ensure products exist in the company's shared catalog (Admin > B2B > Shared Catalogs).
+ */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -9,19 +22,27 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
 const configPath = path.join(repoRoot, 'config.json');
 const runStateDir = path.join(repoRoot, '.demo-order-runs');
-const runStatePath = path.join(runStateDir, 'matt-adobedemo-chep-orders.json');
 
-const CUSTOMER_EMAIL = 'matt@adobedemo.com';
+const CUSTOMER_EMAIL = process.env.CHEP_DEMO_CUSTOMER_EMAIL ?? 'matt@adobedemo.com';
 const CUSTOMER_PASSWORD = process.env.CHEP_DEMO_CUSTOMER_PASSWORD ?? 'Password1';
+const SKIP_COMPANY_CONTEXT = process.env.CHEP_DEMO_SKIP_COMPANY === 'true' || process.env.CHEP_DEMO_SKIP_COMPANY === '1';
+
+function getRunStatePath() {
+  const slug = CUSTOMER_EMAIL.replace(/@/g, '-').replace(/\./g, '-');
+  return path.join(runStateDir, `${slug}-chep-orders.json`);
+}
+const runStatePath = getRunStatePath();
 const CUSTOMER_TOKEN = process.env.CHEP_DEMO_CUSTOMER_TOKEN ?? '';
 const START_INDEX = Number.parseInt(process.env.CHEP_DEMO_START_INDEX ?? '0', 10);
 
 const ORDER_SOURCE = 'CHEP';
-const DEFAULT_SHIPPING_METHOD = Object.freeze({
-  carrierCode: 'flatrate',
-  methodCode: 'flatrate',
-});
-const DEFAULT_PAYMENT_METHOD_CODE = 'checkmo';
+const USE_FREE_SHIPPING = process.env.CHEP_DEMO_FREE_SHIPPING === 'true' || process.env.CHEP_DEMO_FREE_SHIPPING === '1';
+const DEFAULT_SHIPPING_METHOD = Object.freeze(
+  USE_FREE_SHIPPING
+    ? { carrierCode: 'freeshipping', methodCode: 'freeshipping' }
+    : { carrierCode: 'flatrate', methodCode: 'flatrate' },
+);
+const DEFAULT_PAYMENT_METHOD_CODE = process.env.CHEP_DEMO_PAYMENT_METHOD ?? 'checkmo';
 
 const CART_CUSTOM_ATTRIBUTE_CODES = Object.freeze({
   orderType: 'chep_order_type',
@@ -80,28 +101,50 @@ const DELIVERY_SITES = [
   },
 ];
 
-const SITE_CONTACTS = Object.freeze({
-  'site-manchester-001': {
-    name: 'Matt Hargreaves',
-    phone: '0161 555 0142',
-    email: CUSTOMER_EMAIL,
-  },
-  'site-birmingham-002': {
-    name: 'Matt Collins',
-    phone: '0121 555 0198',
-    email: CUSTOMER_EMAIL,
-  },
-  'site-leeds-003': {
-    name: 'Matt Lawson',
-    phone: '0113 555 0176',
-    email: CUSTOMER_EMAIL,
-  },
-  'site-bristol-004': {
-    name: 'Matt Reed',
-    phone: '0117 555 0124',
-    email: CUSTOMER_EMAIL,
-  },
-});
+function getSiteContacts() {
+  return Object.freeze({
+    'site-manchester-001': {
+      name: 'Matt Hargreaves',
+      phone: '0161 555 0142',
+      email: CUSTOMER_EMAIL,
+    },
+    'site-birmingham-002': {
+      name: 'Matt Collins',
+      phone: '0121 555 0198',
+      email: CUSTOMER_EMAIL,
+    },
+    'site-leeds-003': {
+      name: 'Matt Lawson',
+      phone: '0113 555 0176',
+      email: CUSTOMER_EMAIL,
+    },
+    'site-bristol-004': {
+      name: 'Matt Reed',
+      phone: '0117 555 0124',
+      email: CUSTOMER_EMAIL,
+    },
+  });
+}
+const SITE_CONTACTS = getSiteContacts();
+
+const MAX_PALLETS = Number.parseInt(process.env.CHEP_DEMO_MAX_PALLETS ?? '40', 10) || 40;
+
+const OVERRIDE_SKUS = process.env.CHEP_DEMO_SKUS
+  ? process.env.CHEP_DEMO_SKUS.split(/[,\s]+/).map((s) => s.trim()).filter(Boolean)
+  : null;
+
+const ORDER_BLUEPRINTS_SMALL = [
+  { siteId: 'site-manchester-001', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:00', to: '12:00' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 25 }, { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 15 }] },
+  { siteId: 'site-birmingham-002', orderType: 'single', transport: 'customer', deliveryWindow: { from: '09:00', to: '13:00' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 40 }] },
+  { siteId: 'site-leeds-003', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '07:00', to: '11:00' }, equipment: [{ sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 20 }, { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 18 }] },
+  { siteId: 'site-bristol-004', orderType: 'single', transport: 'chep', deliveryWindow: { from: '10:00', to: '14:00' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 22 }, { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 12 }] },
+  { siteId: 'site-manchester-001', orderType: 'single', transport: 'customer', deliveryWindow: { from: '06:00', to: '10:00' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 35 }] },
+  { siteId: 'site-birmingham-002', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '11:00', to: '15:00' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 28 }, { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 10 }] },
+  { siteId: 'site-leeds-003', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:30', to: '12:30' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 30 }, { sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 8 }] },
+  { siteId: 'site-bristol-004', orderType: 'single', transport: 'customer', deliveryWindow: { from: '07:30', to: '11:30' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 15 }, { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 20 }] },
+  { siteId: 'site-manchester-001', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '12:00', to: '16:00' }, equipment: [{ sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 40 }] },
+  { siteId: 'site-birmingham-002', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:00', to: '10:00' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 18 }, { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 22 }] },
+];
 
 const ORDER_BLUEPRINTS = [
   {
@@ -110,7 +153,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '08:00', to: '12:00' },
     equipment: [
-      { sku: 'CHEP-UK-WOOD-1200X1000-01', quantity: 320 },
+      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 320 },
       { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 180 },
     ],
   },
@@ -139,7 +182,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '10:00', to: '14:00' },
     equipment: [
-      { sku: 'CHEP-UK-WOOD-1200X1000-01', quantity: 500 },
+      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 500 },
       { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 110 },
     ],
   },
@@ -149,7 +192,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'customer',
     deliveryWindow: { from: '06:00', to: '10:00' },
     equipment: [
-      { sku: 'CHEP-UK-WOOD-1200X1000-01', quantity: 760 },
+      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 760 },
     ],
   },
   {
@@ -179,7 +222,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'customer',
     deliveryWindow: { from: '07:30', to: '11:30' },
     equipment: [
-      { sku: 'CHEP-UK-WOOD-1200X1000-01', quantity: 210 },
+      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 210 },
       { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 210 },
       { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 120 },
     ],
@@ -209,7 +252,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'customer',
     deliveryWindow: { from: '09:30', to: '13:30' },
     equipment: [
-      { sku: 'CHEP-UK-WOOD-1200X1000-01', quantity: 150 },
+      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 150 },
       { sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 70 },
     ],
   },
@@ -219,7 +262,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '13:00', to: '16:00' },
     equipment: [
-      { sku: 'CHEP-UK-WOOD-1200X1000-01', quantity: 620 },
+      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 620 },
       { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 75 },
       { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 60 },
     ],
@@ -574,21 +617,34 @@ function createDeliveryDate(offset) {
   return date.toISOString().slice(0, 10);
 }
 
+function applySkuOverride(equipment) {
+  if (!OVERRIDE_SKUS?.length) return equipment;
+  const skus = OVERRIDE_SKUS;
+  const overridden = equipment.map((line, i) => ({
+    sku: skus[i % skus.length],
+    quantity: Number(line.quantity),
+  }));
+  const merged = new Map();
+  for (const { sku, quantity } of overridden) {
+    merged.set(sku, (merged.get(sku) ?? 0) + quantity);
+  }
+  return [...merged.entries()].map(([sku, quantity]) => ({ sku, quantity }));
+}
+
 function buildPayload(blueprint, index) {
   const site = DELIVERY_SITES.find((entry) => entry.id === blueprint.siteId);
   if (!site) {
     throw new Error(`Unknown site ${blueprint.siteId}`);
   }
 
+  const equipment = applySkuOverride(blueprint.equipment);
+
   return {
     orderType: blueprint.orderType,
     deliveryDate: createDeliveryDate(index),
     source: ORDER_SOURCE,
     transport: blueprint.transport,
-    equipment: blueprint.equipment.map((line) => ({
-      sku: line.sku,
-      quantity: Number(line.quantity),
-    })),
+    equipment,
     site,
     contact: {
       ...SITE_CONTACTS[site.id],
@@ -652,7 +708,8 @@ async function loadCoreClient() {
   const config = rawConfig.public.default;
   const client = new FetchGraphQL();
   client.setEndpoint(config['commerce-endpoint']);
-  client.setFetchGraphQlHeaders(config.headers.all ?? {});
+  const headers = { ...(config.headers?.all ?? {}), ...(config.headers?.cs ?? {}) };
+  client.setFetchGraphQlHeaders(headers);
   return { client, config };
 }
 
@@ -696,6 +753,11 @@ async function authenticateCustomer(client) {
 }
 
 async function applyCompanyContextHeader(client) {
+  if (SKIP_COMPANY_CONTEXT) {
+    console.log('Skipping company context (CHEP_DEMO_SKIP_COMPANY=true)');
+    return null;
+  }
+
   const response = await client.fetchGraphQl(GET_COMPANY_CONTEXT_QUERY, {
     method: 'POST',
   });
@@ -893,6 +955,13 @@ function summarisePersistedAttributes(attributes) {
 async function main() {
   await ensureNotPreviouslyRun();
 
+  if (OVERRIDE_SKUS?.length) {
+    console.log(`Using override SKUs: ${OVERRIDE_SKUS.join(', ')}`);
+  }
+  if (USE_FREE_SHIPPING) {
+    console.log('Using free shipping (freeshipping/freeshipping)');
+  }
+
   const { client, config } = await loadCoreClient();
 
   const runState = {
@@ -912,7 +981,8 @@ async function main() {
     runState.customer = customer;
     await writeRunState(runState);
 
-    const payloads = ORDER_BLUEPRINTS.map(buildPayload);
+    const blueprints = MAX_PALLETS === 40 ? ORDER_BLUEPRINTS_SMALL : ORDER_BLUEPRINTS;
+    const payloads = blueprints.map(buildPayload);
 
     for (const [index, payload] of payloads.entries()) {
       if (index < START_INDEX) {

@@ -50,6 +50,17 @@ body.dashboard-page main > .section > div {
   min-width: 0;
 }
 
+/* Demo mode banner — avoid account lockout during demos */
+.chep-demo-banner {
+  display: block;
+  padding: 6px 12px;
+  background: #e8f4fd;
+  color: #0a5276;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
 /* Beat `main a:not(.dropin-design a) { color: var(--color-brand-500) }` from styles.css.
    Using the same leading `main` specificity prefix to win at equal cascade weight. */
 main .chep-dashboard a:not(.dropin-design a) {
@@ -719,6 +730,124 @@ main .chep-dashboard a:not(.dropin-design a):hover {
 .chep-dashboard-content::-webkit-scrollbar-thumb {
   background: #c4cdd9;
   border-radius: 3px;
+}
+
+/* ==========================================================================
+   New customer banner (no orders yet)
+   ========================================================================== */
+
+.dashboard-new-customer-banner {
+  display: block;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #002d6e 0%, #003f88 50%, #005eb8 100%);
+  border-radius: 10px;
+  color: #fff;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 12%);
+  box-shadow: 0 4px 16px rgb(0 45 110 / 25%);
+}
+
+.dashboard-new-customer-banner__inner {
+  display: flex;
+  align-items: stretch;
+  min-height: 100%;
+}
+
+.dashboard-new-customer-banner__content {
+  flex: 1;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dashboard-new-customer-banner__heading {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+  letter-spacing: normal !important;
+}
+
+.dashboard-new-customer-banner__text {
+  font-size: 14px;
+  color: rgb(255 255 255 / 92%);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 520px;
+}
+
+.dashboard-new-customer-banner__guides {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.dashboard-new-customer-banner__guides-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 75%);
+}
+
+.dashboard-new-customer-banner__guide-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dashboard-new-customer-banner__guide-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  color: #fff;
+  background: rgb(255 255 255 / 10%);
+  border: 1px solid rgb(255 255 255 / 25%);
+  border-radius: 8px;
+  cursor: default;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.dashboard-new-customer-banner__guide-btn:hover:not(:disabled) {
+  background: rgb(255 255 255 / 18%);
+  border-color: rgb(255 255 255 / 35%);
+}
+
+.dashboard-new-customer-banner__guide-btn:disabled {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.dashboard-new-customer-banner__accent {
+  width: 6px;
+  min-width: 6px;
+  background: #f07800;
+  flex-shrink: 0;
+}
+
+@media (max-width: 599px) {
+  .dashboard-new-customer-banner__content {
+    padding: 20px;
+  }
+
+  .dashboard-new-customer-banner__heading {
+    font-size: 18px !important;
+  }
+
+  .dashboard-new-customer-banner__guide-btns {
+    flex-direction: column;
+  }
+
+  .dashboard-new-customer-banner__guide-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* ==========================================================================
@@ -1949,6 +2078,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
 @media (prefers-reduced-motion: reduce) {
   .kpi-card,
   .dashboard-welcome__cta,
+  .dashboard-new-customer-banner__guide-btn,
   .chep-nav,
   .equip-card {
     transition: none;

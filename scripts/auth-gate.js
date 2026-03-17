@@ -51,13 +51,14 @@ const AUTH_ONLY_PATH_PATTERNS = [
   '/customer/create-password',
 ];
 
-/** Public paths that must NOT be protected (guest order lookup, etc.) */
+/** Public paths that must NOT be protected (guest order lookup, company registration, etc.) */
 const PUBLIC_PATH_PATTERNS = [
   '/order-status',
   '/order-details',
   '/return-details',
   '/create-return',
   '/privacy-policy',
+  '/customer/company/create', // Guest company registration
 ];
 
 /**

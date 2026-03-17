@@ -54,20 +54,37 @@ export default async function decorate(block) {
     routeSignUp: () => appendReturnUrl(rootLink(CUSTOMER_CREATE_PATH)),
   })(formContainer);
 
-  /* Prevent password show/hide toggle when clicking input — only the eye icon should toggle */
-  const fixPasswordToggleClick = () => {
-    const pwdWrapper = formContainer.querySelector('.dropin-input-password');
-    if (!pwdWrapper || pwdWrapper.dataset.toggleClickFixed) return;
-    const labelContainer = pwdWrapper.querySelector('.dropin-input-label-container');
-    if (labelContainer) {
-      pwdWrapper.dataset.toggleClickFixed = 'true';
-      labelContainer.addEventListener('click', (e) => e.stopPropagation());
+  /* Inject overrides after Dropin (must load last to override SDK) */
+  const style = document.createElement('style');
+  style.textContent = `
+    body.auth-page .auth-split__form .dropin-input,
+    body.auth-page .auth-split__form .dropin-input-container input,
+    body.auth-page .auth-split__form input {
+      padding-right: 56px !important;
     }
-  };
-  fixPasswordToggleClick();
-  const observer = new MutationObserver(fixPasswordToggleClick);
-  observer.observe(formContainer, { childList: true, subtree: true });
-  setTimeout(() => { fixPasswordToggleClick(); observer.disconnect(); }, 800);
+    body.auth-page .auth-split__form .dropin-input-password,
+    body.auth-page .auth-split__form .auth-sign-in-form__form__password {
+      --icon-space: 0 !important;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+    }
+    body.auth-page .auth-split__form .dropin-input-password .dropin-input-container,
+    body.auth-page .auth-split__form .dropin-input-password .dropin-input-container * {
+      --icon-space: 0 !important;
+    }
+    body.auth-page .auth-split__form .dropin-input-password input,
+    body.auth-page .auth-split__form .dropin-input-password .dropin-input,
+    body.auth-page .auth-split__form .dropin-input-password .dropin-input.dropin-input--icon-left {
+      padding-left: 16px !important;
+      padding-right: 56px !important;
+      margin-left: 0 !important;
+    }
+    body.auth-page .auth-split__form .dropin-input-password .dropin-input__label--floating,
+    body.auth-page .auth-split__form .dropin-input-password .dropin-input__label--floating--icon-left {
+      padding-left: 16px !important;
+    }
+  `;
+  document.head.appendChild(style);
 
   /* Add prominent Registration button below Sign in */
   const regBtn = document.createElement('a');

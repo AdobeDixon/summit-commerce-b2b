@@ -368,6 +368,46 @@ body.dashboard-page main > .section > div {
   text-transform: uppercase;
 }
 
+.commerce-invoices-list__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  padding: var(--spacing-medium) var(--spacing-big);
+  background: var(--color-neutral-50);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.commerce-invoices-list__filter-label {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font: var(--type-details-caption-1-font);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.commerce-invoices-list__month-select {
+  min-width: 160px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+  cursor: pointer;
+  appearance: auto;
+}
+
+.commerce-invoices-list__month-select:hover {
+  border-color: var(--color-brand-500);
+}
+
+.commerce-invoices-list__month-select:focus {
+  outline: none;
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 2px rgb(0 94 184 / 20%);
+}
+
 .commerce-invoices-list__content {
   background: var(--color-neutral-50);
 }
@@ -604,6 +644,10 @@ body.dashboard-page main > .section > div {
 
   .commerce-invoices-shell__page {
     padding: 16px;
+  }
+
+  .commerce-invoices-list__filters {
+    padding: var(--spacing-medium) var(--spacing-medium);
   }
 
   .commerce-invoices-list__hero {

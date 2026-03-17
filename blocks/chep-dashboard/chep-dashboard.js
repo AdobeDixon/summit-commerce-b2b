@@ -74,6 +74,38 @@ const PLACEHOLDER_NOTIFICATIONS = [
   },
 ];
 
+/* ── New customer welcome banner (no orders yet) ─────────────────────────── */
+
+function buildNewCustomerBanner() {
+  const banner = document.createElement('div');
+  banner.className = 'dashboard-new-customer-banner';
+  banner.setAttribute('role', 'region');
+  banner.setAttribute('aria-label', 'Welcome to MyCHEP');
+  banner.style.cssText = 'display:block !important; min-height:1px;'; /* fallback visibility */
+
+  banner.innerHTML = `
+    <div class="dashboard-new-customer-banner__inner">
+      <div class="dashboard-new-customer-banner__content">
+        <h2 class="dashboard-new-customer-banner__heading">Welcome to MyCHEP</h2>
+        <p class="dashboard-new-customer-banner__text">
+          You're all set up. Get started by creating your first order — use the button in the top right to place an order.
+        </p>
+        <div class="dashboard-new-customer-banner__guides">
+          <span class="dashboard-new-customer-banner__guides-label">User guides</span>
+          <div class="dashboard-new-customer-banner__guide-btns">
+            <button type="button" class="dashboard-new-customer-banner__guide-btn" disabled>Getting Started</button>
+            <button type="button" class="dashboard-new-customer-banner__guide-btn" disabled>Ordering Guide</button>
+            <button type="button" class="dashboard-new-customer-banner__guide-btn" disabled>Equipment Overview</button>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-new-customer-banner__accent" aria-hidden="true"></div>
+    </div>
+  `;
+
+  return banner;
+}
+
 /* ── Welcome banner ────────────────────────────────────────────────────── */
 
 function buildWelcomeBanner(customerName) {
@@ -404,6 +436,18 @@ export default async function decorate(block) {
 
     /* Update topbar account name — uses dedicated identity query, independent of orders */
     updateAccountName(topBar, customerIdentity);
+
+    /* Show new customer banner when authenticated and no orders */
+    const totalCount = ordersData?.totalCount ?? 0;
+    const hasNoOrders = totalCount === 0;
+    const isLoggedIn = customerIdentity != null || ordersData != null;
+    const forceShowBanner = new URLSearchParams(window.location.search).get('newCustomerPreview') === '1';
+    const showNewCustomerBanner = forceShowBanner || (isLoggedIn && hasNoOrders);
+
+    if (showNewCustomerBanner) {
+      const newCustomerBanner = buildNewCustomerBanner();
+      content.prepend(newCustomerBanner);
+    }
 
     /* Update welcome banner with real customer first name */
     const firstname = customerIdentity?.firstname ?? ordersData?.customer?.firstname;

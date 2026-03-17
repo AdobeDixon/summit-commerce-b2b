@@ -73,7 +73,7 @@ body.auth-page .auth-split__form .auth-sign-up-form .dropin-field label {
   font-weight: 500;
   font-size: 14px;
   padding-left: 16px;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
   margin-top: 0;
   display: block;
 }
@@ -102,7 +102,9 @@ body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__fi
 
 /* ── Password field: match other fields, single composed control ─────── */
 body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password {
-  /* Same layout participation as dropin-field */
+  --icon-space: 0 !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
 }
 
 /* Input container: no padding/margin — aligns with other fields */
@@ -118,6 +120,7 @@ body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password .drop
 body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password .dropin-input.dropin-input--icon-left,
 body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password input {
   padding-left: 16px !important;
+  padding-right: 56px !important;
 }
 
 /* Floating label: match other fields (same left alignment as email) */

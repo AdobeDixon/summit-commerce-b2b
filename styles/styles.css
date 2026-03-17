@@ -937,7 +937,6 @@ body.auth-page .auth-split__form {
   font-family: adobe-clean, Inter, -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
 }
-
 body.auth-page .auth-split__form input {
   background-color: #fff;
   border: 1px solid #e4e7eb;
@@ -992,8 +991,8 @@ body.auth-page .auth-split__form .dropin-input,
 body.auth-page .auth-split__form input {
   width: 100% !important;
   min-height: 48px !important;
-  height: 48px !important;
   padding: 14px 16px !important;
+  padding-right: 56px !important; /* Room for validation icon — prevents overlap */
   box-sizing: border-box !important;
   border-radius: 8px !important;
   background-color: #ffffff !important;
@@ -1001,19 +1000,57 @@ body.auth-page .auth-split__form input {
   text-align: left !important;
 }
 
-/* Password field: same layout participation as other form fields */
-body.auth-page .auth-split__form .dropin-input-password {
+/* Floating label: more space between label and input value */
+body.auth-page .auth-split__form .dropin-input-container--floating {
+  min-height: 52px !important;
+}
+body.auth-page .auth-split__form .dropin-input--floating,
+body.auth-page .auth-split__form .dropin-input-container--floating .dropin-input {
+  padding-top: 18px !important;
+  padding-bottom: 14px !important;
+  min-height: 52px !important;
+}
+body.auth-page .auth-split__form .dropin-input--floating:focus,
+body.auth-page .auth-split__form .dropin-input--floating:not(:placeholder-shown),
+body.auth-page .auth-split__form .dropin-input-container--floating:focus-within .dropin-input {
+  padding-top: 28px !important;
+  min-height: 56px !important;
+}
+body.auth-page .auth-split__form .dropin-input-container--floating:focus-within {
+  min-height: 56px !important;
+}
+
+/* Password field: same layout participation as other form fields, no indent. Neutralize Dropin icon-space. */
+body.auth-page .auth-split__form .dropin-input-password,
+body.auth-page .auth-split__form .auth-sign-in-form__form__password,
+body.auth-page .auth-split__form .auth-sign-up-form .dropin-input-password,
+body.auth-page .auth-split__form .auth-reset-password-form .dropin-input-password {
+  --icon-space: 0 !important;
   position: relative;
   width: 100%;
   min-width: 0;
   margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  align-self: stretch !important;
+  justify-self: stretch !important;
+}
+
+/* Password field wrapper (dropin-field) — no indent */
+body.auth-page .auth-split__form .dropin-input-password .dropin-field,
+body.auth-page .auth-split__form .dropin-input-password .dropin-field__content {
+  margin-left: 0 !important;
   padding-left: 0 !important;
 }
 
-/* Input container: sole positioning context, no extra padding/margin */
+/* Input container: sole positioning context, no extra padding/margin (override icon-left padding) */
 body.auth-page .auth-split__form .dropin-input-password .dropin-input-container,
 body.auth-page .auth-split__form .dropin-input-password .dropin-input-container.dropin-input-container--primary,
-body.auth-page .auth-split__form .dropin-input-password .dropin-input-container.dropin-input-container--floating {
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container.dropin-input-container--floating,
+body.auth-page .auth-split__form .dropin-input-password [class*="dropin-input-container"] {
+  --icon-space: 0 !important;
+  --icon-size: 0 !important;
   position: relative !important;
   display: flex !important;
   align-items: center;
@@ -1037,42 +1074,30 @@ body.auth-page .auth-split__form .dropin-input-password .dropin-input__field-ico
   display: none !important;
 }
 
-/* Right eye toggle: inside input, right edge, vertically centered */
-body.auth-page .auth-split__form .dropin-input-password .dropin-input-container .dropin-input-password__eye-icon {
-  position: absolute !important;
-  right: 14px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  left: auto !important;
-  margin: 0 !important;
-  z-index: 2;
-  pointer-events: auto;
-}
-
-/* Fallback when eye is not yet moved into container (JS pending) */
+/* Eye toggle: hidden — simple password field, no show/hide */
+body.auth-page .auth-split__form .dropin-input-password .dropin-input-container .dropin-input-password__eye-icon,
 body.auth-page .auth-split__form .dropin-input-password .dropin-input-password__eye-icon {
-  position: absolute !important;
-  right: 14px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  left: auto !important;
-  z-index: 2;
-  pointer-events: auto;
+  display: none !important;
 }
 
-/* Input padding: match other fields (16px left), override Dropin icon-left padding */
+/* Input padding: match other fields (16px left, 56px right for validation icon). Override Dropin --icon-space. */
 body.auth-page .auth-split__form .dropin-input-password input,
 body.auth-page .auth-split__form .dropin-input-password .dropin-input,
 body.auth-page .auth-split__form .dropin-input-password .dropin-input.dropin-input--icon-left {
+  --icon-space: 0 !important;
   padding-left: 16px !important;
-  padding-right: 48px !important;
+  padding-right: 56px !important;
   margin-left: 0 !important;
 }
 
-/* Floating label: align with input text (same as other fields) */
+/* Floating label: align with input text (same as other fields), no extra indent for icon-left */
 body.auth-page .auth-split__form .dropin-input-password .dropin-input__label--floating,
+body.auth-page .auth-split__form .dropin-input-password .dropin-input__label--floating--icon-left {
+  padding-left: 16px !important;
+}
+/* Label container: no extra padding (input has its own) */
 body.auth-page .auth-split__form .dropin-input-password .dropin-input-label-container {
-  padding-left: 16px;
+  padding-left: 0 !important;
 }
 
 /* Label alignment: 16px for fields without icon */
@@ -1080,3 +1105,4 @@ body.auth-page .auth-split__form .dropin-field .dropin-input__label--floating,
 body.auth-page .auth-split__form .dropin-field label {
   padding-left: 16px;
 }
+

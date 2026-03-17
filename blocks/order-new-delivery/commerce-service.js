@@ -101,8 +101,8 @@ function normalizeCommerceError(error) {
     return 'Your session is no longer authenticated. Sign in again and retry the order.';
   }
 
-  if (/not assigned|not available|requested qty|salable|Could not find a cart/i.test(message)) {
-    return 'One or more equipment SKUs are unavailable for this customer or shared catalog context.';
+  if (/cannot add|not assigned|not available|requested qty|salable|Could not find a (cart|product)/i.test(message)) {
+    return 'One or more equipment SKUs are unavailable for this customer or shared catalog. In Adobe Commerce Admin, ensure the products exist in the catalog and are assigned to the company\'s shared catalog (B2B > Shared Catalogs > [Catalog] > Products).';
   }
 
   if (/carrier|shipping method/i.test(message)) {
