@@ -223,9 +223,15 @@ const renderAuthCombine = (navSections, toggleMenu) => {
     const authCombineLink = accountLiItems[accountLiItems.length - 1];
 
     authCombineLink.classList.add('authCombineNavElement');
-    const text = authCombineLink.textContent || '';
-    authCombineLink.innerHTML = `<a href="#">${text}</a>`;
+    const text = authCombineLink.textContent?.trim() || '';
+    authCombineLink.textContent = '';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'auth-combine-trigger';
+    btn.textContent = text;
+    authCombineLink.appendChild(btn);
     authCombineLink.addEventListener('click', (event) => {
+      if (!event.target.closest('.auth-combine-trigger')) return;
       event.preventDefault();
       onHeaderLinkClick(accountLi);
 

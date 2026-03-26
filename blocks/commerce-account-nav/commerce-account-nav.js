@@ -1,6 +1,7 @@
 import { provider as UI, Icon } from '@dropins/tools/components.js';
 import { events } from '@dropins/tools/event-bus.js';
 
+import { sanitizeUrl } from '../../scripts/utils.js';
 import '../../scripts/initializers/auth.js';
 
 export default async function decorate(block) {
@@ -66,10 +67,12 @@ export default async function decorate(block) {
       const $content = $item.querySelector(`:scope > div:nth-child(${rows.label})`)?.children;
 
       /** Link */
-      const link = $content[0]?.querySelector('a')?.href;
-      const isActive = link && new URL(link).pathname === window.location.pathname;
+      const rawHref = $content[0]?.querySelector('a')?.getAttribute('href');
+      const link = sanitizeUrl(rawHref || '');
+      const isActive = link
+        && new URL(link, window.location.href).pathname === window.location.pathname;
       $link.classList.toggle('commerce-account-nav__item--active', isActive);
-      $link.href = link;
+      $link.href = link || `${window.location.pathname}${window.location.search}`;
 
       /** Icon */
       const icon = $item.querySelector(`:scope > div:nth-child(${rows.icon})`)?.textContent?.trim();

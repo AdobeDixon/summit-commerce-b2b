@@ -1,0 +1,18 @@
+{
+  "definitions": [{
+    "title": "Commerce Account Nav",
+    "id": "commerce-account-nav",
+    "model": "commerce-account-nav",
+    "plugins": {
+      "da": {
+        "rows": 1,
+        "columns": 3
+      }
+    }
+  }],
+  "models": [{
+    "id": "commerce-account-nav",
+    "fields": []
+  }],
+  "filters": []
+}

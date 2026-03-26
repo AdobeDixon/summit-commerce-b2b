@@ -150,7 +150,7 @@ export const QUICK_ACTIONS = [
 
 /**
  * Map configuration.
- * Uses Leaflet.js from jsDelivr + CARTO Voyager tiles (no API key required).
+ * Uses Leaflet.js from jsDelivr + OpenStreetMap tiles (no API key required).
  * To swap providers, update tileUrl / attribution / subdomains here.
  */
 export const MAP_CONFIG = {

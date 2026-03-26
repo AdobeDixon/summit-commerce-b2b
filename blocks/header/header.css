@@ -553,6 +553,28 @@ header .nav-search-input .search_autocomplete .popover-container {
   }
 }
 
+/* ── Auth Combine (Sign In trigger) ────────────────────────── */
+.authCombineNavElement .auth-combine-trigger {
+  all: unset;
+  font: inherit;
+  color: var(--color-neutral-800);
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: inherit;
+  padding: inherit;
+  transition: color 0.15s ease;
+}
+
+.authCombineNavElement:hover .auth-combine-trigger {
+  color: var(--color-brand-500);
+}
+
+.authCombineNavElement .auth-combine-trigger:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
 /* ── Auth Combine Modal ──────────────────────────────────── */
 #auth-combine-modal {
   position: fixed;

@@ -235,6 +235,20 @@
     ]
   },
   {
+    "id": "chep-dashboard",
+    "fields": []
+  },
+  {
+    "id": "chep-orders-list",
+    "fields": [
+      {
+        "component": "number",
+        "name": "page-size",
+        "label": "Page Size"
+      }
+    ]
+  },
+  {
     "id": "columns",
     "fields": [
       {
@@ -259,6 +273,10 @@
         "label": "Title"
       }
     ]
+  },
+  {
+    "id": "commerce-account-nav",
+    "fields": []
   },
   {
     "id": "commerce-addresses",
@@ -331,16 +349,6 @@
   },
   {
     "id": "commerce-invoices-list",
-    "fields": [
-      {
-        "component": "number",
-        "name": "page-size",
-        "label": "Page Size"
-      }
-    ]
-  },
-  {
-    "id": "chep-orders-list",
     "fields": [
       {
         "component": "number",

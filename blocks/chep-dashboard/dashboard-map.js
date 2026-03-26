@@ -3,12 +3,11 @@
  *
  * MAP IMPLEMENTATION:
  * - Leaflet.js loaded from jsDelivr CDN (reliable, widely allow-listed)
- * - CARTO Voyager tiles — production-grade, free, no API key required
+ * - OpenStreetMap tiles — highly reliable, free, no API key required
  * - Nonce is read from the page's existing nonce scripts for CSP compatibility
  * - Falls back to a clean site list if Leaflet cannot load
  *
- * TILE URL: https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png
- * CARTO free tier: up to 75k tile requests/day — ample for a B2B dashboard.
+ * TILE URL: https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
  *
  * DELIVERIES PANEL:
  * - Shows orders with status "processing" as active deliveries.
@@ -28,10 +27,10 @@ import {
 const LEAFLET_JS = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js';
 const LEAFLET_CSS = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css';
 
-/** CARTO Voyager — clean, modern, no API key, excellent reliability */
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png';
-const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
-const TILE_SUBDOMAINS = 'abcd';
+/** OpenStreetMap — highly reliable, no API key, widely supported (avoids CARTO tile loading issues) */
+const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const TILE_SUBDOMAINS = 'abc';
 
 /* ── Leaflet loader ────────────────────────────────────────────────────── */
 
@@ -160,7 +159,7 @@ async function initMap(container) {
   });
   ro.observe(container);
 
-  setTimeout(fixSize, 600);
+  setTimeout(fixSize, 1000);
 
   return map;
 }
@@ -343,7 +342,9 @@ export function buildBottomSection() {
 
 /**
  * Initialise the Leaflet map only after the bottom section has been appended
- * to the live DOM. Initialising on a detached element causes partial tiles.
+ * to the live DOM and the map container is visible with proper dimensions.
+ * Initialising too early (e.g. when below the fold or during prerender) causes
+ * zero-size container → gray tiles and markers clustered at origin.
  *
  * @param {HTMLElement} section
  */
@@ -351,12 +352,49 @@ export function initializeBottomSectionMap(section) {
   const mapContainer = section?.__mapContainer;
   if (!mapContainer || section.__mapInitialised) return;
 
-  section.__mapInitialised = true;
+  function doInit() {
+    if (section.__mapInitialised) return;
+    const { offsetWidth, offsetHeight } = mapContainer;
+    if (offsetWidth < 50 || offsetHeight < 50) return;
 
-  initMap(mapContainer).catch((err) => {
-    console.warn('[Dashboard] Map failed to load:', err.message);
-    buildMapFallback(mapContainer);
-  });
+    section.__mapInitialised = true;
+    initMap(mapContainer).catch((err) => {
+      console.warn('[Dashboard] Map failed to load:', err.message);
+      buildMapFallback(mapContainer);
+    });
+  }
+
+  /* Wait for container to be visible with dimensions (handles below-fold, prerender) */
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting) {
+        io.disconnect();
+        requestAnimationFrame(() => {
+          requestAnimationFrame(doInit);
+        });
+      }
+    },
+    { threshold: 0.01, rootMargin: '50px' },
+  );
+  io.observe(mapContainer);
+
+  /* Fallback if IntersectionObserver never fires (e.g. container always visible) */
+  const id = setInterval(() => {
+    if (section.__mapInitialised) {
+      clearInterval(id);
+      return;
+    }
+    const { offsetWidth, offsetHeight } = mapContainer;
+    if (offsetWidth >= 50 && offsetHeight >= 50) {
+      clearInterval(id);
+      io.disconnect();
+      doInit();
+    }
+  }, 100);
+  setTimeout(() => {
+    clearInterval(id);
+    if (!section.__mapInitialised) doInit();
+  }, 3000);
 }
 
 /**

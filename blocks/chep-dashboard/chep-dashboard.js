@@ -441,8 +441,10 @@ export default async function decorate(block) {
     const totalCount = ordersData?.totalCount ?? 0;
     const hasNoOrders = totalCount === 0;
     const isLoggedIn = customerIdentity != null || ordersData != null;
+    const customerEmail = (customerIdentity?.email ?? ordersData?.customer?.email ?? '').toLowerCase();
     const forceShowBanner = new URLSearchParams(window.location.search).get('newCustomerPreview') === '1';
-    const showNewCustomerBanner = forceShowBanner || (isLoggedIn && hasNoOrders);
+    const isBannerEmail = customerEmail === 'tl@ig.com';
+    const showNewCustomerBanner = forceShowBanner || isBannerEmail || (isLoggedIn && hasNoOrders);
 
     if (showNewCustomerBanner) {
       const newCustomerBanner = buildNewCustomerBanner();
