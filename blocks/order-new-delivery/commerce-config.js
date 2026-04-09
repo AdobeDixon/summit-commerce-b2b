@@ -1,4 +1,4 @@
-export const ORDER_SOURCE = 'CHEP';
+export const ORDER_SOURCE = 'BODEA';
 
 // TODO: Replace these defaults with the production B2B shipping carrier/method.
 export const DEFAULT_SHIPPING_METHOD = Object.freeze({

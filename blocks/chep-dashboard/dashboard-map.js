@@ -1,5 +1,5 @@
 /**
- * CHEP Dashboard – Site Locations Map + Deliveries Side Panel
+ * Bodea Dashboard – Site Locations Map + Deliveries Side Panel
  *
  * MAP IMPLEMENTATION:
  * - Leaflet.js loaded from jsDelivr CDN (reliable, widely allow-listed)
@@ -15,7 +15,7 @@
  */
 
 import { MAP_CONFIG, QUICK_ACTIONS, SITE_COORDINATES } from './dashboard-config.js';
-import { DELIVERY_SITES } from '../order-new-delivery/sites.js';
+import { getDeliverySites } from '../order-new-delivery/sites.js';
 import {
   rootLink,
   CUSTOMER_ORDERS_PATH,
@@ -31,6 +31,72 @@ const LEAFLET_CSS = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const TILE_SUBDOMAINS = 'abc';
+
+const GEOCODE_CACHE_PREFIX = 'ond-nominatim-coord:';
+const NOMINATIM_DELAY_MS = 1100;
+
+/**
+ * Resolve [lat, lng] for a delivery site: optional static override, else Nominatim (cached).
+ * @param {{ id: string, address1?: string, city?: string, postcode?: string, region?: string, countryCode?: string }} site
+ * @returns {Promise<number[] | null>}
+ */
+function peekKnownCoordinates(site) {
+  const override = SITE_COORDINATES[site.id];
+  if (Array.isArray(override) && override.length === 2) {
+    return override;
+  }
+  const cacheKey = `${GEOCODE_CACHE_PREFIX}${site.id}`;
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length === 2
+        && typeof parsed[0] === 'number' && typeof parsed[1] === 'number') {
+        return parsed;
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+async function resolveSiteCoordinates(site) {
+  const known = peekKnownCoordinates(site);
+  if (known) return known;
+
+  const cacheKey = `${GEOCODE_CACHE_PREFIX}${site.id}`;
+
+  const q = [
+    site.address1,
+    site.city,
+    site.postcode,
+    site.region,
+    site.countryCode,
+  ].filter(Boolean).join(', ');
+
+  if (!q.trim()) return null;
+
+  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'SummitCommerceB2B/1.0 (dashboard map; contact: storefront)',
+      },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const hit = data[0];
+    if (!hit?.lat || !hit?.lon) return null;
+    const coords = [parseFloat(hit.lat), parseFloat(hit.lon)];
+    sessionStorage.setItem(cacheKey, JSON.stringify(coords));
+    return coords;
+  } catch {
+    return null;
+  }
+}
 
 /* ── Leaflet loader ────────────────────────────────────────────────────── */
 
@@ -85,13 +151,13 @@ async function initMap(container) {
     maxZoom: 20,
   }).addTo(map);
 
-  /* Custom CHEP marker icon */
+  /* Custom site marker icon */
   const chepIcon = L.divIcon({
     className: 'chep-map-marker',
     html: `
       <div class="chep-map-marker__pin">
         <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#005eb8"/>
+          <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#0369a1"/>
           <circle cx="16" cy="16" r="6" fill="white"/>
         </svg>
       </div>
@@ -101,10 +167,23 @@ async function initMap(container) {
     popupAnchor: [0, -44],
   });
 
-  /* Add a marker for each configured site */
-  DELIVERY_SITES.forEach((site) => {
-    const coords = SITE_COORDINATES[site.id];
-    if (!coords) return;
+  /* Add a marker for each address-book site (geocoded unless SITE_COORDINATES overrides). */
+  const sites = getDeliverySites();
+  let isFirstNetworkLookup = true;
+  // eslint-disable-next-line no-restricted-syntax
+  for (let i = 0; i < sites.length; i += 1) {
+    const site = sites[i];
+    const hadCoords = Boolean(peekKnownCoordinates(site));
+    if (!hadCoords) {
+      if (!isFirstNetworkLookup) {
+        // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
+        await new Promise((r) => setTimeout(r, NOMINATIM_DELAY_MS));
+      }
+      isFirstNetworkLookup = false;
+    }
+    // eslint-disable-next-line no-await-in-loop
+    const coords = await resolveSiteCoordinates(site);
+    if (!coords) continue;
     siteBounds.push(coords);
 
     const typeLabel = site.type
@@ -122,7 +201,7 @@ async function initMap(container) {
         { maxWidth: 240, className: 'chep-popup-wrap' },
       )
       .addTo(map);
-  });
+  }
 
   function fitToSites() {
     if (!siteBounds.length) return;
@@ -167,6 +246,16 @@ async function initMap(container) {
 /* ── Map fallback (Leaflet unavailable) ────────────────────────────────── */
 
 function buildMapFallback(container) {
+  const sites = getDeliverySites();
+  const siteRows = sites.length
+    ? sites.map((s) => `
+          <div class="map-fallback__site">
+            <strong>${s.name}</strong>
+            <span>${s.city}, ${s.postcode}</span>
+          </div>
+        `).join('')
+    : '<p class="map-fallback__no-sites">No saved addresses in your address book.</p>';
+
   container.innerHTML = `
     <div class="map-fallback">
       <div class="map-fallback__icon">
@@ -177,14 +266,9 @@ function buildMapFallback(container) {
         </svg>
       </div>
       <p class="map-fallback__title">Map unavailable</p>
-      <p class="map-fallback__desc">Map tiles could not be loaded. Your active sites are listed below.</p>
+      <p class="map-fallback__desc">Map tiles could not be loaded. Your saved delivery locations are listed below.</p>
       <div class="map-fallback__sites">
-        ${DELIVERY_SITES.map((s) => `
-          <div class="map-fallback__site">
-            <strong>${s.name}</strong>
-            <span>${s.city}, ${s.postcode}</span>
-          </div>
-        `).join('')}
+        ${siteRows}
       </div>
     </div>
   `;
@@ -283,7 +367,7 @@ export function buildBottomSection() {
 
   const mapContainer = document.createElement('div');
   mapContainer.className = 'dashboard-map-container';
-  mapContainer.setAttribute('aria-label', 'CHEP site locations map');
+  mapContainer.setAttribute('aria-label', 'Bodea site locations map');
   mapWrap.appendChild(mapContainer);
 
   section.appendChild(mapWrap);

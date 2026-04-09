@@ -121,7 +121,7 @@
 .product-details__buttons .dropin-button--primary:hover,
 .product-details__buttons button[type="submit"]:hover {
   background-color: var(--color-brand-600);
-  box-shadow: 0 2px 8px rgb(0 48 135 / 24%);
+  box-shadow: 0 2px 8px rgb(3 105 161 / 24%);
 }
 
 /* Attributes ────────────────────────────────────────────── */

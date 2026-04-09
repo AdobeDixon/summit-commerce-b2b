@@ -50,12 +50,12 @@ const PRODUCTS_BY_SKU_QUERY = `
 `;
 
 const TARGET_SKUS = [
-  'CHEP-UK-WOOD-1200X1000-01',
-  'CHEP-EU-WOOD-1200X800-03',
-  'CHEP-WOOD-METAL-800X600-08',
-  'CHEP-PLASTIC-1200X800-01120',
-  'CHEP-PLASTIC-1200X1000-LIPS-00077',
-  'CHEP-PLASTIC-QTR-600X400-16',
+  'HCS-BR-FAC-WIRECUT-P450',
+  'HCS-BR-ENG-CLASSAB-P350',
+  'HCS-BR-CMU-SOLID-P450',
+  'HCS-BR-COM-UTILITY-P450',
+  'HCS-BR-PRF-MULTICELL-P450',
+  'HCS-BR-AIR-VENT-P030',
 ];
 
 class FetchGraphQL {
@@ -113,7 +113,7 @@ async function main() {
   console.log(`Authenticated as ${CUSTOMER_EMAIL}\n`);
 
   // Try products(skus: ...) query
-  console.log('Checking target CHEP SKUs via products(skus:...)...');
+  console.log('Checking target catalog SKUs via products(skus:...)...');
   const productsRes = await client.fetchGraphQl(PRODUCTS_BY_SKU_QUERY, { skus: TARGET_SKUS });
   const productsData = productsRes?.data?.products;
   const productsList = Array.isArray(productsData) ? productsData : (productsData ? [productsData] : []);
@@ -124,11 +124,11 @@ async function main() {
     const skus = productsList.map((p) => p?.sku).filter(Boolean);
     console.log('  Found:', skus.join(', '));
   } else {
-    console.log('  None of the target CHEP SKUs were found.');
+    console.log('  None of the target catalog SKUs were found.');
   }
 
   // Try productSearch with broad terms
-  for (const phrase of ['pallet', 'CHEP', 'product']) {
+  for (const phrase of ['pallet', 'Bodea', 'product']) {
     console.log(`\nproductSearch(phrase="${phrase}")...`);
     const searchRes = await client.fetchGraphQl(PRODUCT_SEARCH_QUERY, {
       phrase,

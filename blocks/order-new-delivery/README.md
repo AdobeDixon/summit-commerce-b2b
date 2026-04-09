@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Order New Delivery block is a multi-step wizard for placing CHEP delivery orders. Steps: Order Type, Delivery Date, Transport, Equipment, Site & Contact, Delivery Window. Uses Commerce order API and equipment product catalog.
+The Order New Delivery block is a multi-step wizard for placing Bodea delivery orders. Steps: Order Type, Delivery Date, Transport, Equipment, Site & Contact, Delivery Window. Uses Commerce order API and equipment product catalog.
 
 ## DA.live Integration
 

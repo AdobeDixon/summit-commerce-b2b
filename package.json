@@ -17,7 +17,9 @@
     "build:json:definitions": "merge-json-cli -i \"models/_component-definition.json\" -o \"component-definition.json\"",
     "build:json:filters": "merge-json-cli -i \"models/_component-filters.json\" -o \"component-filters.json\"",
     "prepare": "husky",
-    "create-user": "node scripts/create-commerce-user.mjs"
+    "create-user": "node scripts/create-commerce-user.mjs",
+    "update-product-names": "node scripts/update-commerce-product-names.mjs",
+    "migrate-masonry-skus": "node scripts/migrate-legacy-skus-to-masonry.mjs"
   },
   "repository": {
     "type": "git",

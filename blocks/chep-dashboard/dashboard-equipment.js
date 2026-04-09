@@ -1,7 +1,7 @@
 /**
- * CHEP Dashboard – Equipment Overview Section
+ * Bodea Dashboard – Equipment Overview Section
  *
- * Renders featured CHEP pallet cards with stock indicators and a link
+ * Renders featured pallet cards with stock indicators and a link
  * to the order/equipment flow.
  *
  * DATA:
@@ -18,14 +18,14 @@ import { EQUIPMENT_DISPLAY_NAMES, EQUIPMENT_STOCK_CAPACITY, FEATURED_EQUIPMENT_S
 
 const EQUIPMENT_ICONS = {
   wood: `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="14" width="20" height="4" rx="1" fill="rgba(0,94,184,0.08)"/>
+    <rect x="2" y="14" width="20" height="4" rx="1" fill="rgba(3,105,161,0.08)"/>
     <path d="M4 14V8h16v6"/>
     <path d="M8 8V5M12 8V5M16 8V5"/>
     <path d="M6 18v2M18 18v2"/>
     <path d="M4 11h16"/>
   </svg>`,
   plastic: `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="13" width="20" height="5" rx="1.5" fill="rgba(0,94,184,0.08)"/>
+    <rect x="2" y="13" width="20" height="5" rx="1.5" fill="rgba(3,105,161,0.08)"/>
     <path d="M5 13V7h14v6"/>
     <path d="M2 13h20"/>
     <rect x="4" y="8" width="4" height="5" rx="0.5"/>
@@ -34,7 +34,7 @@ const EQUIPMENT_ICONS = {
     <path d="M5 18v2M19 18v2"/>
   </svg>`,
   'wood-metal': `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="14" width="20" height="4" rx="1" fill="rgba(0,94,184,0.08)" stroke-dasharray="4 2"/>
+    <rect x="2" y="14" width="20" height="4" rx="1" fill="rgba(3,105,161,0.08)" stroke-dasharray="4 2"/>
     <path d="M4 14V8h16v6"/>
     <path d="M7 8V5M12 8V5M17 8V5"/>
     <path d="M4 11h16"/>

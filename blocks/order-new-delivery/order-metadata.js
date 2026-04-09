@@ -28,7 +28,7 @@ export function buildOrderMetadata(payload) {
   return {
     orderType: normalizeOrderType(payload.orderType),
     transport: normalizeTransport(payload.transport),
-    source: trimString(payload.source || 'CHEP'),
+    source: trimString(payload.source || 'BODEA'),
     siteId: trimString(payload.site?.id),
     siteName: trimString(payload.site?.name),
     contactName: trimString(payload.contact?.name),

@@ -1,5 +1,5 @@
 /**
- * CHEP Dashboard – Low Stock Alert Panel
+ * Bodea Dashboard – Low Stock Alert Panel
  *
  * Renders the "Low Stock Alert" card with a list of equipment items
  * whose inventory is at or below the configured threshold.
@@ -18,9 +18,10 @@ import {
   EQUIPMENT_DISPLAY_NAMES,
   EQUIPMENT_STOCK_CAPACITY,
   FEATURED_EQUIPMENT_SKUS,
+  PRIMARY_EQUIPMENT_SKU,
 } from './dashboard-config.js';
 
-/* ── Pallet icons (order flow wood icon for CHEP-UK-WOOD, generic fallback) ─ */
+/* ── Pallet icons (order flow wood icon for UK wood SKU, generic fallback) ─ */
 
 const PALLET_ICON = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
   <rect x="2" y="14" width="20" height="4" rx="1"/>
@@ -40,7 +41,7 @@ const ORDER_FLOW_WOOD_ICON = `<svg width="32" height="32" viewBox="0 0 32 32" fi
 </svg>`;
 
 function getStockItemIcon(sku) {
-  return sku === 'CHEP-UK-WOOD-1200X1000-01' ? ORDER_FLOW_WOOD_ICON : PALLET_ICON;
+  return sku === PRIMARY_EQUIPMENT_SKU ? ORDER_FLOW_WOOD_ICON : PALLET_ICON;
 }
 
 /* ── Progress bar colour logic ─────────────────────────────────────────── */

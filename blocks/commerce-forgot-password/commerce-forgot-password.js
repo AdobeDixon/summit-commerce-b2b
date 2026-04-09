@@ -19,7 +19,7 @@ function buildAuthSplitLayout(block) {
   const brand = document.createElement('div');
   brand.className = 'auth-split__brand';
   brand.innerHTML = `
-    <img src="/images/mychep-logo.png" alt="myCHEP - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
+    <img src="/images/bodea-logo.png" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
     <p class="auth-split__desc">Reset your password. We'll send you an email with a link to create a new password.</p>
   `;
   split.appendChild(brand);

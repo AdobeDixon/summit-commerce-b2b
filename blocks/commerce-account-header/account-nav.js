@@ -1,7 +1,7 @@
 /**
  * My Account – Left Navigation Rail
  *
- * Builds the same chep-nav structure as the dashboard but with only
+ * Builds the same left-nav structure as the dashboard but with only
  * My account items from the sidebar fragment.
  */
 
@@ -62,7 +62,7 @@ const ICONS = {
 /* Fallback for unknown icons */
 const DEFAULT_ICON = ICONS.User;
 
-const MYCHEP_LOGO_IMG = `<img src="/images/mychep-logo.png" alt="myCHEP - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />`;
+const BODEA_LOGO_IMG = `<img src="/images/bodea-logo.png" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />`;
 
 /* Icon name mapping (fragment may use different names) */
 const ICON_MAP = {
@@ -169,8 +169,8 @@ export async function buildAccountNav(pathname, navItems = null) {
   const logoArea = document.createElement('div');
   logoArea.className = 'chep-nav__logo';
   logoArea.innerHTML = `
-    <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="myCHEP Home">
-      ${MYCHEP_LOGO_IMG}
+    <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="Bodea Home">
+      ${BODEA_LOGO_IMG}
     </a>
   `;
   nav.appendChild(logoArea);
@@ -189,8 +189,7 @@ export async function buildAccountNav(pathname, navItems = null) {
   footer.className = 'chep-nav__footer';
   footer.innerHTML = `
     <div class="chep-nav__footer-brand">
-      <span class="chep-nav__footer-text">Powered by CHEP</span>
-      <span class="chep-nav__footer-sub">Brambles Group Limited</span>
+      <span class="chep-nav__footer-text">Bodea</span>
     </div>
   `;
   nav.appendChild(footer);

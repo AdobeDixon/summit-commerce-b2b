@@ -19,7 +19,7 @@ function renderPalletIcon(material) {
   const colors = {
     wood: '#c68642',
     'wood-metal': '#8a9bb0',
-    plastic: '#1fa6e8',
+    plastic: '#0369a1',
   };
   const c = colors[material] || colors.wood;
   return `<svg class="chep-orders-list__pallet-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

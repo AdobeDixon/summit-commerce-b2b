@@ -70,7 +70,7 @@ function formatOrderType(value) {
 }
 
 function formatTransport(value) {
-  if (value === 'chep') return 'CHEP';
+  if (value === 'chep') return 'Bodea';
   if (value === 'customer') return 'Customer';
   return 'Not selected';
 }

@@ -261,7 +261,7 @@
           }
         },
         {
-          "title": "CHEP Dashboard",
+          "title": "Bodea Dashboard",
           "id": "chep-dashboard",
           "model": "chep-dashboard",
           "plugins": {
@@ -271,7 +271,7 @@
           }
         },
         {
-          "title": "CHEP Orders List",
+          "title": "Bodea Orders List",
           "id": "chep-orders-list",
           "model": "chep-orders-list",
           "plugins": {

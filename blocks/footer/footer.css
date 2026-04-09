@@ -1,10 +1,10 @@
 /* ── Footer ──────────────────────────────────────────────── */
 footer {
-  background-color: var(--color-surface-dark);    /* #002d6e — CHEP deep navy */
+  background-color: var(--color-surface-dark);
   color: rgb(255 255 255 / 75%);
   font: var(--type-body-2-default-font);
   letter-spacing: var(--type-body-2-default-letter-spacing);
-  border-top: 4px solid var(--color-brand-500);   /* #005eb8 accent top-border */
+  border-top: 4px solid var(--color-brand-500);
 }
 
 footer .footer > div {

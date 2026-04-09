@@ -1,5 +1,5 @@
 /**
- * CHEP Dashboard Data Service
+ * Bodea Dashboard Data Service
  *
  * Responsible for all Commerce GraphQL data fetching for the dashboard.
  * Keeps data access completely separate from UI rendering.
@@ -14,10 +14,14 @@
  */
 
 import { CORE_FETCH_GRAPHQL, checkIsAuthenticated } from '../../scripts/commerce.js';
-import { FEATURED_EQUIPMENT_SKUS } from './dashboard-config.js';
+import {
+  EQUIPMENT_DISPLAY_NAMES,
+  FEATURED_EQUIPMENT_SKUS,
+  PRIMARY_EQUIPMENT_SKU,
+} from './dashboard-config.js';
 
 /** Demo: artificially show this SKU as low stock on the dashboard */
-const DEMO_LOW_STOCK_SKU = 'CHEP-UK-WOOD-1200X1000-01';
+const DEMO_LOW_STOCK_SKU = PRIMARY_EQUIPMENT_SKU;
 
 /** Demo: fake order for delivery today — shown in Recent Orders, KPI, and Recent Deliveries */
 function getDemoOrderForDeliveryToday() {
@@ -30,10 +34,18 @@ function getDemoOrderForDeliveryToday() {
     location: 'Manchester DC – Manchester',
     city: 'Manchester',
     items: [
-      { name: 'CHEP Standard Pallet', sku: 'CHEP-UK-WOOD-1200X1000-01', qty: 50 },
-      { name: 'European Wooden Pallet', sku: 'CHEP-EU-WOOD-1200X800-03', qty: 25 },
+      {
+        name: EQUIPMENT_DISPLAY_NAMES[PRIMARY_EQUIPMENT_SKU],
+        sku: PRIMARY_EQUIPMENT_SKU,
+        qty: 50,
+      },
+      {
+        name: EQUIPMENT_DISPLAY_NAMES['HCS-BR-ENG-CLASSAB-P350'],
+        sku: 'HCS-BR-ENG-CLASSAB-P350',
+        qty: 25,
+      },
     ],
-    primaryEquipment: 'CHEP Standard Pallet',
+    primaryEquipment: EQUIPMENT_DISPLAY_NAMES[PRIMARY_EQUIPMENT_SKU],
     total: { value: 1250, currency: 'GBP' },
   };
 }
@@ -41,7 +53,7 @@ function getDemoOrderForDeliveryToday() {
 function getSyntheticLowStockItem() {
   return {
     sku: DEMO_LOW_STOCK_SKU,
-    name: 'CHEP Standard Pallet',
+    name: EQUIPMENT_DISPLAY_NAMES[DEMO_LOW_STOCK_SKU],
     stockStatus: 'IN_STOCK',
     qty: 120,
     qtyIsReal: false,
@@ -321,7 +333,7 @@ export const DashboardService = {
   },
 
   /**
-   * Fetch product details and stock levels for the featured CHEP equipment SKUs.
+   * Fetch product details and stock levels for the featured equipment SKUs.
    * This query is public (no authentication required for product catalog).
    * Returns an empty array if the query fails.
    */

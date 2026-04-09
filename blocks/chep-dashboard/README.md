@@ -1,8 +1,8 @@
-# CHEP Dashboard Block
+# Bodea Dashboard Block
 
 ## Overview
 
-The CHEP Dashboard block provides the MyCHEP homepage experience: left navigation, KPI cards, recent orders, stock alerts, equipment overview, and a map with delivery activity. It loads Commerce data asynchronously and replaces the standard header/footer with a full-page dashboard layout.
+The Bodea Dashboard block provides the Bodea homepage experience: left navigation, KPI cards, recent orders, stock alerts, equipment overview, and a map with delivery activity. It loads Commerce data asynchronously and replaces the standard header/footer with a full-page dashboard layout.
 
 ## DA.live Integration
 

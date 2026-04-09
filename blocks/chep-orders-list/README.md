@@ -1,8 +1,8 @@
-# CHEP Orders List Block
+# Bodea Orders List Block
 
 ## Overview
 
-The CHEP Orders List block displays a paginated table of customer orders with status, date, products, and links to order details. Uses Commerce order API and shares nav with CHEP Dashboard.
+The Bodea Orders List block displays a paginated table of customer orders with status, date, products, and links to order details. Uses Commerce order API and shares nav with the Bodea Dashboard.
 
 ## DA.live Integration
 

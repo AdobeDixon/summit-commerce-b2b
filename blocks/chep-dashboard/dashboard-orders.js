@@ -1,5 +1,5 @@
 /**
- * CHEP Dashboard – Recent Orders Panel
+ * Bodea Dashboard – Recent Orders Panel
  *
  * Renders the "Recent Orders" card including a table of the latest orders,
  * status pills, and a "View All" link.

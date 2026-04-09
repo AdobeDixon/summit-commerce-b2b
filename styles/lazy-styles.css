@@ -1,5 +1,5 @@
 /* ============================================================
-   MYCHEP LAZY STYLES
+   BODEA LAZY STYLES
    Global post-LCP polish, dropin overrides, content modules
    ============================================================ */
 
@@ -289,13 +289,13 @@ dialog,
 }
 
 .section.callout a.button:any-link {
-  background-color: var(--color-accent-500);
+  background-color: var(--color-brand-500);
   color: var(--color-neutral-50);
   border-color: transparent;
 }
 
 .section.callout a.button:hover {
-  background-color: var(--color-accent-600);
+  background-color: var(--color-brand-600);
 }
 
 /* ── Feature Icon Block ──────────────────────────────────── */

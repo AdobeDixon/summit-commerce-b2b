@@ -1,5 +1,5 @@
 /**
- * CHEP Dashboard – KPI Summary Cards
+ * Bodea Dashboard – KPI Summary Cards
  *
  * Renders a row of KPI metric cards. Each card displays a label, a large
  * numeric value, and a supporting subtitle.

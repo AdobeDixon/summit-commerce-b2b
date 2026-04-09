@@ -20,7 +20,7 @@
 .dashboard-page {
   display: block;
   overflow: hidden;
-  background: #f0f2f5;
+  background: var(--color-neutral-200);
 }
 
 body.dashboard-page > header,
@@ -74,7 +74,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   width: 100%;
   height: 100dvh;
   overflow: hidden;
-  background: #f0f2f5;
+  background: var(--color-neutral-200);
 }
 
 /* Override .commerce-company-users flex-direction:column when shell is active */
@@ -97,8 +97,8 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   gap: 16px;
   min-height: 64px;
   padding: 0 24px;
-  background: #fff;
-  border-bottom: 1px solid #e4e7eb;
+  background: var(--color-neutral-50);
+  border-bottom: 1px solid var(--color-neutral-300);
   box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
   flex-shrink: 0;
 }
@@ -112,13 +112,13 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #475569;
+  color: var(--color-neutral-700);
   cursor: pointer;
 }
 
 .commerce-company-users-shell__menu-btn:hover {
-  background: #f0f2f5;
-  color: #005eb8;
+  background: var(--color-neutral-200);
+  color: var(--color-brand-500);
 }
 
 .commerce-company-users-shell__topbar-copy {
@@ -127,7 +127,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
 
 .commerce-company-users-shell__eyebrow {
   display: block;
-  color: #6b7785;
+  color: var(--color-neutral-600);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -136,7 +136,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
 
 .commerce-company-users-shell__page-title {
   margin: 0;
-  color: #1f2933;
+  color: var(--color-neutral-900);
   font-size: 18px;
   font-weight: 700;
 }
@@ -146,14 +146,14 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   align-items: center;
   gap: 8px;
   margin-left: auto;
-  color: #475569;
+  color: var(--color-neutral-700);
   text-decoration: none;
   font-size: 13px;
   font-weight: 600;
 }
 
 .commerce-company-users-shell__account-link:hover {
-  color: #005eb8;
+  color: var(--color-brand-500);
 }
 
 .commerce-company-users-shell__page {
@@ -162,13 +162,13 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   padding: 24px;
 }
 
-/* Left nav (chep-nav) – shared with invoices/dashboard blocks */
+/* Left nav – shared with invoices/dashboard blocks */
 .chep-nav {
   display: flex;
   flex-direction: column;
   width: 240px;
   min-width: 240px;
-  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  background: linear-gradient(180deg, var(--color-surface-dark) 0%, var(--color-surface-dark-mid) 100%);
   overflow: hidden auto;
   flex-shrink: 0;
   z-index: 200;
@@ -204,7 +204,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff !important;
+  color: var(--color-neutral-50) !important;
   text-decoration: none !important;
 }
 
@@ -253,12 +253,12 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
 
 .chep-nav__link:hover {
   background: rgb(255 255 255 / 10%);
-  color: #fff !important;
+  color: var(--color-neutral-50) !important;
 }
 
 .chep-nav__item--active .chep-nav__link {
   background: rgb(255 255 255 / 15%);
-  color: #fff !important;
+  color: var(--color-neutral-50) !important;
   font-weight: 600;
 }
 
@@ -270,7 +270,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   transform: translateY(-50%);
   width: 4px;
   height: 28px;
-  background: #f07800;
+  background: var(--color-accent-500);
   border-radius: 0 3px 3px 0;
 }
 
@@ -441,7 +441,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   gap: var(--spacing-medium);
   padding: var(--spacing-medium) var(--spacing-large);
   border-bottom: 1px solid var(--color-neutral-300);
-  background: linear-gradient(180deg, rgb(0 94 184 / 3%), transparent);
+  background: linear-gradient(180deg, rgb(3 105 161 / 3%), transparent);
 }
 
 .commerce-company-users__tabs {
@@ -476,8 +476,8 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
 .commerce-company-users__tab[aria-selected="true"],
 .commerce-company-users__tab.is-active {
   border-color: var(--color-brand-500);
-  background: rgb(0 94 184 / 6%);
-  box-shadow: inset 0 0 0 1px rgb(0 94 184 / 14%);
+  background: rgb(3 105 161 / 6%);
+  box-shadow: inset 0 0 0 1px rgb(3 105 161 / 14%);
 }
 
 .commerce-company-users__tab-label {
@@ -540,7 +540,7 @@ body.company-users-page .delete-role-modal__actions button {
 body.company-users-page .delete-role-modal__actions button:hover {
   border-color: var(--color-brand-500);
   background: var(--color-neutral-100);
-  color: #0051a0 !important; /* CHEP brand hover – overrides dropin-design */
+  color: var(--color-brand-600) !important; /* Brand hover — overrides dropin-design */
 }
 
 .commerce-company-users__section-intro {
@@ -601,7 +601,7 @@ body.company-users-page .delete-role-modal__actions button:hover {
   height: 0.95rem;
   border-radius: 50%;
   background: var(--color-brand-500);
-  box-shadow: 0 0 0 0 rgb(0 94 184 / 30%);
+  box-shadow: 0 0 0 0 rgb(3 105 161 / 30%);
   animation: commerce-company-users-pulse 1.4s infinite;
 }
 
@@ -652,7 +652,7 @@ body.company-users-page .delete-role-modal__actions button:hover {
 }
 
 .commerce-company-users .dropin-table__body__row:hover {
-  background: rgb(0 94 184 / 4%);
+  background: rgb(3 105 161 / 4%);
 }
 
 .commerce-company-users .dropin-table__body__cell {
@@ -715,19 +715,19 @@ body.company-users-page .delete-role-modal__actions button:hover {
   letter-spacing: var(--type-button-2-letter-spacing);
 }
 
-/* Primary dropin buttons (Add New User, Add New Role) – white text on CHEP blue */
+/* Primary dropin buttons (Add New User, Add New Role) – white text on brand blue */
 .commerce-company-users .dropin-button--primary,
 .commerce-company-users .dropin-button--primary span {
-  color: #fff !important;
-  background-color: #005eb8 !important;
-  border-color: #005eb8 !important;
+  color: var(--color-neutral-50) !important;
+  background-color: var(--color-brand-500) !important;
+  border-color: var(--color-brand-500) !important;
 }
 
 .commerce-company-users .dropin-button--primary:hover,
 .commerce-company-users .dropin-button--primary:hover span {
-  color: #fff !important;
-  background-color: #0051a0 !important;
-  border-color: #0051a0 !important;
+  color: var(--color-neutral-50) !important;
+  background-color: var(--color-brand-600) !important;
+  border-color: var(--color-brand-600) !important;
 }
 
 .commerce-company-users .addUserButtonContainer :is(button, .dropin-button) *,
@@ -784,15 +784,15 @@ body.company-users-page .dropin-modal .edit-role-and-permission {
 
 @keyframes commerce-company-users-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgb(0 94 184 / 30%);
+    box-shadow: 0 0 0 0 rgb(3 105 161 / 30%);
   }
 
   70% {
-    box-shadow: 0 0 0 0.65rem rgb(0 94 184 / 0%);
+    box-shadow: 0 0 0 0.65rem rgb(3 105 161 / 0%);
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgb(0 94 184 / 0%);
+    box-shadow: 0 0 0 0 rgb(3 105 161 / 0%);
   }
 }
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Commerce Invoices List block displays a paginated table of B2B invoices with status, date, amount, and PDF download. Uses Commerce invoice API and shares nav with CHEP Dashboard.
+The Commerce Invoices List block displays a paginated table of B2B invoices with status, date, amount, and PDF download. Uses Commerce invoice API and shares nav with the Bodea Dashboard.
 
 ## DA.live Integration
 

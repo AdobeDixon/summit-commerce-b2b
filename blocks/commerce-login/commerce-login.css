@@ -94,7 +94,7 @@ main .commerce-login-container input {
 main .commerce-login-container input:focus {
   outline: none;
   border-color: var(--color-brand-500);
-  box-shadow: 0 0 0 3px rgb(0 48 135 / 12%);
+  box-shadow: 0 0 0 3px rgb(3 105 161 / 12%);
 }
 
 main .commerce-login-container .dropin-field {
@@ -169,7 +169,7 @@ body.auth-page .auth-split__form h1,
 body.auth-page .auth-split__form h2 {
   font-size: 32px;
   font-weight: 700;
-  color: #1f2933;
+  color: var(--color-neutral-900);
   margin: 0 0 24px;
   white-space: nowrap;
 }
@@ -186,7 +186,7 @@ body.auth-page .auth-split__form h2 {
 
 /* Labels — strong contrast, align with input text (16px matches input padding) */
 body.auth-page .auth-split__form .dropin-field__label {
-  color: #1f2933;
+  color: var(--color-neutral-900);
   font-weight: 500;
   font-size: 14px;
   padding-left: 16px;
@@ -275,14 +275,14 @@ body.auth-page .auth-split__form .auth-sign-in-form__form__buttons .auth-sign-in
 body.auth-page .auth-split__form .auth-sign-in-form__button--forgot {
   font-size: 14px;
   font-weight: 600;
-  color: #005eb8;
+  color: var(--color-brand-500);
   padding: 0;
   background: none;
   border: none;
 }
 
 body.auth-page .auth-split__form .auth-sign-in-form__button--forgot:hover {
-  color: #0051a0;
+  color: var(--color-brand-600);
   text-decoration: underline;
 }
 
@@ -295,20 +295,20 @@ body.auth-page .auth-split__form .dropin-button--primary {
   padding: 0 24px;
   font-size: 14px;
   font-weight: 600;
-  background: #005eb8;
-  color: #fff;
+  background: var(--color-brand-500);
+  color: var(--color-neutral-50);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 2px 6px rgb(0 94 184 / 30%);
+  box-shadow: 0 2px 6px rgb(3 105 161 / 30%);
 }
 
 body.auth-page .auth-split__form .auth-sign-in-form__button--submit:hover,
 body.auth-page .auth-split__form button[type="submit"]:hover,
 body.auth-page .auth-split__form .dropin-button--primary:hover {
-  background: #0051a0;
-  box-shadow: 0 4px 12px rgb(0 94 184 / 40%);
+  background: var(--color-brand-600);
+  box-shadow: 0 4px 12px rgb(3 105 161 / 40%);
 }
 
 /* Registration / Create account button — same size as Sign in */
@@ -324,9 +324,9 @@ body.auth-page .auth-split__form .dropin-button--primary:hover {
   text-align: center;
   text-decoration: none;
   line-height: 48px;
-  color: #005eb8;
-  background: #fff;
-  border: 2px solid #005eb8;
+  color: var(--color-brand-500);
+  background: var(--color-neutral-50);
+  border: 2px solid var(--color-brand-500);
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -335,8 +335,8 @@ body.auth-page .auth-split__form .dropin-button--primary:hover {
 }
 
 .auth-split__form-inner .auth-registration-btn:hover {
-  background: #005eb8;
-  color: #fff;
-  border-color: #005eb8;
+  background: var(--color-brand-500);
+  color: var(--color-neutral-50);
+  border-color: var(--color-brand-500);
 }
 

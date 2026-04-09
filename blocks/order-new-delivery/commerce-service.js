@@ -49,13 +49,16 @@ function splitContactName(fullName) {
 
 function toAddressInput(site, payload) {
   const { firstName, lastName } = splitContactName(payload.contact.name);
+  const street = (site.streetLines && site.streetLines.length)
+    ? site.streetLines
+    : [site.address1].filter(Boolean);
 
   return {
     address: {
       firstName,
       lastName,
       company: site.name,
-      street: [site.address1],
+      street: street.length ? street : [''],
       city: site.city,
       region: site.region,
       postcode: site.postcode,

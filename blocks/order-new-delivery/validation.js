@@ -1,5 +1,5 @@
 import { getEquipmentProductBySku } from './equipment-products.js';
-import { findSiteById, findSiteBySearchValue } from './sites.js';
+import { findSiteById, findSiteBySearchValue, getDeliverySites } from './sites.js';
 import { STEP_SEQUENCE } from './state.js';
 
 function createValidationResult(fields = {}, summary = '') {
@@ -74,10 +74,16 @@ function validateEquipment(state) {
 
 function validateSiteContact(state) {
   const fields = {};
+
+  if (!getDeliverySites().length) {
+    fields.siteSearch = 'Add at least one address in your address book before continuing.';
+  }
+
   const selectedSite = findSiteById(state.data.siteId) || findSiteBySearchValue(state.data.siteSearch || '');
 
   if (!selectedSite) {
-    fields.siteSearch = 'Select a valid site from the list.';
+    fields.siteSearch = fields.siteSearch
+      || 'Select a delivery location from your saved addresses.';
   }
 
   if (!state.data.contactName.trim()) {

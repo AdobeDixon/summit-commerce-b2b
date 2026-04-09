@@ -13,59 +13,58 @@
 /* stylelint-disable no-empty-source */
 
 /* ============================================================
-   MYCHEP / BRAMBLES DESIGN SYSTEM
-   Brand: MyCHEP – Brambles Global Supply Chain Platform
+   GENERIC B2B DESIGN SYSTEM
+   Pattern: Enterprise Gateway — navy/slate surfaces, sky CTA,
+   restrained accents (ui-ux-pro-max: corporate, high integrity).
    ============================================================ */
 
 :root, .dropin-design {
 
-  /* ── MyCHEP / CHEP Brand Palette ───────────────────────── */
+  /* ── Brand (primary actions, links, focus) ─────────────── */
+  --color-brand-300: #7dd3fc;
+  --color-brand-500: #0369a1;
+  --color-brand-600: #075985;
+  --color-brand-700: #0c4a6e;
 
-  /* Core CHEP blue (maps to dropin brand tokens) */
-  --color-brand-300: #5baee3;
-  --color-brand-500: #005eb8;   /* CHEP primary blue */
-  --color-brand-600: #0051a0;   /* Hover state */
-  --color-brand-700: #003f88;   /* Active / dark */
+  /* Secondary emphasis (badges, section rules) — teal, not retail orange */
+  --color-accent-500: #0e7490;
+  --color-accent-600: #115e59;
+  --color-accent-light: #f0fdfa;
 
-  /* CHEP orange — primary CTA and accent */
-  --color-accent-500: #f07800;
-  --color-accent-600: #d96b00;
-  --color-accent-light: #fff3e0;
+  /* Data / secondary UI chrome */
+  --color-teal-500: #0d9488;
+  --color-teal-200: #ccfbf1;
 
-  /* Digital teal (secondary action / data) */
-  --color-teal-500: #007e85;
-  --color-teal-200: #e0f4f4;
-
-  /* ── Neutral Scale ─────────────────────────────────────── */
+  /* ── Neutral scale (slate) ─────────────────────────────── */
   --color-neutral-50:  #ffffff;
-  --color-neutral-100: #f7f9fc;
-  --color-neutral-200: #eef2f7;
-  --color-neutral-300: #dde3ed;
-  --color-neutral-400: #c4cdd9;
+  --color-neutral-100: #f8fafc;
+  --color-neutral-200: #f1f5f9;
+  --color-neutral-300: #e2e8f0;
+  --color-neutral-400: #cbd5e1;
   --color-neutral-500: #94a3b8;
   --color-neutral-600: #64748b;
   --color-neutral-700: #475569;
-  --color-neutral-800: #1e2a3b;
-  --color-neutral-900: #0f1923;
+  --color-neutral-800: #334155;
+  --color-neutral-900: #020617;
 
-  /* ── Dark Surface (header, footer, hero overlays) ───────── */
-  --color-surface-dark: #002d6e;
-  --color-surface-dark-mid: #003f88;
-  --color-surface-dark-overlay: rgb(0 45 110 / 88%);
+  /* ── Dark surfaces (nav chrome, footer, hero) ──────────── */
+  --color-surface-dark: #0f172a;
+  --color-surface-dark-mid: #1e293b;
+  --color-surface-dark-overlay: rgb(15 23 42 / 88%);
 
   /* ── Status ─────────────────────────────────────────────── */
-  --color-positive-200: #e8f5ec;
-  --color-positive-500: #2e7d32;
-  --color-positive-800: #1b5e20;
-  --color-informational-200: #e8f0fe;
-  --color-informational-500: #1565c0;
-  --color-informational-800: #0d47a1;
-  --color-warning-200: #fef3e8;
-  --color-warning-500: #e87722;
-  --color-warning-800: #d0641a;
-  --color-alert-200: #fdecea;
-  --color-alert-500: #c62828;
-  --color-alert-800: #b71c1c;
+  --color-positive-200: #ecfdf5;
+  --color-positive-500: #15803d;
+  --color-positive-800: #14532d;
+  --color-informational-200: #e0f2fe;
+  --color-informational-500: #0284c7;
+  --color-informational-800: #075985;
+  --color-warning-200: #fffbeb;
+  --color-warning-500: #d97706;
+  --color-warning-800: #b45309;
+  --color-alert-200: #fef2f2;
+  --color-alert-500: #dc2626;
+  --color-alert-800: #b91c1c;
 
   /* ── Button Interaction Tokens ─────────────────────────── */
   --color-button-active: var(--color-brand-700);
@@ -662,7 +661,7 @@ main[hidden] {
   margin-bottom: var(--spacing-xsmall);
 }
 
-/* ── Utility: Orange Accent Bar ──────────────────────────── */
+/* ── Utility: Accent bar ─────────────────────────────────── */
 .accent-bar {
   display: block;
   width: 48px;
@@ -746,8 +745,9 @@ main[hidden] {
   text-shadow: 0 1px 8px rgb(0 0 0 / 60%);
 }
 
-/* ── Page title: myCHEP ──────────────────────────────────── */
-#mychep {
+/* ── Page title (legacy #mychep kept for existing content) ── */
+#mychep,
+#bodea {
   color: #fff !important;
   font-size: 8rem !important;
   font-weight: 700 !important;
@@ -757,7 +757,8 @@ main[hidden] {
   margin-bottom: var(--spacing-medium) !important;
 }
 
-#mychep strong {
+#mychep strong,
+#bodea strong {
   color: #fff !important;
   font-size: inherit !important;
   font-weight: 700 !important;
@@ -773,11 +774,11 @@ body.auth-page {
   display: block;
   min-height: 100dvh;
   overflow-x: hidden;
-  background: #f6f8fa;
+  background: var(--color-neutral-100);
   font-family: adobe-clean, Inter, -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #1f2933;
+  color: var(--color-neutral-900);
 }
 
 body.auth-page > header,
@@ -845,13 +846,17 @@ body.auth-page main .section > div {
   }
 }
 
-/* Brand panel — full height, matches chep-nav gradient */
+/* Brand panel — full height, matches left nav gradient */
 .auth-split__brand {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: var(--spacing-xxbig);
-  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-dark) 0%,
+    var(--color-surface-dark-mid) 100%
+  );
   color: #fff;
   min-height: 280px;
 }
@@ -905,7 +910,7 @@ body.auth-page main .section > div {
   justify-content: center;
   padding: var(--spacing-xxbig);
   min-width: 0;
-  background: #f6f8fa;
+  background: var(--color-neutral-100);
   overflow-x: hidden;
 }
 
@@ -939,21 +944,21 @@ body.auth-page .auth-split__form {
 }
 body.auth-page .auth-split__form input {
   background-color: #fff;
-  border: 1px solid #e4e7eb;
-  color: #1f2933;
+  border: 1px solid var(--color-neutral-300);
+  color: var(--color-neutral-900);
   font-family: inherit;
 }
 
 body.auth-page .auth-split__form input:focus {
-  border-color: #005eb8;
-  box-shadow: 0 0 0 3px rgb(0 94 184 / 18%);
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgb(3 105 161 / 18%);
   outline: none;
 }
 
 body.auth-page .auth-split__form h1,
 body.auth-page .auth-split__form h2,
 body.auth-page .auth-split__form .dropin-header-container__title {
-  color: #1f2933;
+  color: var(--color-neutral-900);
   font-weight: 700;
   font-family: inherit;
 }

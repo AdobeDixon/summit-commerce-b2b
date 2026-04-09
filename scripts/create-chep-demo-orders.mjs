@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Create CHEP demo orders via Adobe Commerce API.
+ * Create Bodea demo orders via Adobe Commerce API.
  *
  * Env vars:
  *   CHEP_DEMO_CUSTOMER_EMAIL    - Customer email (default: matt@adobedemo.com)
  *   CHEP_DEMO_CUSTOMER_PASSWORD - Customer password (default: Password1)
  *   CHEP_DEMO_MAX_PALLETS=40    - Use 10 orders with max 40 pallets each
  *   CHEP_DEMO_SKIP_COMPANY=true - Skip company context (if products not in company catalog)
- *   CHEP_DEMO_SKUS=SKU1,SKU2   - Override product SKUs (use when CHEP products not in catalog)
+ *   CHEP_DEMO_SKUS=SKU1,SKU2   - Override product SKUs (use when catalog SKUs differ)
  *   CHEP_DEMO_FREE_SHIPPING=true - Use free shipping (freeshipping/freeshipping) instead of flatrate
  *
  * B2B: Ensure products exist in the company's shared catalog (Admin > B2B > Shared Catalogs).
@@ -35,7 +35,7 @@ const runStatePath = getRunStatePath();
 const CUSTOMER_TOKEN = process.env.CHEP_DEMO_CUSTOMER_TOKEN ?? '';
 const START_INDEX = Number.parseInt(process.env.CHEP_DEMO_START_INDEX ?? '0', 10);
 
-const ORDER_SOURCE = 'CHEP';
+const ORDER_SOURCE = 'BODEA';
 const USE_FREE_SHIPPING = process.env.CHEP_DEMO_FREE_SHIPPING === 'true' || process.env.CHEP_DEMO_FREE_SHIPPING === '1';
 const DEFAULT_SHIPPING_METHOD = Object.freeze(
   USE_FREE_SHIPPING
@@ -134,16 +134,16 @@ const OVERRIDE_SKUS = process.env.CHEP_DEMO_SKUS
   : null;
 
 const ORDER_BLUEPRINTS_SMALL = [
-  { siteId: 'site-manchester-001', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:00', to: '12:00' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 25 }, { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 15 }] },
-  { siteId: 'site-birmingham-002', orderType: 'single', transport: 'customer', deliveryWindow: { from: '09:00', to: '13:00' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 40 }] },
-  { siteId: 'site-leeds-003', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '07:00', to: '11:00' }, equipment: [{ sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 20 }, { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 18 }] },
-  { siteId: 'site-bristol-004', orderType: 'single', transport: 'chep', deliveryWindow: { from: '10:00', to: '14:00' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 22 }, { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 12 }] },
-  { siteId: 'site-manchester-001', orderType: 'single', transport: 'customer', deliveryWindow: { from: '06:00', to: '10:00' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 35 }] },
-  { siteId: 'site-birmingham-002', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '11:00', to: '15:00' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 28 }, { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 10 }] },
-  { siteId: 'site-leeds-003', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:30', to: '12:30' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 30 }, { sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 8 }] },
-  { siteId: 'site-bristol-004', orderType: 'single', transport: 'customer', deliveryWindow: { from: '07:30', to: '11:30' }, equipment: [{ sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 15 }, { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 20 }] },
-  { siteId: 'site-manchester-001', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '12:00', to: '16:00' }, equipment: [{ sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 40 }] },
-  { siteId: 'site-birmingham-002', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:00', to: '10:00' }, equipment: [{ sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 18 }, { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 22 }] },
+  { siteId: 'site-manchester-001', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:00', to: '12:00' }, equipment: [{ sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 25 }, { sku: 'HCS-BR-COM-UTILITY-P450', quantity: 15 }] },
+  { siteId: 'site-birmingham-002', orderType: 'single', transport: 'customer', deliveryWindow: { from: '09:00', to: '13:00' }, equipment: [{ sku: 'HCS-BR-COM-UTILITY-P450', quantity: 40 }] },
+  { siteId: 'site-leeds-003', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '07:00', to: '11:00' }, equipment: [{ sku: 'HCS-BR-CMU-SOLID-P450', quantity: 20 }, { sku: 'HCS-BR-AIR-VENT-P030', quantity: 18 }] },
+  { siteId: 'site-bristol-004', orderType: 'single', transport: 'chep', deliveryWindow: { from: '10:00', to: '14:00' }, equipment: [{ sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 22 }, { sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 12 }] },
+  { siteId: 'site-manchester-001', orderType: 'single', transport: 'customer', deliveryWindow: { from: '06:00', to: '10:00' }, equipment: [{ sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 35 }] },
+  { siteId: 'site-birmingham-002', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '11:00', to: '15:00' }, equipment: [{ sku: 'HCS-BR-COM-UTILITY-P450', quantity: 28 }, { sku: 'HCS-BR-AIR-VENT-P030', quantity: 10 }] },
+  { siteId: 'site-leeds-003', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:30', to: '12:30' }, equipment: [{ sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 30 }, { sku: 'HCS-BR-CMU-SOLID-P450', quantity: 8 }] },
+  { siteId: 'site-bristol-004', orderType: 'single', transport: 'customer', deliveryWindow: { from: '07:30', to: '11:30' }, equipment: [{ sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 15 }, { sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 20 }] },
+  { siteId: 'site-manchester-001', orderType: 'seven-day', transport: 'chep', deliveryWindow: { from: '12:00', to: '16:00' }, equipment: [{ sku: 'HCS-BR-AIR-VENT-P030', quantity: 40 }] },
+  { siteId: 'site-birmingham-002', orderType: 'single', transport: 'chep', deliveryWindow: { from: '08:00', to: '10:00' }, equipment: [{ sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 18 }, { sku: 'HCS-BR-COM-UTILITY-P450', quantity: 22 }] },
 ];
 
 const ORDER_BLUEPRINTS = [
@@ -153,8 +153,8 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '08:00', to: '12:00' },
     equipment: [
-      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 320 },
-      { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 180 },
+      { sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 320 },
+      { sku: 'HCS-BR-COM-UTILITY-P450', quantity: 180 },
     ],
   },
   {
@@ -163,7 +163,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'customer',
     deliveryWindow: { from: '09:00', to: '13:00' },
     equipment: [
-      { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 140 },
+      { sku: 'HCS-BR-COM-UTILITY-P450', quantity: 140 },
     ],
   },
   {
@@ -172,8 +172,8 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '07:00', to: '11:00' },
     equipment: [
-      { sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 90 },
-      { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 240 },
+      { sku: 'HCS-BR-CMU-SOLID-P450', quantity: 90 },
+      { sku: 'HCS-BR-AIR-VENT-P030', quantity: 240 },
     ],
   },
   {
@@ -182,8 +182,8 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '10:00', to: '14:00' },
     equipment: [
-      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 500 },
-      { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 110 },
+      { sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 500 },
+      { sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 110 },
     ],
   },
   {
@@ -192,7 +192,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'customer',
     deliveryWindow: { from: '06:00', to: '10:00' },
     equipment: [
-      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 760 },
+      { sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 760 },
     ],
   },
   {
@@ -201,9 +201,9 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '11:00', to: '15:00' },
     equipment: [
-      { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 220 },
-      { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 160 },
-      { sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 95 },
+      { sku: 'HCS-BR-COM-UTILITY-P450', quantity: 220 },
+      { sku: 'HCS-BR-AIR-VENT-P030', quantity: 160 },
+      { sku: 'HCS-BR-CMU-SOLID-P450', quantity: 95 },
     ],
   },
   {
@@ -212,8 +212,8 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '08:30', to: '12:30' },
     equipment: [
-      { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 300 },
-      { sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 120 },
+      { sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 300 },
+      { sku: 'HCS-BR-CMU-SOLID-P450', quantity: 120 },
     ],
   },
   {
@@ -222,9 +222,9 @@ const ORDER_BLUEPRINTS = [
     transport: 'customer',
     deliveryWindow: { from: '07:30', to: '11:30' },
     equipment: [
-      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 210 },
-      { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 210 },
-      { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 120 },
+      { sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 210 },
+      { sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 210 },
+      { sku: 'HCS-BR-COM-UTILITY-P450', quantity: 120 },
     ],
   },
   {
@@ -233,7 +233,7 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '12:00', to: '16:00' },
     equipment: [
-      { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 480 },
+      { sku: 'HCS-BR-AIR-VENT-P030', quantity: 480 },
     ],
   },
   {
@@ -242,8 +242,8 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '08:00', to: '10:00' },
     equipment: [
-      { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 180 },
-      { sku: 'CHEP-PLASTIC-1200X800-01120', quantity: 260 },
+      { sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 180 },
+      { sku: 'HCS-BR-COM-UTILITY-P450', quantity: 260 },
     ],
   },
   {
@@ -252,8 +252,8 @@ const ORDER_BLUEPRINTS = [
     transport: 'customer',
     deliveryWindow: { from: '09:30', to: '13:30' },
     equipment: [
-      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 150 },
-      { sku: 'CHEP-WOOD-METAL-800X600-08', quantity: 70 },
+      { sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 150 },
+      { sku: 'HCS-BR-CMU-SOLID-P450', quantity: 70 },
     ],
   },
   {
@@ -262,9 +262,9 @@ const ORDER_BLUEPRINTS = [
     transport: 'chep',
     deliveryWindow: { from: '13:00', to: '16:00' },
     equipment: [
-      { sku: 'CHEP-EU-WOOD-1200X800-03', quantity: 620 },
-      { sku: 'CHEP-PLASTIC-QTR-600X400-16', quantity: 75 },
-      { sku: 'CHEP-PLASTIC-1200X1000-LIPS-00077', quantity: 60 },
+      { sku: 'HCS-BR-ENG-CLASSAB-P350', quantity: 620 },
+      { sku: 'HCS-BR-AIR-VENT-P030', quantity: 75 },
+      { sku: 'HCS-BR-PRF-MULTICELL-P450', quantity: 60 },
     ],
   },
 ];

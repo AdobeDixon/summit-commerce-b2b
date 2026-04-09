@@ -1,6 +1,6 @@
 {
   "definitions": [{
-    "title": "CHEP Orders List",
+    "title": "Bodea Orders List",
     "id": "chep-orders-list",
     "model": "chep-orders-list",
     "plugins": {

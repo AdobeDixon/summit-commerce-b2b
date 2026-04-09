@@ -1,5 +1,5 @@
 /**
- * CHEP Dashboard Configuration
+ * Bodea Dashboard Configuration
  *
  * Central configuration for the dashboard block. Update these values to
  * change featured equipment, stock thresholds, navigation items, and map settings.
@@ -12,29 +12,66 @@
 export const LOW_STOCK_THRESHOLD = 250;
 
 /**
- * Featured CHEP equipment SKUs displayed in Equipment Overview and Low Stock Alert panels.
- * These are the real Commerce product SKUs created for the MyCHEP platform.
+ * Featured masonry SKUs (Commerce catalog). HCS-BR-* = Heavy Construction Supplies brick lines.
  */
 export const FEATURED_EQUIPMENT_SKUS = [
-  'CHEP-UK-WOOD-1200X1000-01',
-  'CHEP-EU-WOOD-1200X800-03',
-  'CHEP-WOOD-METAL-800X600-08',
-  'CHEP-PLASTIC-1200X800-01120',
-  'CHEP-PLASTIC-1200X1000-LIPS-00077',
-  'CHEP-PLASTIC-QTR-600X400-16',
+  'HCS-BR-FAC-WIRECUT-P450',
+  'HCS-BR-ENG-CLASSAB-P350',
+  'HCS-BR-CMU-SOLID-P450',
+  'HCS-BR-COM-UTILITY-P450',
+  'HCS-BR-PRF-MULTICELL-P450',
+  'HCS-BR-AIR-VENT-P030',
+];
+
+/** Primary SKU for demo low-stock / notifications (first featured line). */
+export const PRIMARY_EQUIPMENT_SKU = FEATURED_EQUIPMENT_SKUS[0];
+
+/**
+ * Product titles for Commerce name field and UI (short format: Type (detail) – Standard Size, Pack of ~n).
+ */
+export const EQUIPMENT_CATALOG_NAMES = {
+  'HCS-BR-FAC-WIRECUT-P450':
+    'Facing Brick (Wirecut) – Standard Size, Pack of ~450',
+  'HCS-BR-ENG-CLASSAB-P350':
+    'Engineering Brick (Class A/B) – Standard Size, Pack of ~350',
+  'HCS-BR-CMU-SOLID-P450':
+    'Concrete Brick – Standard Size, Pack of ~450',
+  'HCS-BR-COM-UTILITY-P450':
+    'Common Brick – Standard Size, Pack of ~450',
+  'HCS-BR-PRF-MULTICELL-P450':
+    'Perforated Brick – Standard Size, Pack of ~450',
+  'HCS-BR-AIR-VENT-P030':
+    'Air Brick (Ventilation) – Standard Size, Pack of ~30',
+};
+
+/**
+ * Dashboard card labels (same as catalog titles; fallback if Commerce name is unavailable).
+ */
+export const EQUIPMENT_DISPLAY_NAMES = { ...EQUIPMENT_CATALOG_NAMES };
+
+/**
+ * Legacy CHEP pallet SKUs → canonical HCS-BR SKUs (Commerce migration; see scripts).
+ */
+export const LEGACY_EQUIPMENT_SKU_MIGRATION = [
+  { from: 'CHEP-UK-WOOD-1200X1000-01', to: 'HCS-BR-FAC-WIRECUT-P450' },
+  { from: 'CHEP-EU-WOOD-1200X800-03', to: 'HCS-BR-ENG-CLASSAB-P350' },
+  { from: 'CHEP-WOOD-METAL-800X600-08', to: 'HCS-BR-CMU-SOLID-P450' },
+  { from: 'CHEP-PLASTIC-1200X800-01120', to: 'HCS-BR-COM-UTILITY-P450' },
+  { from: 'CHEP-PLASTIC-1200X1000-LIPS-00077', to: 'HCS-BR-PRF-MULTICELL-P450' },
+  { from: 'CHEP-PLASTIC-QTR-600X400-16', to: 'HCS-BR-AIR-VENT-P030' },
 ];
 
 /**
- * Display-only labels for featured SKUs (used as fallback if Commerce name is unavailable).
+ * Intermediate masonry SKUs (HCS-MSY-*) → canonical HCS-BR-* (after earlier migration).
  */
-export const EQUIPMENT_DISPLAY_NAMES = {
-  'CHEP-UK-WOOD-1200X1000-01': 'CHEP Standard Pallet',
-  'CHEP-EU-WOOD-1200X800-03': 'European Wooden Pallet',
-  'CHEP-WOOD-METAL-800X600-08': 'Wooden & Metal Pallet',
-  'CHEP-PLASTIC-1200X800-01120': 'Plastic Pallet',
-  'CHEP-PLASTIC-1200X1000-LIPS-00077': 'Plastic Pallet with Lips',
-  'CHEP-PLASTIC-QTR-600X400-16': 'Quarter Display Pallet',
-};
+export const EQUIPMENT_MSY_TO_BR_SKU_MIGRATION = [
+  { from: 'HCS-MSY-FAC-215102565-450', to: 'HCS-BR-FAC-WIRECUT-P450' },
+  { from: 'HCS-MSY-ENG-215102565-350', to: 'HCS-BR-ENG-CLASSAB-P350' },
+  { from: 'HCS-MSY-CMU-215102565-450', to: 'HCS-BR-CMU-SOLID-P450' },
+  { from: 'HCS-MSY-COM-215102565-450', to: 'HCS-BR-COM-UTILITY-P450' },
+  { from: 'HCS-MSY-PRF-215102565-450', to: 'HCS-BR-PRF-MULTICELL-P450' },
+  { from: 'HCS-MSY-AIR-215065-040', to: 'HCS-BR-AIR-VENT-P030' },
+];
 
 /**
  * Placeholder stock capacity values per SKU for visual progress bars.
@@ -45,12 +82,12 @@ export const EQUIPMENT_DISPLAY_NAMES = {
  * are used as the denominator for the stock level bar only.
  */
 export const EQUIPMENT_STOCK_CAPACITY = {
-  'CHEP-UK-WOOD-1200X1000-01': 500,
-  'CHEP-EU-WOOD-1200X800-03': 500,
-  'CHEP-WOOD-METAL-800X600-08': 300,
-  'CHEP-PLASTIC-1200X800-01120': 400,
-  'CHEP-PLASTIC-1200X1000-LIPS-00077': 400,
-  'CHEP-PLASTIC-QTR-600X400-16': 300,
+  'HCS-BR-FAC-WIRECUT-P450': 500,
+  'HCS-BR-ENG-CLASSAB-P350': 400,
+  'HCS-BR-CMU-SOLID-P450': 500,
+  'HCS-BR-COM-UTILITY-P450': 500,
+  'HCS-BR-PRF-MULTICELL-P450': 500,
+  'HCS-BR-AIR-VENT-P030': 60,
 };
 
 /**
@@ -160,18 +197,11 @@ export const MAP_CONFIG = {
 };
 
 /**
- * Approximate geocoordinates for the delivery sites defined in
- * order-new-delivery/sites.js. Keyed by site ID.
- *
- * These are used by the map section to position site markers.
- * For production, geocoordinates should be stored in the site data source.
+ * Optional manual map coordinates keyed by delivery site id (Commerce address uid).
+ * Markers are normally resolved via OpenStreetMap Nominatim from address fields;
+ * add entries here only when you need to override geocoding for a specific address.
  */
-export const SITE_COORDINATES = {
-  'site-manchester-001': [53.4631, -2.2913],
-  'site-birmingham-002': [52.4862, -1.8904],
-  'site-leeds-003': [53.7965, -1.5478],
-  'site-bristol-004': [51.4545, -2.5879],
-};
+export const SITE_COORDINATES = {};
 
 /**
  * Magento order statuses considered "active" (in-progress, not yet fulfilled).

@@ -1,6 +1,6 @@
 mountpoints:
   /:
-    url: https://content.da.live/adobedixon/mycheps-march-demo/
+    url: https://content.da.live/adobedixon/summit-commerce-b2b/
     type: markup
 
 folders:

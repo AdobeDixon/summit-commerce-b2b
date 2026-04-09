@@ -1,6 +1,6 @@
 {
   "definitions": [{
-    "title": "CHEP Dashboard",
+    "title": "Bodea Dashboard",
     "id": "chep-dashboard",
     "model": "chep-dashboard",
     "plugins": {

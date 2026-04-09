@@ -1,12 +1,18 @@
 import {
   CUSTOMER_ACCOUNT_PATH,
+  CUSTOMER_ADDRESS_PATH,
   CUSTOMER_LOGIN_PATH,
   checkIsAuthenticated,
   rootLink,
 } from '../../scripts/commerce.js';
 import { buildNav, toggleNav } from '../chep-dashboard/dashboard-nav.js';
 import { EQUIPMENT_PRODUCTS } from './equipment-products.js';
-import { DELIVERY_SITES, findSiteById, getSiteSearchLabel } from './sites.js';
+import {
+  findSiteById,
+  getDeliverySites,
+  getSiteSearchLabel,
+  loadDeliverySitesFromAddressBook,
+} from './sites.js';
 import {
   STEP_SEQUENCE,
   createEquipmentLine,
@@ -20,6 +26,7 @@ import { validateStep } from './validation.js';
 import { submitOrderWizard } from './submission.js';
 
 import '../../scripts/initializers/auth.js';
+import '../../scripts/initializers/account.js';
 import '../../scripts/initializers/cart.js';
 import '../../scripts/initializers/checkout.js';
 import '../../scripts/initializers/order.js';
@@ -36,7 +43,7 @@ const STEP_TITLES = {
 const STEP_DESCRIPTIONS = {
   orderType: 'Choose between a single delivery or a 7-day recurring order.',
   deliveryDate: 'Select the date your pallets need to be delivered.',
-  transport: 'Choose whether CHEP or your own fleet handles transport.',
+  transport: 'Choose whether Bodea or your own fleet handles transport.',
   equipment: 'Select the pallet types and quantities you require.',
   siteContact: 'Specify the delivery address and on-site contact details.',
   deliveryWindow: 'Set your preferred delivery time window for the driver.',
@@ -79,20 +86,42 @@ function renderArrowIcon() {
   </svg>`;
 }
 
-function renderPalletIcon(material) {
+/** Stretcher-bond brick wall (masonry), material-colored — not pallet slats */
+function renderBrickProductIcon(material) {
   const colors = {
     wood: '#c68642',
     'wood-metal': '#8a9bb0',
-    plastic: '#1fa6e8',
+    plastic: '#0369a1',
+    'clay-facing': '#b45309',
+    'clay-engineering': '#1e3a5f',
+    concrete: '#6b7280',
+    'clay-common': '#78716c',
+    'clay-perf': '#9a3412',
+    vent: '#0e7490',
   };
-  const c = colors[material] || colors.wood;
+  const c = colors[material] || colors['clay-common'];
+  const m = 'rgb(255 255 255 / 22%)';
   return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <rect x="2" y="9" width="28" height="3.5" rx="1" fill="${c}"/>
-    <rect x="2" y="14.5" width="28" height="3.5" rx="1" fill="${c}" opacity="0.75"/>
-    <rect x="2" y="19" width="28" height="3.5" rx="1" fill="${c}" opacity="0.5"/>
-    <rect x="2" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
-    <rect x="12.5" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
-    <rect x="23" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
+    <rect x="1" y="1" width="30" height="30" rx="2" fill="${c}" opacity="0.12"/>
+    <g fill="${c}">
+      <rect x="2" y="3" width="13" height="6" rx="0.6"/>
+      <rect x="17" y="3" width="13" height="6" rx="0.6"/>
+      <rect x="2" y="12" width="8" height="6" rx="0.6"/>
+      <rect x="11" y="12" width="10" height="6" rx="0.6"/>
+      <rect x="22" y="12" width="8" height="6" rx="0.6"/>
+      <rect x="2" y="21" width="13" height="6" rx="0.6"/>
+      <rect x="17" y="21" width="13" height="6" rx="0.6"/>
+    </g>
+    <g stroke="${m}" stroke-width="1">
+      <line x1="15.5" y1="3" x2="15.5" y2="9"/>
+      <line x1="10" y1="12" x2="10" y2="18"/>
+      <line x1="21" y1="12" x2="21" y2="18"/>
+      <line x1="15.5" y1="21" x2="15.5" y2="27"/>
+      <line x1="2" y1="10.5" x2="30" y2="10.5"/>
+      <line x1="2" y1="19.5" x2="30" y2="19.5"/>
+    </g>
+    ${material === 'vent' ? `<rect x="12" y="13" width="8" height="4" rx="0.4" fill="rgb(255 255 255 / 35%)"/>` : ''}
+    ${material === 'clay-perf' ? `<circle cx="8" cy="15" r="1.2" fill="rgb(0 0 0 / 22%)"/><circle cx="16" cy="15" r="1.2" fill="rgb(0 0 0 / 22%)"/><circle cx="24" cy="15" r="1.2" fill="rgb(0 0 0 / 22%)"/>` : ''}
   </svg>`;
 }
 
@@ -237,7 +266,24 @@ function formatSiteType(type) {
 }
 
 function renderSiteCards(state, errors) {
-  const cards = DELIVERY_SITES.map((site) => {
+  const sites = getDeliverySites();
+
+  if (!sites.length) {
+    return `
+      <div class="ond-site-empty" role="status">
+        <p class="ond-site-empty__title">No saved delivery addresses</p>
+        <p class="ond-site-empty__text">
+          Add one or more addresses in your account address book, then refresh this page.
+        </p>
+        <a class="button primary ond-site-empty__cta" href="${rootLink(CUSTOMER_ADDRESS_PATH)}">
+          Manage address book
+        </a>
+      </div>
+      ${renderError(errors.fields.siteSearch)}
+    `;
+  }
+
+  const cards = sites.map((site) => {
     const isSelected = state.data.siteId === site.id;
     const address = [site.address1, site.city, site.postcode].filter(Boolean).join(', ');
 
@@ -479,6 +525,12 @@ function formatMaterial(material) {
   if (material === 'wood') return 'Wooden';
   if (material === 'wood-metal') return 'Wood & Metal';
   if (material === 'plastic') return 'Plastic';
+  if (material === 'clay-facing') return 'Facing brick';
+  if (material === 'clay-engineering') return 'Engineering brick';
+  if (material === 'concrete') return 'Concrete / CMU';
+  if (material === 'clay-common') return 'Common brick';
+  if (material === 'clay-perf') return 'Perforated brick';
+  if (material === 'vent') return 'Air brick';
   return material;
 }
 
@@ -494,7 +546,7 @@ function renderEquipmentCards(state, errors) {
       <div class="ond-equipment-card${isSelected ? ' is-selected' : ''}">
         <div class="ond-equipment-card__top">
           <div class="ond-equipment-card__icon">
-            ${renderPalletIcon(product.material)}
+            ${renderBrickProductIcon(product.material)}
           </div>
           <div class="ond-equipment-card__info">
             <div class="ond-equipment-card__name">${escapeHtml(shortName)}</div>
@@ -615,7 +667,7 @@ function renderStepBody(stepId, state, siteListId) {
           <div class="ond-field">
             <label for="delivery-source">Source</label>
             <input id="delivery-source" type="text" value="${escapeHtml(state.data.source)}" readonly>
-            <p class="ond-help-text">Source is fixed as CHEP for this flow.</p>
+            <p class="ond-help-text">Source is fixed as Bodea for this flow.</p>
           </div>
         </div>
       `;
@@ -627,7 +679,7 @@ function renderStepBody(stepId, state, siteListId) {
           ${renderChoiceCard({
             name: 'transport',
             value: 'chep',
-            label: 'CHEP Delivery',
+            label: 'Bodea delivery',
             checked: state.data.transport === 'chep',
             stepId,
           })}
@@ -790,7 +842,7 @@ function renderWizard(state, siteListId) {
   return `
     <div class="ond-page-header">
       <h2>Order New Delivery</h2>
-      <p>Create a new B2B pallet delivery order via your authenticated CHEP account.</p>
+      <p>Create a new B2B pallet delivery order via your authenticated Bodea account.</p>
     </div>
     ${state.submitError ? `<div class="ond-form-error" role="alert">${escapeHtml(state.submitError)}</div>` : ''}
     ${renderStepProgressIndicator(state)}
@@ -1286,6 +1338,14 @@ function renderBlock(wizardContainer, state) {
 export default async function decorate(block) {
   block.classList.add('order-new-delivery');
   block.dataset.siteListId = `ond-sites-${Math.random().toString(36).slice(2, 10)}`;
+
+  if (checkIsAuthenticated()) {
+    try {
+      await loadDeliverySitesFromAddressBook();
+    } catch (err) {
+      console.warn('order-new-delivery: Could not load address book for delivery sites.', err);
+    }
+  }
 
   const state = createInitialState();
   state.ui = {}; // calendar navigation state — not sent to API

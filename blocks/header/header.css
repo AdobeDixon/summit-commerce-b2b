@@ -8,7 +8,7 @@
 
 /* ── Nav Wrapper ─────────────────────────────────────────── */
 /*
- * CHEP nav layout: thin CHEP-blue utility bar on top,
+ * B2B nav layout: thin brand utility bar on top,
  * white main nav bar below. We achieve this with a top
  * border on the white bar that doubles as the blue strip.
  */
@@ -19,7 +19,7 @@ header .nav-wrapper {
   position: fixed;
   border-bottom: 1px solid var(--color-neutral-300);
   box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
-  /* CHEP-blue utility stripe across the very top */
+  /* Brand-blue utility stripe across the very top */
   border-top: 6px solid var(--color-brand-500);
 }
 
@@ -490,7 +490,7 @@ header .nav-search-panel input {
 header .nav-search-panel input:focus {
   outline: none;
   border-color: var(--color-brand-500);
-  box-shadow: 0 0 0 3px rgb(0 48 135 / 12%);
+  box-shadow: 0 0 0 3px rgb(3 105 161 / 12%);
 }
 
 header .nav-search-panel .dropin-input-container {

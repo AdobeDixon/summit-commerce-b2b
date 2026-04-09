@@ -185,11 +185,11 @@ export default async function decorate(block) {
   if (navBrand && brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container')?.classList.remove('button-container');
-    /* Replace text logo with myCHEP image */
+    /* Replace text logo with Bodea image */
     brandLink.textContent = '';
     const logoImg = document.createElement('img');
-    logoImg.src = '/images/mychep-logo.png';
-    logoImg.alt = 'myCHEP - Smart. Simple. Fast.';
+    logoImg.src = '/images/bodea-logo.png';
+    logoImg.alt = 'Bodea - Smart. Simple. Fast.';
     logoImg.className = 'nav-brand-logo';
     brandLink.appendChild(logoImg);
   }

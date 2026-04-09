@@ -87,7 +87,7 @@
 .hero h2,
 .hero > div > div > h1,
 .hero > div > div > h2 {
-  color: #ffffff !important;
+  color: var(--color-neutral-50) !important;
   max-width: 660px;
   margin-top: 0;
   margin-bottom: var(--spacing-medium);
@@ -120,7 +120,7 @@
 }
 
 .hero p {
-  color: #ffffff !important;
+  color: var(--color-neutral-50) !important;
   font-size: 1.8rem;
   line-height: 1.65;
   max-width: 520px;

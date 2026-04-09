@@ -1,5 +1,5 @@
 /**
- * Site-wide authentication gating for the MyCHEP B2B portal.
+ * Site-wide authentication gating for the Bodea B2B portal.
  *
  * Runs before any protected content is rendered. Unauthenticated users
  * attempting to access protected paths are redirected to login with returnUrl.

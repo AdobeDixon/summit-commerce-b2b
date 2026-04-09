@@ -1,14 +1,14 @@
 /**
- * CHEP Dashboard Block
+ * Bodea Dashboard Block
  *
- * Main orchestrator for the MyCHEP homepage dashboard experience.
+ * Main orchestrator for the Bodea homepage dashboard experience.
  * Builds the full page shell (left nav + main content), then loads
  * real Commerce data asynchronously to populate each section.
  *
  * ── ADDING THIS PAGE ───────────────────────────────────────────────────
  * To place this dashboard on a page:
  * 1. Create a document in Adobe Document Authoring at /dashboard (or /)
- * 2. Add a "CHEP Dashboard" block to the document (single empty cell)
+ * 2. Add a "Bodea Dashboard" block to the document (single empty cell)
  * 3. The block takes over the full viewport — it hides the standard
  *    header and footer via the `dashboard-page` body class
  * 4. Publish the document
@@ -32,6 +32,8 @@
 import {
   checkIsAuthenticated, rootLink, CUSTOMER_ACCOUNT_PATH, CUSTOMER_ORDERS_PATH, CUSTOMER_LOGIN_PATH,
 } from '../../scripts/commerce.js';
+import '../../scripts/initializers/account.js';
+import { loadDeliverySitesFromAddressBook } from '../order-new-delivery/sites.js';
 import { buildNav, toggleNav } from './dashboard-nav.js';
 import { buildKpiSection, updateKpiSection } from './dashboard-kpi.js';
 import { buildOrdersSection, updateOrdersSection } from './dashboard-orders.js';
@@ -42,6 +44,7 @@ import {
   initializeBottomSectionMap,
   updateDeliveriesPanel,
 } from './dashboard-map.js';
+import { EQUIPMENT_DISPLAY_NAMES, PRIMARY_EQUIPMENT_SKU } from './dashboard-config.js';
 import { DashboardService } from './dashboard-service.js';
 
 /* ── Placeholder notifications ─────────────────────────────────────────── */
@@ -60,7 +63,7 @@ const PLACEHOLDER_NOTIFICATIONS = [
     id: 'n2',
     type: 'stock',
     title: 'Low stock alert',
-    body: 'CHEP Standard Pallet is below 250 units threshold.',
+    body: `${EQUIPMENT_DISPLAY_NAMES[PRIMARY_EQUIPMENT_SKU]} is below 250 units threshold.`,
     time: '4h ago',
     unread: true,
   },
@@ -80,13 +83,13 @@ function buildNewCustomerBanner() {
   const banner = document.createElement('div');
   banner.className = 'dashboard-new-customer-banner';
   banner.setAttribute('role', 'region');
-  banner.setAttribute('aria-label', 'Welcome to MyCHEP');
+  banner.setAttribute('aria-label', 'Welcome to Bodea');
   banner.style.cssText = 'display:block !important; min-height:1px;'; /* fallback visibility */
 
   banner.innerHTML = `
     <div class="dashboard-new-customer-banner__inner">
       <div class="dashboard-new-customer-banner__content">
-        <h2 class="dashboard-new-customer-banner__heading">Welcome to MyCHEP</h2>
+        <h2 class="dashboard-new-customer-banner__heading">Welcome to Bodea</h2>
         <p class="dashboard-new-customer-banner__text">
           You're all set up. Get started by creating your first order — use the button in the top right to place an order.
         </p>
@@ -115,7 +118,7 @@ function buildWelcomeBanner(customerName) {
   banner.innerHTML = `
     <div class="dashboard-welcome__text">
       <h1 class="dashboard-welcome__heading">
-        ${customerName ? `Welcome back, ${customerName}!` : 'Welcome to MyCHEP'}
+        ${customerName ? `Welcome back, ${customerName}!` : 'Welcome to Bodea'}
       </h1>
       <p class="dashboard-welcome__sub">Your logistics control centre</p>
     </div>
@@ -287,7 +290,7 @@ function buildTopBar(navElement) {
           </div>
           <div class="chep-topbar__account-text">
             <span class="chep-topbar__account-name chep-topbar__account-name--loading">Loading…</span>
-            <span class="chep-topbar__account-role">CHEP Customer</span>
+            <span class="chep-topbar__account-role">Bodea customer</span>
           </div>
           <svg class="chep-topbar__account-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polyline points="6 9 12 15 18 9"/>
@@ -426,6 +429,14 @@ export default async function decorate(block) {
   mainEl.appendChild(content);
   block.appendChild(mainEl);
 
+  if (isAuthenticated) {
+    try {
+      await loadDeliverySitesFromAddressBook();
+    } catch (err) {
+      console.warn('chep-dashboard: Could not load customer addresses for the site map.', err);
+    }
+  }
+
   /* Initialise the map only after the section is attached to the document. */
   requestAnimationFrame(() => initializeBottomSectionMap(bottomSection));
 
@@ -473,7 +484,7 @@ export default async function decorate(block) {
     /* Update deliveries panel */
     updateDeliveriesPanel(bottomSection, ordersData, isAuthenticated);
   } catch (err) {
-    console.error('[CHEP Dashboard] Data load failed:', err);
+    console.error('[Bodea Dashboard] Data load failed:', err);
 
     updateKpiSection(kpiSection, { ordersData: null, stockData: [], isAuthenticated });
     updateOrdersSection(ordersSection, null, isAuthenticated);

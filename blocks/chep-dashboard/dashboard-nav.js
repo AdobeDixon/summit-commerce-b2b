@@ -1,5 +1,5 @@
 /**
- * CHEP Dashboard – Left Navigation Rail
+ * Bodea Dashboard – Left Navigation Rail
  *
  * Builds and returns the left-hand nav DOM element.
  * Active state is derived from the current window.location.pathname.
@@ -77,9 +77,9 @@ const ICONS = {
   </svg>`,
 };
 
-/* ── myCHEP Logo Image ─────────────────────────────────────────────────── */
+/* ── Bodea logo image ─────────────────────────────────────────────────── */
 
-const MYCHEP_LOGO_IMG = `<img src="/images/mychep-logo.png" alt="myCHEP - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />`;
+const BODEA_LOGO_IMG = `<img src="/images/bodea-logo.png" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />`;
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
@@ -125,8 +125,8 @@ export function buildNav(pathname) {
   const logoArea = document.createElement('div');
   logoArea.className = 'chep-nav__logo';
   logoArea.innerHTML = `
-    <a href="/" class="chep-nav__logo-link" aria-label="myCHEP Home">
-      ${MYCHEP_LOGO_IMG}
+    <a href="/" class="chep-nav__logo-link" aria-label="Bodea Home">
+      ${BODEA_LOGO_IMG}
     </a>
   `;
   nav.appendChild(logoArea);
@@ -147,8 +147,7 @@ export function buildNav(pathname) {
   footer.className = 'chep-nav__footer';
   footer.innerHTML = `
     <div class="chep-nav__footer-brand">
-      <span class="chep-nav__footer-text">Powered by CHEP</span>
-      <span class="chep-nav__footer-sub">Brambles Group Limited</span>
+      <span class="chep-nav__footer-text">Bodea</span>
     </div>
   `;
   nav.appendChild(footer);

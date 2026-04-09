@@ -69,7 +69,7 @@ body.auth-page .auth-split__form .auth-sign-up-form .auth-sign-up-form__form__fi
 body.auth-page .auth-split__form .auth-sign-up-form .dropin-field__label,
 body.auth-page .auth-split__form .auth-sign-up-form .dropin-input__label--floating,
 body.auth-page .auth-split__form .auth-sign-up-form .dropin-field label {
-  color: #1f2933;
+  color: var(--color-neutral-900);
   font-weight: 500;
   font-size: 14px;
   padding-left: 16px;

@@ -1,7 +1,7 @@
 .dashboard-page {
   display: block;
   overflow: hidden;
-  background: #f0f2f5;
+  background: var(--color-neutral-200);
 }
 
 body.dashboard-page > header,
@@ -44,8 +44,8 @@ body.dashboard-page main > .section > div {
   width: 100%;
   height: 100dvh;
   overflow: hidden;
-  background: #f0f2f5;
-  color: #1f2933;
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-900);
   font-family: adobe-clean, Inter, -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.5;
@@ -71,8 +71,8 @@ body.dashboard-page main > .section > div {
   gap: 16px;
   min-height: 64px;
   padding: 0 24px;
-  background: #fff;
-  border-bottom: 1px solid #e4e7eb;
+  background: var(--color-neutral-50);
+  border-bottom: 1px solid var(--color-neutral-300);
   box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
   flex-shrink: 0;
 }
@@ -86,13 +86,13 @@ body.dashboard-page main > .section > div {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #475569;
+  color: var(--color-neutral-700);
   cursor: pointer;
 }
 
 .commerce-invoices-shell__menu-btn:hover {
-  background: #f0f2f5;
-  color: #005eb8;
+  background: var(--color-neutral-200);
+  color: var(--color-brand-500);
 }
 
 .commerce-invoices-shell__topbar-copy {
@@ -101,7 +101,7 @@ body.dashboard-page main > .section > div {
 
 .commerce-invoices-shell__eyebrow {
   display: block;
-  color: #6b7785;
+  color: var(--color-neutral-600);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -110,7 +110,7 @@ body.dashboard-page main > .section > div {
 
 .commerce-invoices-shell__page-title {
   margin: 0;
-  color: #1f2933;
+  color: var(--color-neutral-900);
   font-size: 18px;
   font-weight: 700;
 }
@@ -120,14 +120,14 @@ body.dashboard-page main > .section > div {
   align-items: center;
   gap: 8px;
   margin-left: auto;
-  color: #475569;
+  color: var(--color-neutral-700);
   text-decoration: none;
   font-size: 13px;
   font-weight: 600;
 }
 
 .commerce-invoices-shell__account-link:hover {
-  color: #005eb8;
+  color: var(--color-brand-500);
 }
 
 .commerce-invoices-shell__page {
@@ -141,7 +141,7 @@ body.dashboard-page main > .section > div {
   flex-direction: column;
   width: 240px;
   min-width: 240px;
-  background: linear-gradient(180deg, #002d6e 0%, #003f88 100%);
+  background: linear-gradient(180deg, var(--color-surface-dark) 0%, var(--color-surface-dark-mid) 100%);
   overflow: hidden auto;
   flex-shrink: 0;
   z-index: 200;
@@ -177,7 +177,7 @@ body.dashboard-page main > .section > div {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff !important;
+  color: var(--color-neutral-50) !important;
   text-decoration: none !important;
 }
 
@@ -226,12 +226,12 @@ body.dashboard-page main > .section > div {
 
 .chep-nav__link:hover {
   background: rgb(255 255 255 / 10%);
-  color: #fff !important;
+  color: var(--color-neutral-50) !important;
 }
 
 .chep-nav__item--active .chep-nav__link {
   background: rgb(255 255 255 / 15%);
-  color: #fff !important;
+  color: var(--color-neutral-50) !important;
   font-weight: 600;
 }
 
@@ -243,7 +243,7 @@ body.dashboard-page main > .section > div {
   transform: translateY(-50%);
   width: 4px;
   height: 28px;
-  background: #f07800;
+  background: var(--color-accent-500);
   border-radius: 0 3px 3px 0;
 }
 
@@ -405,7 +405,7 @@ body.dashboard-page main > .section > div {
 .commerce-invoices-list__month-select:focus {
   outline: none;
   border-color: var(--color-brand-500);
-  box-shadow: 0 0 0 2px rgb(0 94 184 / 20%);
+  box-shadow: 0 0 0 2px rgb(3 105 161 / 20%);
 }
 
 .commerce-invoices-list__content {
