@@ -1091,41 +1091,122 @@ main .order-new-delivery-container {
 }
 
 .ond-capacity__metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
   margin: 0;
+  padding: 20px 2px 2px;
+  border-top: 1px solid color-mix(in srgb, var(--ond-border) 88%, var(--ond-card-bg));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ond-page-bg) 55%, var(--ond-card-bg)) 0%,
+    var(--ond-card-bg) 28%
+  );
+  border-radius: 0 0 calc(var(--ond-radius) - 2px) calc(var(--ond-radius) - 2px);
 }
 
 .ond-capacity__stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 12px 16px;
-  background: var(--ond-page-bg);
-  border: 1px solid var(--ond-border);
-  border-radius: var(--ond-radius);
+  gap: 12px;
   min-width: 0;
-  flex: 1;
-  min-width: 140px;
+  padding: 6px 16px 10px;
+  margin: 0;
+  background: transparent;
+  border: none;
+  position: relative;
+}
+
+.ond-capacity__stat:first-child {
+  padding-left: 0;
+}
+
+.ond-capacity__stat:last-child {
+  padding-right: 0;
+}
+
+.ond-capacity__stat:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 0;
+  bottom: 6px;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--ond-border) 75%, transparent) 22%,
+    color-mix(in srgb, var(--ond-border) 75%, transparent) 78%,
+    transparent 100%
+  );
+}
+
+.ond-capacity__stat-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Same language as .ond-equipment-card__icon + .ond-step__badge: neutral plate, brand stroke */
+.ond-capacity__stat-icon-wrap {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--ond-radius);
+  background: var(--ond-page-bg);
+  color: var(--ond-blue);
+  transition: background var(--ond-transition), color var(--ond-transition);
+}
+
+.ond-capacity--overflow .ond-capacity__stat-icon-wrap {
+  background: var(--color-informational-200);
+  color: var(--ond-blue-dark);
+}
+
+.ond-capacity__icon {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 .ond-capacity__stat-label {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  color: var(--ond-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  color: var(--ond-text-secondary);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
 }
 
-.ond-capacity__stat-value {
-  font-size: 1.5rem;
-  font-weight: 700;
+.ond-capacity__stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-left: 46px; /* 36px icon + 10px gap — matches .ond-step__badge size */
+}
+
+.ond-capacity__stat-figure {
+  font-size: 2.2rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
   color: var(--ond-text-primary);
-  line-height: 1.3;
 }
 
-.ond-capacity--overflow .ond-capacity__stat-value {
+.ond-capacity__stat-hint {
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--ond-text-muted);
+  max-width: 26ch;
+}
+
+.ond-capacity--overflow .ond-capacity__stat-figure {
   color: var(--ond-text-primary);
 }
 
@@ -1140,11 +1221,51 @@ main .order-new-delivery-container {
   }
 
   .ond-capacity__metrics {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    padding: 16px 0 0;
+    background: transparent;
+    border-top: 1px solid color-mix(in srgb, var(--ond-border) 88%, var(--ond-card-bg));
   }
 
   .ond-capacity__stat {
-    min-width: 100%;
+    padding: 14px 0;
+    gap: 8px;
+  }
+
+  .ond-capacity__stat:first-child,
+  .ond-capacity__stat:last-child {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .ond-capacity__stat:not(:last-child)::after {
+    display: none;
+  }
+
+  .ond-capacity__stat:not(:last-child) {
+    border-bottom: 1px solid color-mix(in srgb, var(--ond-border) 65%, transparent);
+  }
+
+  .ond-capacity__stat-icon-wrap {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ond-capacity__icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .ond-capacity__stat-body {
+    padding-left: 44px;
+  }
+
+  .ond-capacity__stat-figure {
+    font-size: 2rem;
+  }
+
+  .ond-capacity__stat-hint {
+    max-width: none;
   }
 }
 

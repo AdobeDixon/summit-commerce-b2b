@@ -51,16 +51,16 @@ function validateEquipment(state) {
 
   if (!rows.length) {
     return createValidationResult(
-      { equipment: 'Add at least one equipment line.' },
-      'Equipment is required.',
+      { equipment: 'Add at least one product line.' },
+      'Products are required.',
     );
   }
 
   rows.forEach((line, index) => {
     if (!line.sku) {
-      fields[`equipment-${index}-sku`] = 'Choose an equipment type.';
+      fields[`equipment-${index}-sku`] = 'Choose a product.';
     } else if (!getEquipmentProductBySku(line.sku)) {
-      fields[`equipment-${index}-sku`] = 'Select a valid equipment option.';
+      fields[`equipment-${index}-sku`] = 'Select a valid product.';
     }
 
     const quantity = Number(line.quantity);
@@ -69,7 +69,7 @@ function validateEquipment(state) {
     }
   });
 
-  return createValidationResult(fields, Object.keys(fields).length ? 'Equipment lines need attention.' : '');
+  return createValidationResult(fields, Object.keys(fields).length ? 'Product lines need attention.' : '');
 }
 
 function validateSiteContact(state) {

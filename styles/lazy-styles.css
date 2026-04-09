@@ -26,7 +26,7 @@
 .dropin-design textarea:focus,
 .dropin-design select:focus {
   border-color: var(--color-brand-500) !important;
-  box-shadow: 0 0 0 3px rgb(0 48 135 / 12%) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 18%, transparent) !important;
   outline: none !important;
 }
 

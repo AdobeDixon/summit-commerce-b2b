@@ -70,8 +70,8 @@ function formatOrderType(value) {
 }
 
 function formatTransport(value) {
-  if (value === 'chep') return 'Bodea';
-  if (value === 'customer') return 'Customer';
+  if (value === 'chep') return 'HCS delivery';
+  if (value === 'customer') return 'Customer pickup';
   return 'Not selected';
 }
 
@@ -86,7 +86,7 @@ function formatEquipmentSummary(lines) {
       return `${line.quantity} x ${product.label}`;
     });
 
-  return parts.length ? parts.join(', ') : 'No equipment selected';
+  return parts.length ? parts.join(', ') : 'No products selected';
 }
 
 function formatSiteSummary(state) {

@@ -9,6 +9,8 @@
  *   CHEP_DEMO_SKIP_COMPANY=true - Skip company context (if products not in company catalog)
  *   CHEP_DEMO_SKUS=SKU1,SKU2   - Override product SKUs (use when catalog SKUs differ)
  *   CHEP_DEMO_FREE_SHIPPING=true - Use free shipping (freeshipping/freeshipping) instead of flatrate
+ *   CHEP_DEMO_ORDER_COUNT=1     - Place only the first N blueprint orders (smoke test)
+ *   CHEP_DEMO_FORCE=true        - Ignore prior run state file for this email (allows re-run)
  *
  * B2B: Ensure products exist in the company's shared catalog (Admin > B2B > Shared Catalogs).
  */
@@ -26,6 +28,11 @@ const runStateDir = path.join(repoRoot, '.demo-order-runs');
 const CUSTOMER_EMAIL = process.env.CHEP_DEMO_CUSTOMER_EMAIL ?? 'matt@adobedemo.com';
 const CUSTOMER_PASSWORD = process.env.CHEP_DEMO_CUSTOMER_PASSWORD ?? 'Password1';
 const SKIP_COMPANY_CONTEXT = process.env.CHEP_DEMO_SKIP_COMPANY === 'true' || process.env.CHEP_DEMO_SKIP_COMPANY === '1';
+/** If set, only the first N blueprint orders are placed (e.g. 1 for a smoke test). */
+const ORDER_COUNT = process.env.CHEP_DEMO_ORDER_COUNT
+  ? Number.parseInt(process.env.CHEP_DEMO_ORDER_COUNT, 10)
+  : null;
+const FORCE_RUN = process.env.CHEP_DEMO_FORCE === 'true' || process.env.CHEP_DEMO_FORCE === '1';
 
 function getRunStatePath() {
   const slug = CUSTOMER_EMAIL.replace(/@/g, '-').replace(/\./g, '-');
@@ -683,6 +690,14 @@ async function writeRunState(state) {
 }
 
 async function ensureNotPreviouslyRun() {
+  if (FORCE_RUN) {
+    try {
+      await fs.unlink(runStatePath);
+    } catch (e) {
+      if (e.code !== 'ENOENT') throw e;
+    }
+    return;
+  }
   try {
     const existing = JSON.parse(await fs.readFile(runStatePath, 'utf8'));
     const existingOrders = existing.orders ?? [];
@@ -982,7 +997,15 @@ async function main() {
     await writeRunState(runState);
 
     const blueprints = MAX_PALLETS === 40 ? ORDER_BLUEPRINTS_SMALL : ORDER_BLUEPRINTS;
-    const payloads = blueprints.map(buildPayload);
+    const limitedBlueprints =
+      ORDER_COUNT != null && !Number.isNaN(ORDER_COUNT) && ORDER_COUNT >= 0
+        ? blueprints.slice(0, ORDER_COUNT)
+        : blueprints;
+    const payloads = limitedBlueprints.map(buildPayload);
+
+    if (ORDER_COUNT != null) {
+      console.log(`CHEP_DEMO_ORDER_COUNT=${ORDER_COUNT}: placing ${payloads.length} order(s).`);
+    }
 
     for (const [index, payload] of payloads.entries()) {
       if (index < START_INDEX) {

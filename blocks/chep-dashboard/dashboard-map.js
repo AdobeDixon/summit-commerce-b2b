@@ -157,7 +157,7 @@ async function initMap(container) {
     html: `
       <div class="chep-map-marker__pin">
         <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#0369a1"/>
+          <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#c2410c"/>
           <circle cx="16" cy="16" r="6" fill="white"/>
         </svg>
       </div>

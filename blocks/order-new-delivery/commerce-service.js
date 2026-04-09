@@ -99,13 +99,29 @@ function assertSuccessfulCart(cart, contextLabel) {
 
 function normalizeCommerceError(error) {
   const message = error?.message || 'Unable to place the order.';
+  const detail = message.length > 600 ? `${message.slice(0, 600)}…` : message;
 
   if (/sign in|authenticated|authorization|token/i.test(message)) {
     return 'Your session is no longer authenticated. Sign in again and retry the order.';
   }
 
-  if (/cannot add|not assigned|not available|requested qty|salable|Could not find a (cart|product)/i.test(message)) {
-    return 'One or more equipment SKUs are unavailable for this customer or shared catalog. In Adobe Commerce Admin, ensure the products exist in the catalog and are assigned to the company\'s shared catalog (B2B > Shared Catalogs > [Catalog] > Products).';
+  // "You cannot add … to the cart" often means B2B company role ACL (GraphQL user_errors
+  // code PERMISSION_DENIED), not missing shared catalog. Do not blame catalog only.
+  if (
+    /cannot add|not assigned|not available|requested qty|salable|Could not find a (cart|product)/i.test(
+      message,
+    )
+  ) {
+    return (
+      'These equipment lines could not be added to the cart. Common causes: (1) B2B company role — '
+      + 'purchasing/checkout or **category** permissions (Customers → Companies → Roles; some roles only allow '
+      + 'specific catalog categories — masonry must be in the **same categories** as working CHEP SKUs). '
+      + '(2) Shared catalog — B2B → Shared Catalogs → your company\'s catalog → Products. '
+      + '(3) Website scope — each SKU on every B2B website (e.g. Main + Bodea). '
+      + 'If GraphQL returns PERMISSION_DENIED, run `npm run link-masonry-pallet-category` to add the pallet '
+      + 'equipment category. '
+      + `Commerce message: ${detail}`
+    );
   }
 
   if (/carrier|shipping method/i.test(message)) {

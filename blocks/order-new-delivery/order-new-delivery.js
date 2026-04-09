@@ -35,16 +35,16 @@ const STEP_TITLES = {
   orderType: 'Order Type',
   deliveryDate: 'Delivery Date',
   transport: 'Transport',
-  equipment: 'Equipment',
+  equipment: 'Products',
   siteContact: 'Site & Contact',
   deliveryWindow: 'Delivery Window',
 };
 
 const STEP_DESCRIPTIONS = {
   orderType: 'Choose between a single delivery or a 7-day recurring order.',
-  deliveryDate: 'Select the date your pallets need to be delivered.',
-  transport: 'Choose whether Bodea or your own fleet handles transport.',
-  equipment: 'Select the pallet types and quantities you require.',
+  deliveryDate: 'Select the date your brick packs need to be delivered.',
+  transport: 'Choose Heavy Construction Supplies delivery or your own fleet.',
+  equipment: 'Select brick lines and pack quantities for your order.',
   siteContact: 'Specify the delivery address and on-site contact details.',
   deliveryWindow: 'Set your preferred delivery time window for the driver.',
 };
@@ -86,18 +86,15 @@ function renderArrowIcon() {
   </svg>`;
 }
 
-/** Stretcher-bond brick wall (masonry), material-colored — not pallet slats */
+/** Stretcher-bond brick wall (masonry), material-colored */
 function renderBrickProductIcon(material) {
   const colors = {
-    wood: '#c68642',
-    'wood-metal': '#8a9bb0',
-    plastic: '#0369a1',
     'clay-facing': '#b45309',
     'clay-engineering': '#1e3a5f',
     concrete: '#6b7280',
     'clay-common': '#78716c',
     'clay-perf': '#9a3412',
-    vent: '#0e7490',
+    vent: '#57534e',
   };
   const c = colors[material] || colors['clay-common'];
   const m = 'rgb(255 255 255 / 22%)';
@@ -345,32 +342,32 @@ function renderChoiceCard({ name, value, label, checked, stepId }) {
 }
 
 /* ------------------------------------------------------------------
-   Truck capacity estimation (26 pallet spaces per UK 13.6m trailer)
+   Truck capacity estimation (~26 pack spaces per UK 13.6m trailer)
    ------------------------------------------------------------------ */
-const PALLET_SPACES_PER_TRAILER = 26;
+const PACK_SPACES_PER_TRAILER = 26;
 
 /**
  * Calculates estimated truck capacity metrics from equipment quantities.
  * @param {Object} state - Wizard state with data.equipment
- * @returns {{ totalPallets: number, truckCountEstimate: number, fullTruckCount: number, lastTruckPercent: number }}
+ * @returns {{ totalPackUnits: number, truckCountEstimate: number, fullTruckCount: number, lastTruckPercent: number }}
  */
 function calculateTruckCapacity(state) {
-  const totalPallets = (state.data.equipment || [])
+  const totalPackUnits = (state.data.equipment || [])
     .filter((l) => l.sku && l.sku !== '')
     .reduce((sum, l) => sum + (Number(l.quantity) || 0), 0);
 
-  const truckCountEstimate = totalPallets > 0
-    ? Math.ceil(totalPallets / PALLET_SPACES_PER_TRAILER)
+  const truckCountEstimate = totalPackUnits > 0
+    ? Math.ceil(totalPackUnits / PACK_SPACES_PER_TRAILER)
     : 0;
 
-  const remainder = totalPallets % PALLET_SPACES_PER_TRAILER;
-  const fullTruckCount = remainder === 0 && totalPallets > 0
+  const remainder = totalPackUnits % PACK_SPACES_PER_TRAILER;
+  const fullTruckCount = remainder === 0 && totalPackUnits > 0
     ? truckCountEstimate
-    : Math.floor(totalPallets / PALLET_SPACES_PER_TRAILER);
-  const lastTruckPallets = remainder === 0 ? PALLET_SPACES_PER_TRAILER : remainder;
-  const lastTruckPercent = Math.round((lastTruckPallets / PALLET_SPACES_PER_TRAILER) * 100);
+    : Math.floor(totalPackUnits / PACK_SPACES_PER_TRAILER);
+  const lastTruckPallets = remainder === 0 ? PACK_SPACES_PER_TRAILER : remainder;
+  const lastTruckPercent = Math.round((lastTruckPallets / PACK_SPACES_PER_TRAILER) * 100);
 
-  return { totalPallets, truckCountEstimate, fullTruckCount, lastTruckPercent };
+  return { totalPackUnits, truckCountEstimate, fullTruckCount, lastTruckPercent };
 }
 
 /**
@@ -394,22 +391,52 @@ const FILL_MAX_WIDTH_PCT = 65; /* 91 - 26 */
 
 const TRUCK_CAPACITY_IMG = '/images/truck-capacity.png';
 
+/** Decorative KPI icons (stroke weight matches wizard chevrons ~2px); truck PNGs are separate. */
+const OND_CAPACITY_ICON_PACK = (
+  '<svg class="ond-capacity__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" '
+  + 'fill="none" aria-hidden="true">'
+  + '<path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+  + 'd="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 '
+  + '11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 '
+  + '0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" /></svg>'
+);
+const OND_CAPACITY_ICON_UTIL = (
+  '<svg class="ond-capacity__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" '
+  + 'fill="none" aria-hidden="true">'
+  + '<path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+  + 'd="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 '
+  + '6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 '
+  + '1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 '
+  + '4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 '
+  + '1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>'
+);
+const OND_CAPACITY_ICON_FLEET = (
+  '<svg class="ond-capacity__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" '
+  + 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+  + 'aria-hidden="true">'
+  + '<rect x="1" y="3" width="15" height="13" rx="1"/>'
+  + '<path d="M16 8h4l3 5v3h-7V8z"/>'
+  + '<circle cx="5.5" cy="18.5" r="2.5"/>'
+  + '<circle cx="18.5" cy="18.5" r="2.5"/>'
+  + '</svg>'
+);
+
 /**
  * Truck capacity visual: PNG foreground, blue fill behind (through transparent trailer).
  * Fill bounds: 26%–91% horizontal.
  */
-function renderTruckCapacityVisual(totalPallets) {
-  const truckCount = Math.ceil(totalPallets / PALLET_SPACES_PER_TRAILER) || 1;
+function renderTruckCapacityVisual(totalPackUnits) {
+  const truckCount = Math.ceil(totalPackUnits / PACK_SPACES_PER_TRAILER) || 1;
 
   const trucks = [];
   for (let t = 0; t < truckCount; t++) {
-    const palletsForTruck = Math.min(PALLET_SPACES_PER_TRAILER, Math.max(0, totalPallets - t * PALLET_SPACES_PER_TRAILER));
-    const capacityRatio = Math.min(1, palletsForTruck / PALLET_SPACES_PER_TRAILER);
+    const packsForTruck = Math.min(PACK_SPACES_PER_TRAILER, Math.max(0, totalPackUnits - t * PACK_SPACES_PER_TRAILER));
+    const capacityRatio = Math.min(1, packsForTruck / PACK_SPACES_PER_TRAILER);
     trucks.push(renderTruckWithFill(t, capacityRatio));
   }
 
   return `
-    <div class="ond-capacity__truck-visual" role="img" aria-label="Truck capacity: ${totalPallets} pallets across ${truckCount} truck${truckCount > 1 ? 's' : ''}">
+    <div class="ond-capacity__truck-visual" role="img" aria-label="Truck capacity: ${totalPackUnits} pack units across ${truckCount} truck${truckCount > 1 ? 's' : ''}">
       <div class="ond-capacity__trucks">
         ${trucks.join('')}
       </div>
@@ -419,7 +446,7 @@ function renderTruckCapacityVisual(totalPallets) {
 
 /**
  * Renders one truck: PNG foreground (z-index 2), blue fill behind (z-index 1).
- * visibleFillWidth = min(pallets/26, 1) × 65% of image width.
+ * visibleFillWidth = min(packs/26, 1) × 65% of image width.
  */
 function renderTruckWithFill(truckIndex, capacityRatio) {
   const ratio = Math.min(1, Math.max(0, capacityRatio));
@@ -433,62 +460,77 @@ function renderTruckWithFill(truckIndex, capacityRatio) {
   `;
 }
 
+/**
+ * @param {string} iconSvg - Static SVG only (from OND_CAPACITY_ICON_*).
+ */
+function renderCapacityMetric(iconSvg, label, figure, hint) {
+  return `
+    <div class="ond-capacity__stat">
+      <div class="ond-capacity__stat-head">
+        <span class="ond-capacity__stat-icon-wrap" aria-hidden="true">${iconSvg}</span>
+        <span class="ond-capacity__stat-label">${escapeHtml(label)}</span>
+      </div>
+      <div class="ond-capacity__stat-body">
+        <span class="ond-capacity__stat-figure">${escapeHtml(figure)}</span>
+        <span class="ond-capacity__stat-hint">${escapeHtml(hint)}</span>
+      </div>
+    </div>
+  `;
+}
+
 function renderCapacityCard(state) {
-  const { totalPallets, truckCountEstimate, fullTruckCount, lastTruckPercent } = calculateTruckCapacity(state);
+  const { totalPackUnits, truckCountEstimate, fullTruckCount, lastTruckPercent } = calculateTruckCapacity(state);
   const stateClass = getCapacityStateClass(lastTruckPercent, truckCountEstimate);
-  const isEmpty = totalPallets === 0;
+  const isEmpty = totalPackUnits === 0;
 
   if (isEmpty) {
     return `
       <div class="ond-capacity ond-capacity--empty" data-capacity-card>
         <h4 class="ond-capacity__title">Estimated truck capacity</h4>
-        <p class="ond-capacity__copy">Based on a standard trailer carrying approximately 26 pallet spaces.</p>
+        <p class="ond-capacity__copy">Based on a standard trailer with roughly ${PACK_SPACES_PER_TRAILER} pack spaces.</p>
         <div class="ond-capacity__empty-state">
-          <p class="ond-capacity__empty-text">Add equipment to estimate delivery vehicle capacity.</p>
+          <p class="ond-capacity__empty-text">Add products to estimate delivery vehicle capacity.</p>
         </div>
       </div>
     `;
   }
 
-  const spacesLabel = 'Pallet spaces';
-  const spacesValue = `${totalPallets} used (${PALLET_SPACES_PER_TRAILER} per truck)`;
+  const spacesLabel = 'Pack units';
+  const spacesFigure = String(totalPackUnits);
+  const spacesHint = `${PACK_SPACES_PER_TRAILER} / trailer`;
 
-  let capacityLabel = 'Capacity';
-  let capacityValue;
+  const capLabel = 'Utilisation';
+  let capFigure;
+  let capHint;
   if (truckCountEstimate === 1) {
-    capacityValue = `Approx. ${lastTruckPercent}% full`;
+    capFigure = `${lastTruckPercent}%`;
+    capHint = 'Single trailer';
   } else if (fullTruckCount === truckCountEstimate) {
-    capacityValue = `${fullTruckCount} trucks at 100%`;
+    capFigure = `${fullTruckCount} × full`;
+    capHint = 'All trailers full';
   } else {
     const partialCount = truckCountEstimate - fullTruckCount;
-    capacityValue = fullTruckCount > 0
-      ? `${fullTruckCount} truck${fullTruckCount > 1 ? 's' : ''} at 100%, ${partialCount} truck${partialCount > 1 ? 's' : ''} at ${lastTruckPercent}%`
-      : `Approx. ${lastTruckPercent}% full`;
+    capFigure = fullTruckCount > 0
+      ? `${fullTruckCount} full · ${partialCount} at ${lastTruckPercent}%`
+      : `${lastTruckPercent}%`;
+    capHint = fullTruckCount > 0
+      ? 'Split load'
+      : 'Single trailer';
   }
 
-  const trucksLabel = 'Trucks required';
-  const trucksValue = truckCountEstimate <= 1
-    ? `Approx. ${truckCountEstimate} truck required`
-    : `Approx. ${truckCountEstimate} trucks may be required`;
+  const fleetLabel = 'Trailers';
+  const fleetFigure = String(truckCountEstimate);
+  const fleetHint = 'Indicative · non-binding';
 
   return `
     <div class="ond-capacity ${stateClass}" data-capacity-card>
       <h4 class="ond-capacity__title">Estimated truck capacity</h4>
-      <p class="ond-capacity__copy">Based on a standard trailer carrying approximately 26 pallet spaces.</p>
-      ${renderTruckCapacityVisual(totalPallets)}
-      <div class="ond-capacity__metrics">
-        <div class="ond-capacity__stat">
-          <span class="ond-capacity__stat-label">${escapeHtml(spacesLabel)}</span>
-          <span class="ond-capacity__stat-value">${escapeHtml(spacesValue)}</span>
-        </div>
-        <div class="ond-capacity__stat">
-          <span class="ond-capacity__stat-label">${escapeHtml(capacityLabel)}</span>
-          <span class="ond-capacity__stat-value">${escapeHtml(capacityValue)}</span>
-        </div>
-        <div class="ond-capacity__stat">
-          <span class="ond-capacity__stat-label">${escapeHtml(trucksLabel)}</span>
-          <span class="ond-capacity__stat-value">${escapeHtml(trucksValue)}</span>
-        </div>
+      <p class="ond-capacity__copy">Based on a standard trailer with roughly ${PACK_SPACES_PER_TRAILER} pack spaces.</p>
+      ${renderTruckCapacityVisual(totalPackUnits)}
+      <div class="ond-capacity__metrics" role="group" aria-label="Capacity summary">
+        ${renderCapacityMetric(OND_CAPACITY_ICON_PACK, spacesLabel, spacesFigure, spacesHint)}
+        ${renderCapacityMetric(OND_CAPACITY_ICON_UTIL, capLabel, capFigure, capHint)}
+        ${renderCapacityMetric(OND_CAPACITY_ICON_FLEET, fleetLabel, fleetFigure, fleetHint)}
       </div>
     </div>
   `;
@@ -522,9 +564,6 @@ function getEquipmentQuantity(state, sku) {
 }
 
 function formatMaterial(material) {
-  if (material === 'wood') return 'Wooden';
-  if (material === 'wood-metal') return 'Wood & Metal';
-  if (material === 'plastic') return 'Plastic';
   if (material === 'clay-facing') return 'Facing brick';
   if (material === 'clay-engineering') return 'Engineering brick';
   if (material === 'concrete') return 'Concrete / CMU';
@@ -538,9 +577,7 @@ function renderEquipmentCards(state, errors) {
   const cards = EQUIPMENT_PRODUCTS.map((product) => {
     const qty = getEquipmentQuantity(state, product.sku);
     const isSelected = qty > 0;
-    const dimsMatch = product.label.match(/\d+ x \d+ mm/);
-    const dims = dimsMatch ? dimsMatch[0] : '';
-    const shortName = product.label.replace(/\s*\d+ x \d+ mm.*/, '').trim();
+    const shortName = product.label;
 
     return `
       <div class="ond-equipment-card${isSelected ? ' is-selected' : ''}">
@@ -550,7 +587,6 @@ function renderEquipmentCards(state, errors) {
           </div>
           <div class="ond-equipment-card__info">
             <div class="ond-equipment-card__name">${escapeHtml(shortName)}</div>
-            ${dims ? `<div class="ond-equipment-card__dims">${escapeHtml(dims)}</div>` : ''}
             <span class="ond-equipment-card__material">${escapeHtml(formatMaterial(product.material))}</span>
           </div>
         </div>
@@ -667,7 +703,7 @@ function renderStepBody(stepId, state, siteListId) {
           <div class="ond-field">
             <label for="delivery-source">Source</label>
             <input id="delivery-source" type="text" value="${escapeHtml(state.data.source)}" readonly>
-            <p class="ond-help-text">Source is fixed as Bodea for this flow.</p>
+            <p class="ond-help-text">Source is fixed as Heavy Construction Supplies (HCS) for this flow.</p>
           </div>
         </div>
       `;
@@ -679,14 +715,14 @@ function renderStepBody(stepId, state, siteListId) {
           ${renderChoiceCard({
             name: 'transport',
             value: 'chep',
-            label: 'Bodea delivery',
+            label: 'HCS delivery',
             checked: state.data.transport === 'chep',
             stepId,
           })}
           ${renderChoiceCard({
             name: 'transport',
             value: 'customer',
-            label: 'Customer Pickup',
+            label: 'Own fleet / pickup',
             checked: state.data.transport === 'customer',
             stepId,
           })}
@@ -842,7 +878,7 @@ function renderWizard(state, siteListId) {
   return `
     <div class="ond-page-header">
       <h2>Order New Delivery</h2>
-      <p>Create a new B2B pallet delivery order via your authenticated Bodea account.</p>
+      <p>Create a new B2B masonry delivery order for Heavy Construction Supplies brick packs via your account.</p>
     </div>
     ${state.submitError ? `<div class="ond-form-error" role="alert">${escapeHtml(state.submitError)}</div>` : ''}
     ${renderStepProgressIndicator(state)}

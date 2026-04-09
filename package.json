@@ -19,7 +19,16 @@
     "prepare": "husky",
     "create-user": "node scripts/create-commerce-user.mjs",
     "update-product-names": "node scripts/update-commerce-product-names.mjs",
-    "migrate-masonry-skus": "node scripts/migrate-legacy-skus-to-masonry.mjs"
+    "migrate-masonry-skus": "node scripts/migrate-legacy-skus-to-masonry.mjs",
+    "create-masonry-products": "node scripts/create-masonry-products.mjs",
+    "set-masonry-stock": "node scripts/set-masonry-stock.mjs",
+    "assign-masonry-shared-catalog": "node scripts/assign-masonry-shared-catalog.mjs",
+    "assign-masonry-brick-category": "node scripts/assign-masonry-brick-category.mjs",
+    "list-shared-catalogs": "node scripts/list-shared-catalogs.mjs",
+    "inspect-masonry-skus": "node scripts/inspect-masonry-skus.mjs",
+    "assign-masonry-product-websites": "node scripts/assign-masonry-product-websites.mjs",
+    "align-masonry-with-pallets": "node scripts/align-masonry-with-pallets.mjs",
+    "link-masonry-pallet-category": "node scripts/link-masonry-pallet-equipment-category.mjs"
   },
   "repository": {
     "type": "git",

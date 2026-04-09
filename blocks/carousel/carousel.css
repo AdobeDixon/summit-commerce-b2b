@@ -56,7 +56,7 @@ main > .section .carousel-wrapper {
   background: linear-gradient(
     180deg,
     transparent 30%,
-    rgb(0 27 92 / 80%) 100%
+    color-mix(in srgb, var(--color-surface-dark) 82%, transparent) 100%
   );
   z-index: 0;
   pointer-events: none;
@@ -208,7 +208,7 @@ main > .section .carousel-wrapper {
 
 .carousel .carousel-navigation-buttons button:hover,
 .carousel .carousel-navigation-buttons button:focus-visible {
-  background-color: rgb(0 27 92 / 75%);
+  background-color: color-mix(in srgb, var(--color-brand-600) 78%, transparent);
   border-color: var(--color-accent-500);
 }
 

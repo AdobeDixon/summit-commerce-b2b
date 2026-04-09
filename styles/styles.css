@@ -13,52 +13,52 @@
 /* stylelint-disable no-empty-source */
 
 /* ============================================================
-   GENERIC B2B DESIGN SYSTEM
-   Pattern: Enterprise Gateway — navy/slate surfaces, sky CTA,
-   restrained accents (ui-ux-pro-max: corporate, high integrity).
+   B2B BUILDING MERCHANT DESIGN SYSTEM
+   Warm stone neutrals, terracotta primary, bronze secondary —
+   modern wholesale: confident, not theatrical.
    ============================================================ */
 
 :root, .dropin-design {
 
-  /* ── Brand (primary actions, links, focus) ─────────────── */
-  --color-brand-300: #7dd3fc;
-  --color-brand-500: #0369a1;
-  --color-brand-600: #075985;
-  --color-brand-700: #0c4a6e;
+  /* ── Brand (primary actions, links, focus) — terracotta ── */
+  --color-brand-300: #fb923c;
+  --color-brand-500: #c2410c;
+  --color-brand-600: #9a3412;
+  --color-brand-700: #7c2d12;
 
-  /* Secondary emphasis (badges, section rules) — teal, not retail orange */
-  --color-accent-500: #0e7490;
-  --color-accent-600: #115e59;
-  --color-accent-light: #f0fdfa;
+  /* Secondary emphasis — bronze / hardware gold */
+  --color-accent-500: #a16207;
+  --color-accent-600: #854d0e;
+  --color-accent-light: #fffbeb;
 
-  /* Data / secondary UI chrome */
-  --color-teal-500: #0d9488;
-  --color-teal-200: #ccfbf1;
+  /* Data / secondary UI chrome — warm steel */
+  --color-teal-500: #57534e;
+  --color-teal-200: #e7e5e4;
 
-  /* ── Neutral scale (slate) ─────────────────────────────── */
-  --color-neutral-50:  #ffffff;
-  --color-neutral-100: #f8fafc;
-  --color-neutral-200: #f1f5f9;
-  --color-neutral-300: #e2e8f0;
-  --color-neutral-400: #cbd5e1;
-  --color-neutral-500: #94a3b8;
-  --color-neutral-600: #64748b;
-  --color-neutral-700: #475569;
-  --color-neutral-800: #334155;
-  --color-neutral-900: #020617;
+  /* ── Neutral scale (stone / mortar) ────────────────────── */
+  --color-neutral-50:  #fafaf9;
+  --color-neutral-100: #f5f5f4;
+  --color-neutral-200: #e7e5e4;
+  --color-neutral-300: #d6d3d1;
+  --color-neutral-400: #a8a29e;
+  --color-neutral-500: #78716c;
+  --color-neutral-600: #57534e;
+  --color-neutral-700: #44403c;
+  --color-neutral-800: #292524;
+  --color-neutral-900: #1c1917;
 
-  /* ── Dark surfaces (nav chrome, footer, hero) ──────────── */
-  --color-surface-dark: #0f172a;
-  --color-surface-dark-mid: #1e293b;
-  --color-surface-dark-overlay: rgb(15 23 42 / 88%);
+  /* ── Dark surfaces (nav chrome, footer, hero) — warm charcoal */
+  --color-surface-dark: #1c1917;
+  --color-surface-dark-mid: #292524;
+  --color-surface-dark-overlay: rgb(28 25 23 / 88%);
 
   /* ── Status ─────────────────────────────────────────────── */
   --color-positive-200: #ecfdf5;
   --color-positive-500: #15803d;
   --color-positive-800: #14532d;
-  --color-informational-200: #e0f2fe;
-  --color-informational-500: #0284c7;
-  --color-informational-800: #075985;
+  --color-informational-200: #f5f5f4;
+  --color-informational-500: #57534e;
+  --color-informational-800: #44403c;
   --color-warning-200: #fffbeb;
   --color-warning-500: #d97706;
   --color-warning-800: #b45309;
@@ -95,7 +95,7 @@
   /* ── Border Radius ──────────────────────────────────────── */
   --shape-border-radius-1: 3px;
   --shape-border-radius-2: 6px;
-  --shape-border-radius-3: 6px;   /* Overriding boilerplate pill (24px) → enterprise 6px */
+  --shape-border-radius-3: 6px;
   --shape-border-radius-card: 8px;
   --shape-border-radius-modal: 10px;
 
@@ -385,7 +385,7 @@ main a.button:focus,
 button.button:hover,
 button.button:focus {
   background-color: var(--color-brand-600);
-  box-shadow: 0 2px 8px rgb(0 48 135 / 24%);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-brand-700) 32%, transparent);
   cursor: pointer;
   outline: none;
 }
@@ -429,7 +429,7 @@ button.button.accent {
 main a.button.accent:hover,
 button.button.accent:hover {
   background-color: var(--color-accent-600);
-  box-shadow: 0 2px 8px rgb(232 119 34 / 30%);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent-600) 35%, transparent);
 }
 
 /* ── Inputs ──────────────────────────────────────────────── */
@@ -456,7 +456,7 @@ main textarea:focus,
 main select:focus {
   border-color: var(--color-brand-500);
   outline: none;
-  box-shadow: 0 0 0 3px rgb(0 48 135 / 12%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 18%, transparent);
 }
 
 /* ── Blockquote ──────────────────────────────────────────── */
@@ -951,7 +951,7 @@ body.auth-page .auth-split__form input {
 
 body.auth-page .auth-split__form input:focus {
   border-color: var(--color-brand-500);
-  box-shadow: 0 0 0 3px rgb(3 105 161 / 18%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 20%, transparent);
   outline: none;
 }
 
@@ -1001,7 +1001,7 @@ body.auth-page .auth-split__form input {
   box-sizing: border-box !important;
   border-radius: 8px !important;
   background-color: #ffffff !important;
-  border: 1px solid #e4e7eb !important;
+  border: 1px solid var(--color-neutral-300) !important;
   text-align: left !important;
 }
 
