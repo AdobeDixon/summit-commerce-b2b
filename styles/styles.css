@@ -813,6 +813,8 @@ body.auth-page main > .section {
   margin: 0 auto;
   padding: 0;
   min-width: 0;
+  /* Match body bg — authored `.section.light` / `.highlight` use neutral-50 and read as a full-width strip */
+  background-color: var(--color-neutral-100);
 }
 
 body.auth-page main .section > div {
@@ -831,10 +833,9 @@ body.auth-page main .section > div {
   width: 100%;
   max-width: 100%;
   min-height: 560px;
-  background: #fff;
-  border-radius: 10px;
+  background: transparent;
   box-shadow: 0 4px 24px rgb(0 0 0 / 12%);
-  overflow: hidden;
+  overflow: visible;
   box-sizing: border-box;
 }
 
@@ -859,6 +860,7 @@ body.auth-page main .section > div {
   );
   color: #fff;
   min-height: 280px;
+  border-radius: var(--shape-border-radius-modal) var(--shape-border-radius-modal) 0 0;
 }
 
 @media (min-width: 1024px) {
@@ -868,6 +870,7 @@ body.auth-page main .section > div {
     max-width: 50%;
     min-height: 560px;
     padding: var(--spacing-xxbig) var(--spacing-xhuge);
+    border-radius: var(--shape-border-radius-modal) 0 0 var(--shape-border-radius-modal);
   }
 }
 
@@ -916,6 +919,7 @@ body.auth-page .auth-split__brand .auth-split__desc {
   min-width: 0;
   background: var(--color-neutral-100);
   overflow-x: hidden;
+  border-radius: 0 0 var(--shape-border-radius-modal) var(--shape-border-radius-modal);
 }
 
 .auth-split__form-inner {
@@ -932,6 +936,7 @@ body.auth-page .auth-split__brand .auth-split__desc {
     min-width: 0;
     min-height: 560px;
     padding: var(--spacing-xxbig) var(--spacing-xhuge);
+    border-radius: 0 var(--shape-border-radius-modal) var(--shape-border-radius-modal) 0;
   }
 
   .auth-split__form-inner {

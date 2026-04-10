@@ -5,7 +5,13 @@ import { tryRenderAemAssetsImage } from '@dropins/tools/lib/aem/assets.js';
 import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { fetchPlaceholders, getCodeAssetUrl, getProductLink, rootLink } from '../../scripts/commerce.js';
+import {
+  CUSTOMER_ADDRESS_PATH,
+  fetchPlaceholders,
+  getCodeAssetUrl,
+  getProductLink,
+  rootLink,
+} from '../../scripts/commerce.js';
 
 import renderAuthCombine from './renderAuthCombine.js';
 import { renderAuthDropdown } from './renderAuthDropdown.js';
@@ -222,6 +228,19 @@ export default async function decorate(block) {
   }
 
   const navTools = nav.querySelector('.nav-tools');
+
+  /** Location → address book */
+  if (navTools) {
+    const locationWrapper = document.createElement('div');
+    locationWrapper.className = 'nav-location-wrapper nav-tools-wrapper';
+    const locationLink = document.createElement('a');
+    locationLink.className = 'nav-location-link';
+    locationLink.href = rootLink(CUSTOMER_ADDRESS_PATH);
+    locationLink.textContent = 'Location';
+    locationLink.setAttribute('aria-label', 'Address book');
+    locationWrapper.appendChild(locationLink);
+    navTools.prepend(locationWrapper);
+  }
 
   /** Wishlist */
   const wishlist = document.createRange().createContextualFragment(`

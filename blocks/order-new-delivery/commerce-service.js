@@ -115,7 +115,7 @@ function normalizeCommerceError(error) {
     return (
       'These equipment lines could not be added to the cart. Common causes: (1) B2B company role — '
       + 'purchasing/checkout or **category** permissions (Customers → Companies → Roles; some roles only allow '
-      + 'specific catalog categories — masonry must be in the **same categories** as working CHEP SKUs). '
+      + 'specific catalog categories — masonry must be in the **same categories** as working Bodea SKUs). '
       + '(2) Shared catalog — B2B → Shared Catalogs → your company\'s catalog → Products. '
       + '(3) Website scope — each SKU on every B2B website (e.g. Main + Bodea). '
       + 'If GraphQL returns PERMISSION_DENIED, run `npm run link-masonry-pallet-category` to add the pallet '

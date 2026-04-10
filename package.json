@@ -28,7 +28,9 @@
     "inspect-masonry-skus": "node scripts/inspect-masonry-skus.mjs",
     "assign-masonry-product-websites": "node scripts/assign-masonry-product-websites.mjs",
     "align-masonry-with-pallets": "node scripts/align-masonry-with-pallets.mjs",
-    "link-masonry-pallet-category": "node scripts/link-masonry-pallet-equipment-category.mjs"
+    "link-masonry-pallet-category": "node scripts/link-masonry-pallet-equipment-category.mjs",
+    "playwright-mcp": "playwright-mcp",
+    "playwright-mcp:bridge": "playwright-mcp --extension"
   },
   "repository": {
     "type": "git",
@@ -44,6 +46,7 @@
     "@adobe/aem-cli": "^16.5.8",
     "@babel/eslint-parser": "7.28.6",
     "@dropins/build-tools": "1.0.1",
+    "@playwright/mcp": "^0.0.70",
     "eslint": "8.57.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",

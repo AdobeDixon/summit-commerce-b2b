@@ -412,6 +412,32 @@ header nav .nav-tools {
   z-index: 3;
 }
 
+header nav .nav-location-link {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 10px;
+  font: var(--type-body-2-strong-font);
+  letter-spacing: var(--type-body-2-strong-letter-spacing);
+  color: var(--color-neutral-800);
+  text-decoration: none;
+  border-radius: var(--shape-border-radius-1);
+  white-space: nowrap;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+header nav .nav-location-link:hover {
+  color: var(--color-brand-500);
+  background-color: var(--color-neutral-100);
+}
+
+header nav .nav-location-link:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
 header nav .nav-tools-wrapper > button {
   color: var(--color-neutral-700);
   background: transparent;

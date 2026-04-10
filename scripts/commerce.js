@@ -37,6 +37,35 @@ function sanitizeName(name) {
 }
 
 /**
+ * Replaces legacy "Chep" / "CHEP" branding in the tab title and head meta tags with "Bodea".
+ * Authored DA metadata often still carries the old name; this keeps the browser tab consistent.
+ * @param {string} value
+ * @returns {string}
+ */
+function replaceChepBrandWithBodea(value) {
+  if (!value || !/chep/i.test(value)) return value;
+  return value
+    .replace(/\bMy\s+CHEP\b/gi, 'Bodea')
+    .replace(/\bmychep\b/gi, 'Bodea')
+    .replace(/\bCHEP\b/g, 'Bodea')
+    .replace(/\bChep\b/g, 'Bodea')
+    .replace(/\bchep\b/g, 'Bodea');
+}
+
+/**
+ * Updates document title and common SEO meta tags after authored content is loaded.
+ */
+export function normalizeBrandInPageHead() {
+  document.title = replaceChepBrandWithBodea(document.title);
+  document.querySelectorAll('meta[property="og:title"], meta[name="twitter:title"], meta[name="title"]').forEach(
+    (el) => {
+      const content = el.getAttribute('content');
+      if (content) el.setAttribute('content', replaceChepBrandWithBodea(content));
+    },
+  );
+}
+
+/**
  * Fetch GraphQL Instances
  */
 
@@ -362,7 +391,8 @@ export async function initializeCommerce() {
   CS_FETCH_GRAPHQL.setEndpoint(await commerceEndpointWithQueryParams());
   CS_FETCH_GRAPHQL.setFetchGraphQlHeaders((prev) => ({ ...prev, ...getHeaders('cs') }));
 
-  return initializeDropins();
+  await initializeDropins();
+  normalizeBrandInPageHead();
 }
 
 /**
