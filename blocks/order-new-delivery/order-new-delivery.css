@@ -1022,6 +1022,7 @@ main .order-new-delivery-container {
   flex-wrap: wrap;
   gap: 12px;
   align-items: flex-start;
+  justify-content: center;
 }
 
 .ond-capacity__truck {
@@ -1058,11 +1059,14 @@ main .order-new-delivery-container {
 }
 
 /* Blue fill: behind image, visible through transparent trailer */
+/* +2px at full fill (65) aligns bar with new truck artwork; scales with fill level */
 .truck-capacity-fill {
   position: absolute;
   left: 26%;
   top: 20%;
-  width: calc(var(--fill-width-pct, 0) * 1%);
+  width: calc(
+    var(--fill-width-pct, 0) * 1% + var(--fill-width-pct, 0) / 65 * 2px
+  );
   height: 55%;
   background: var(--color-brand-500);
   z-index: 1;
@@ -1073,7 +1077,11 @@ main .order-new-delivery-container {
 /* Animate fill on mount (left-to-right growth) */
 @keyframes ond-truck-fill-in {
   from { width: 0; }
-  to { width: calc(var(--fill-width-pct, 0) * 1%); }
+  to {
+    width: calc(
+      var(--fill-width-pct, 0) * 1% + var(--fill-width-pct, 0) / 65 * 2px
+    );
+  }
 }
 
 .truck-capacity-fill {
