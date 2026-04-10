@@ -4,6 +4,7 @@ import {
   CUSTOMER_CREATE_PATH,
   CUSTOMER_FORGOTPASSWORD_PATH,
   checkIsAuthenticated,
+  getCodeAssetUrl,
   rootLink,
 } from '../../scripts/commerce.js';
 import { getPostLoginRedirectUrl } from '../../scripts/auth-gate.js';
@@ -18,8 +19,8 @@ function buildAuthSplitLayout(block) {
   const brand = document.createElement('div');
   brand.className = 'auth-split__brand';
   brand.innerHTML = `
-    <img src="${rootLink('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
-    <p class="auth-split__desc">Your logistics control centre. Sign in to manage orders, equipment, and delivery locations.</p>
+    <img src="${getCodeAssetUrl('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
+    <p class="auth-split__desc">Built for brick and building materials—Bodea keeps your supply chain moving. Sign in to place orders, track deliveries, and manage equipment and job-site locations.</p>
   `;
   split.appendChild(brand);
 

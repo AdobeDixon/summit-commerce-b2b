@@ -6,7 +6,7 @@
  */
 
 import { loadFragment } from '../fragment/fragment.js';
-import { rootLink, CUSTOMER_ORDERS_PATH } from '../../scripts/commerce.js';
+import { getCodeAssetUrl, rootLink, CUSTOMER_ORDERS_PATH } from '../../scripts/commerce.js';
 
 /* ── SVG Icons (match dashboard style) ──────────────────────────────────── */
 
@@ -168,7 +168,7 @@ export async function buildAccountNav(pathname, navItems = null) {
   logoArea.className = 'chep-nav__logo';
   logoArea.innerHTML = `
     <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="Bodea Home">
-      <img src="${rootLink('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />
+      <img src="${getCodeAssetUrl('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />
     </a>
   `;
   nav.appendChild(logoArea);

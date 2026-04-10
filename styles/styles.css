@@ -877,14 +877,18 @@ body.auth-page main .section > div {
   max-width: 160px;
   height: auto;
   object-fit: contain;
-  mix-blend-mode: lighten;
 }
 
 .auth-split__desc {
   font-size: 15px;
   line-height: 1.6;
-  color: rgb(255 255 255 / 95%);
+  color: #fff;
   margin: 0;
+}
+
+/* Auth brand panel: lock description to white (global main/section p rules can override otherwise) */
+body.auth-page .auth-split__brand .auth-split__desc {
+  color: #fff;
 }
 
 .auth-split__brand h1 {
@@ -898,7 +902,7 @@ body.auth-page main .section > div {
 .auth-split__brand p {
   font-size: 1rem;
   line-height: 1.6;
-  color: rgb(255 255 255 / 95%);
+  color: #fff;
   margin: 0;
 }
 

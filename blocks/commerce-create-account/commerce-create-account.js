@@ -4,6 +4,7 @@ import {
   CUSTOMER_LOGIN_PATH,
   checkIsAuthenticated,
   authPrivacyPolicyConsentSlot,
+  getCodeAssetUrl,
   rootLink,
 } from '../../scripts/commerce.js';
 import { getPostLoginRedirectUrl } from '../../scripts/auth-gate.js';
@@ -18,7 +19,7 @@ function buildAuthSplitLayout(block) {
   const brand = document.createElement('div');
   brand.className = 'auth-split__brand';
   brand.innerHTML = `
-    <img src="${rootLink('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
+    <img src="${getCodeAssetUrl('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
     <p class="auth-split__desc">Create your account to access the customer portal. Manage orders, equipment, and delivery locations.</p>
   `;
   split.appendChild(brand);

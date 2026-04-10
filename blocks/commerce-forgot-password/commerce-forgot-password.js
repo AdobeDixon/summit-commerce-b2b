@@ -5,6 +5,7 @@ import {
   CUSTOMER_ACCOUNT_PATH,
   CUSTOMER_LOGIN_PATH,
   checkIsAuthenticated,
+  getCodeAssetUrl,
   rootLink,
 } from '../../scripts/commerce.js';
 import { getPostLoginRedirectUrl } from '../../scripts/auth-gate.js';
@@ -19,7 +20,7 @@ function buildAuthSplitLayout(block) {
   const brand = document.createElement('div');
   brand.className = 'auth-split__brand';
   brand.innerHTML = `
-    <img src="${rootLink('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
+    <img src="${getCodeAssetUrl('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
     <p class="auth-split__desc">Reset your password. We'll send you an email with a link to create a new password.</p>
   `;
   split.appendChild(brand);

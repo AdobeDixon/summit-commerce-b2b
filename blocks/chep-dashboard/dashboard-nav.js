@@ -5,7 +5,7 @@
  * Active state is derived from the current window.location.pathname.
  */
 
-import { rootLink } from '../../scripts/commerce.js';
+import { getCodeAssetUrl, rootLink } from '../../scripts/commerce.js';
 import { NAV_ITEMS } from './dashboard-config.js';
 
 /* ── SVG Icons ─────────────────────────────────────────────────────────── */
@@ -121,7 +121,7 @@ export function buildNav(pathname) {
   /* Logo (images/ is served from code bus; rootLink handles locale root) */
   const logoArea = document.createElement('div');
   logoArea.className = 'chep-nav__logo';
-  const logoSrc = rootLink('/images/bodea-inc-logo-white.png');
+  const logoSrc = getCodeAssetUrl('/images/bodea-inc-logo-white.png');
   logoArea.innerHTML = `
     <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="Bodea Home">
       <img src="${logoSrc}" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />

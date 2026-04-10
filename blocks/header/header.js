@@ -5,7 +5,7 @@ import { tryRenderAemAssetsImage } from '@dropins/tools/lib/aem/assets.js';
 import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { fetchPlaceholders, getProductLink, rootLink } from '../../scripts/commerce.js';
+import { fetchPlaceholders, getCodeAssetUrl, getProductLink, rootLink } from '../../scripts/commerce.js';
 
 import renderAuthCombine from './renderAuthCombine.js';
 import { renderAuthDropdown } from './renderAuthDropdown.js';
@@ -188,7 +188,7 @@ export default async function decorate(block) {
     /* Logo from code bus (images/) — /.nav/ URLs are not reliably served as static on aem.live */
     brandLink.textContent = '';
     const logoImg = document.createElement('img');
-    logoImg.src = rootLink('/images/bodea-inc-logo-white.png');
+    logoImg.src = getCodeAssetUrl('/images/bodea-inc-logo-white.png');
     logoImg.alt = 'Bodea - Smart. Simple. Fast.';
     logoImg.className = 'nav-brand-logo';
     brandLink.appendChild(logoImg);

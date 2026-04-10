@@ -409,6 +409,21 @@ export function rootLink(link) {
 }
 
 /**
+ * URL for static files from the code bundle (images/, etc.).
+ * Uses window.hlx.codeBasePath for branch previews. Do not pass through rootLink —
+ * locale roots apply to authored routes, not GitHub static paths under /images/.
+ * @param {string} absolutePath - Path starting with / (e.g. '/images/logo.png')
+ * @returns {string}
+ */
+export function getCodeAssetUrl(absolutePath) {
+  const path = absolutePath.startsWith('/') ? absolutePath : `/${absolutePath}`;
+  const base = typeof window !== 'undefined' && window.hlx?.codeBasePath != null
+    ? window.hlx.codeBasePath
+    : '';
+  return `${base}${path}`;
+}
+
+/**
  * Decorates Columns Template to the main element.
  * @param {Element} doc The document element
  */
