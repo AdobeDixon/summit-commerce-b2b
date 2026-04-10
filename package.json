@@ -29,6 +29,8 @@
     "assign-masonry-product-websites": "node scripts/assign-masonry-product-websites.mjs",
     "align-masonry-with-pallets": "node scripts/align-masonry-with-pallets.mjs",
     "link-masonry-pallet-category": "node scripts/link-masonry-pallet-equipment-category.mjs",
+    "seed-terrablock-credit": "node scripts/seed-terrablock-company-credit.mjs",
+    "debug-spend-trend": "node scripts/debug-spend-trend.mjs",
     "playwright-mcp": "playwright-mcp",
     "playwright-mcp:bridge": "playwright-mcp --extension"
   },

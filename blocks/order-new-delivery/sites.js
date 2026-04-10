@@ -8,7 +8,7 @@ function getAuthDropinToken() {
 }
 
 /** Must match storefront-company-switcher `companySessionStorageKey` */
-const COMPANY_SESSION_STORAGE_KEY = 'DROPIN__COMPANYSWITCHER__COMPANY__CONTEXT';
+export const COMPANY_SESSION_STORAGE_KEY = 'DROPIN__COMPANYSWITCHER__COMPANY__CONTEXT';
 
 /**
  * Current B2B company for the logged-in customer (authoritative — does not depend on stale
@@ -324,15 +324,24 @@ async function resolveAddressRows() {
   return raw;
 }
 
-export async function loadDeliverySitesFromAddressBook(options = {}) {
-  const { retryIfEmpty = false } = options;
-
+/**
+ * Ensures company switcher is loaded, auth is ready, and `X-Adobe-Company` is set on CORE GraphQL.
+ * Use before B2B `company { ... }` queries (e.g. dashboard company credit) so the subgraph resolves
+ * the correct company — same preparation as {@link loadDeliverySitesFromAddressBook}.
+ */
+export async function ensureB2bCompanyGraphqlContext() {
   await ensureCompanySwitcherLoaded();
   await waitForAuthGraphQlReady();
   await syncCompanyHeaderWithCommerce();
   await new Promise((r) => {
     setTimeout(r, 50);
   });
+}
+
+export async function loadDeliverySitesFromAddressBook(options = {}) {
+  const { retryIfEmpty = false } = options;
+
+  await ensureB2bCompanyGraphqlContext();
 
   let raw = await resolveAddressRows();
   let sites = mapCustomerAddressesToDeliverySites(raw);

@@ -20,8 +20,9 @@
  * - dashboard-kpi.js      — KPI summary cards
  * - dashboard-orders.js   — recent orders table
  * - dashboard-stock.js    — low stock alert panel
- * - dashboard-equipment.js — equipment overview cards
  * - dashboard-map.js      — Leaflet map + deliveries panel + quick actions
+ * - dashboard-spend-trend.js — spend trend chart (REST rolling 12 weeks)
+ * - dashboard-company-credit.js — company credit summary (REST + GraphQL fallback)
  *
  * ── DATA STATUS ────────────────────────────────────────────────────────
  * Real Commerce data: orders list, product names, stock_status
@@ -38,8 +39,9 @@ import { loadDeliverySitesFromAddressBook } from '../order-new-delivery/sites.js
 import { buildNav, toggleNav } from './dashboard-nav.js';
 import { buildKpiSection, updateKpiSection } from './dashboard-kpi.js';
 import { buildOrdersSection, updateOrdersSection } from './dashboard-orders.js';
+import { buildSpendTrendSection, updateSpendTrendSection } from './dashboard-spend-trend.js';
+import { buildCompanyCreditSection, updateCompanyCreditSection } from './dashboard-company-credit.js';
 import { buildStockSection, updateStockSection } from './dashboard-stock.js';
-import { buildEquipmentSection, updateEquipmentSection } from './dashboard-equipment.js';
 import {
   buildBottomSection,
   initializeBottomSectionMap,
@@ -410,6 +412,15 @@ export default async function decorate(block) {
   const kpiSection = buildKpiSection();
   content.appendChild(kpiSection);
 
+  /* Spend trend + company credit (side by side on wide viewports) */
+  const chartsRow = document.createElement('div');
+  chartsRow.className = 'dashboard-charts-row';
+  const spendTrendSection = buildSpendTrendSection();
+  const companyCreditSection = buildCompanyCreditSection();
+  chartsRow.appendChild(spendTrendSection);
+  chartsRow.appendChild(companyCreditSection);
+  content.appendChild(chartsRow);
+
   /* Main grid: orders + stock */
   const mainGrid = document.createElement('div');
   mainGrid.className = 'dashboard-main-grid';
@@ -419,10 +430,6 @@ export default async function decorate(block) {
   mainGrid.appendChild(ordersSection);
   mainGrid.appendChild(stockSection);
   content.appendChild(mainGrid);
-
-  /* Equipment overview */
-  const equipmentSection = buildEquipmentSection();
-  content.appendChild(equipmentSection);
 
   /* Bottom section: map + deliveries + quick actions */
   const bottomSection = buildBottomSection();
@@ -436,11 +443,9 @@ export default async function decorate(block) {
   };
   document.addEventListener('bodea-delivery-sites-changed', refreshMapFromAddressBook);
 
-  let addressBookSiteCount = 0;
   if (isAuthenticated) {
     try {
-      const sites = await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
-      addressBookSiteCount = sites.length;
+      await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
     } catch (err) {
       console.warn('bodea-dashboard: Could not load customer addresses for the site map.', err);
     }
@@ -465,7 +470,13 @@ export default async function decorate(block) {
   /* ── Load data asynchronously ──────────────────────────────────────── */
 
   try {
-    const { customerIdentity, ordersData, stockData } = await DashboardService.loadAll();
+    const {
+      customerIdentity,
+      ordersData,
+      stockData,
+      spendTrendData,
+      companyCreditData,
+    } = await DashboardService.loadAll();
 
     /* Update topbar account name — uses dedicated identity query, independent of orders */
     updateAccountName(topBar, customerIdentity);
@@ -492,19 +503,21 @@ export default async function decorate(block) {
     /* Update KPI cards */
     updateKpiSection(kpiSection, { ordersData, stockData, isAuthenticated });
 
+    /* Spend trend + company credit panels */
+    updateSpendTrendSection(spendTrendSection, spendTrendData, isAuthenticated, ordersData);
+    updateCompanyCreditSection(companyCreditSection, companyCreditData, isAuthenticated);
+
     /* Update orders table */
     updateOrdersSection(ordersSection, ordersData, isAuthenticated);
 
     /* Update stock alerts */
     updateStockSection(stockSection, stockData);
 
-    /* Update equipment cards */
-    updateEquipmentSection(equipmentSection, stockData);
-
     /* Update deliveries panel */
     updateDeliveriesPanel(bottomSection, ordersData, isAuthenticated);
 
-    /* Re-sync address book after other GraphQL (company context); bodea-delivery-sites-changed refreshes the map */
+    /* Re-sync address book after other GraphQL (company context); */
+    /* bodea-delivery-sites-changed refreshes the map */
     if (isAuthenticated) {
       try {
         await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
@@ -516,9 +529,19 @@ export default async function decorate(block) {
     console.error('[Bodea Dashboard] Data load failed:', err);
 
     updateKpiSection(kpiSection, { ordersData: null, stockData: [], isAuthenticated });
+    updateSpendTrendSection(
+      spendTrendSection,
+      { points: [], currency: 'GBP', error: 'network' },
+      isAuthenticated,
+      null,
+    );
+    updateCompanyCreditSection(
+      companyCreditSection,
+      { error: 'network' },
+      isAuthenticated,
+    );
     updateOrdersSection(ordersSection, null, isAuthenticated);
     updateStockSection(stockSection, []);
-    updateEquipmentSection(equipmentSection, []);
     updateDeliveriesPanel(bottomSection, null, isAuthenticated);
     updateAccountName(topBar, null);
   }

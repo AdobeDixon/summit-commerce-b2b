@@ -12,6 +12,24 @@
 export const LOW_STOCK_THRESHOLD = 250;
 
 /**
+ * REST API path prefix for the core Commerce instance (Magento store scope).
+ * Used to build `GET {origin}{prefix}/V1/orders?...` alongside the GraphQL endpoint.
+ * Change if your deployment uses a different store code (e.g. `/rest/all`).
+ */
+export const COMMERCE_REST_PATH_PREFIX = '/rest/default';
+
+/**
+ * Query string value for the spend-trend orders endpoint (rolling 12 weeks).
+ */
+export const SPEND_TREND_DATE_RANGE = 'rolling12w';
+
+/** Week counts available in the dashboard spend-trend period filter (oldest → chart width). */
+export const SPEND_TREND_PERIOD_OPTIONS = [4, 8, 12];
+
+/** Default selected period (weeks) when the panel loads. */
+export const DEFAULT_SPEND_TREND_WEEKS = 12;
+
+/**
  * Featured masonry SKUs (Commerce catalog). HCS-BR-* = Heavy Construction Supplies brick lines.
  */
 export const FEATURED_EQUIPMENT_SKUS = [
