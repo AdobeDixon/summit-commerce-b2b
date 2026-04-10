@@ -1,10 +1,27 @@
-# Edge Delivery Services + Adobe Commerce Boilerplate
+# Summit Commerce B2B (Bodea demo)
 
-This project boilerplate is for Edge Delivery Services projects that integrate with Adobe Commerce.
+This repository is a **demonstration storefront** built on the **Adobe Commerce + Edge Delivery Services B2B boilerplate**. It uses the fictional **Bodea** brand (the standard demo company in Adobe Commerce materials) as a **B2B brick wholesale supplier**: catalog, ordering, company accounts, and logistics-style flows are illustrative only and not a real business.
 
-## Documentation
+## About this project
 
-Before using the boilerplate, we recommend you to go through the documentation on <https://experienceleague.adobe.com/developer/commerce/storefront/> and more specifically:
+- **Base**: [Adobe Commerce Storefront boilerplate](https://experienceleague.adobe.com/developer/commerce/storefront/get-started/) for Edge Delivery Services with Adobe Commerce drop-ins (cart, checkout, account, B2B purchase orders, negotiable quotes, requisition lists, and related account blocks).
+- **Demo brand**: **Bodea** — fictional company; copy, products, and scenarios are for demos and learning.
+- **Custom experience blocks** (Bodea-specific UI on top of Commerce APIs):
+  - **Bodea Dashboard** (`chep-dashboard`) — Home-style dashboard: left nav, KPIs, recent orders, stock alerts, equipment overview, and a delivery-activity map.
+  - **Bodea Orders List** (`chep-orders-list`) — Paginated orders table with status, dates, products, and links to order details; shares navigation patterns with the dashboard.
+  - **Order New Delivery** (`order-new-delivery`) — Multi-step wizard to place a delivery order (order type, date, transport, equipment, site and contact, delivery window), backed by Commerce order APIs and catalog configuration.
+
+Other blocks in `blocks/` follow the boilerplate: commerce account, cart, checkout, B2B PO and approval flows, returns, invoices, and content blocks (e.g. cards, carousel, columns). See each block’s `README.md` for details.
+
+## Credits and contact
+
+Built by **Alex Dixon SC** (UK). For questions about this demo implementation, contact **alexanderd@adobe.com**.
+
+---
+
+## Documentation (boilerplate)
+
+Before extending the boilerplate, we recommend the documentation on <https://experienceleague.adobe.com/developer/commerce/storefront/> and more specifically:
 
 1. [Storefront Developer Tutorial](https://experienceleague.adobe.com/developer/commerce/storefront/get-started/)
 1. [AEM Docs](https://www.aem.live/docs/)
@@ -21,7 +38,7 @@ Alternatively, you can follow our [Guide](https://experienceleague.adobe.com/dev
 
 ## Updating Drop-in dependencies
 
-You may need to update one of the drop-in components, or `@adobe/magento-storefront-event-collector` or `@adobe/magento-storefront-events-sdk` to a new version. Besides checking the release notes for any breaking changes, ensure you also execute the `postinstall` script so that the dependenices in your `scripts/__dropins__` directory are updated to the latest build. This should be run immediately after you update the component, for example:
+You may need to update one of the drop-in components, or `@adobe/magento-storefront-event-collector` or `@adobe/magento-storefront-events-sdk` to a new version. Besides checking the release notes for any breaking changes, ensure you also execute the `postinstall` script so that the dependencies in your `scripts/__dropins__` directory are updated to the latest build. This should be run immediately after you update the component, for example:
 
 ```bash
 npm install @dropins/storefront-cart@2.0. # Updates the storefront-cart dependency in node_modules/
