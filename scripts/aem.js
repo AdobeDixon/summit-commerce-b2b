@@ -561,6 +561,21 @@ function buildBlock(blockName, content) {
 }
 
 /**
+ * Maps authored block class names (DOM / first row of block table) to the folder name under
+ * /blocks used for JS/CSS. Keeps old CHEP-era names working after the Bodea rename.
+ * @param {string} name - block.dataset.blockName or first class on the block root
+ * @returns {string}
+ */
+function resolveBlockModuleFolder(name) {
+  if (!name) return name;
+  const aliases = {
+    'chep-dashboard': 'bodea-dashboard',
+    'chep-orders-list': 'bodea-orders-list',
+  };
+  return aliases[name] || name;
+}
+
+/**
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
  */
@@ -568,21 +583,24 @@ async function loadBlock(block) {
   const status = block.dataset.blockStatus;
   if (status !== 'loading' && status !== 'loaded') {
     block.dataset.blockStatus = 'loading';
-    const { blockName } = block.dataset;
+    const rawName = block.dataset.blockName || block.classList[0];
+    const moduleFolder = resolveBlockModuleFolder(rawName);
     try {
-      const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`);
+      const cssLoaded = loadCSS(
+        `${window.hlx.codeBasePath}/blocks/${moduleFolder}/${moduleFolder}.css`,
+      );
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
             const mod = await import(
-              `${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.js`
+              `${window.hlx.codeBasePath}/blocks/${moduleFolder}/${moduleFolder}.js`,
             );
             if (mod.default) {
               await mod.default(block);
             }
           } catch (error) {
             // eslint-disable-next-line no-console
-            console.error(`failed to load module for ${blockName}`, error);
+            console.error(`failed to load module for ${rawName} (path: ${moduleFolder})`, error);
           }
           resolve();
         })();
@@ -590,7 +608,7 @@ async function loadBlock(block) {
       await Promise.all([cssLoaded, decorationComplete]);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(`failed to load block ${blockName}`, error);
+      console.error(`failed to load block ${rawName}`, error);
     }
     block.dataset.blockStatus = 'loaded';
   }
@@ -621,6 +639,19 @@ function decorateBlock(block) {
  */
 function decorateBlocks(main) {
   main.querySelectorAll('div.section > div > div').forEach(decorateBlock);
+
+  /* Some authoring outputs add an extra wrapper so the block root is deeper than
+   * section > div > div. Pick up known Bodea blocks by class if still undecorated. */
+  const deepBlockSelectors = [
+    'div.bodea-dashboard',
+    'div.chep-dashboard',
+    'div.bodea-orders-list',
+    'div.chep-orders-list',
+    'div.bodea-address-book',
+  ];
+  deepBlockSelectors.forEach((sel) => {
+    main.querySelectorAll(`div.section ${sel}:not(.block)`).forEach(decorateBlock);
+  });
 }
 
 /**
