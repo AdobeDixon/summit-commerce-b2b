@@ -18,7 +18,7 @@ function buildAuthSplitLayout(block) {
   const brand = document.createElement('div');
   brand.className = 'auth-split__brand';
   brand.innerHTML = `
-    <img src="/images/bodea-logo.png" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
+    <img src="${rootLink('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="auth-split__logo" width="160" height="auto" />
     <p class="auth-split__desc">Your logistics control centre. Sign in to manage orders, equipment, and delivery locations.</p>
   `;
   split.appendChild(brand);

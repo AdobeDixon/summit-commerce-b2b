@@ -442,7 +442,7 @@ body.dashboard-page main > .section > div {
   gap: 4px;
 }
 
-.chep-orders-list__pallet-icon {
+.chep-orders-list__brick-icon {
   width: 28px;
   height: 28px;
   flex-shrink: 0;

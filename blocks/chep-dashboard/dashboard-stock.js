@@ -18,31 +18,17 @@ import {
   EQUIPMENT_DISPLAY_NAMES,
   EQUIPMENT_STOCK_CAPACITY,
   FEATURED_EQUIPMENT_SKUS,
-  PRIMARY_EQUIPMENT_SKU,
 } from './dashboard-config.js';
 
-/* ── Pallet icons (order flow wood icon for UK wood SKU, generic fallback) ─ */
+/* ── Brick icon (featured masonry / HCS-BR-* catalog; matches low-stock SKU line) ─ */
 
-const PALLET_ICON = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-  <rect x="2" y="14" width="20" height="4" rx="1"/>
-  <path d="M4 14V8h16v6"/>
-  <path d="M8 8V5M12 8V5M16 8V5"/>
-  <path d="M6 18v2M18 18v2"/>
+const BRICK_ICON = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="2" y="3" width="9" height="5" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="13" y="3" width="9" height="5" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="7" y="10" width="9" height="5" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="2" y="17" width="10" height="4" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="14" y="17" width="8" height="4" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
 </svg>`;
-
-/** Order flow wood pallet icon (from order-new-delivery) */
-const ORDER_FLOW_WOOD_ICON = `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <rect x="2" y="9" width="28" height="3.5" rx="1" fill="#c68642"/>
-  <rect x="2" y="14.5" width="28" height="3.5" rx="1" fill="#c68642" opacity="0.75"/>
-  <rect x="2" y="19" width="28" height="3.5" rx="1" fill="#c68642" opacity="0.5"/>
-  <rect x="2" y="22.5" width="7" height="5.5" rx="1" fill="#c68642" opacity="0.65"/>
-  <rect x="12.5" y="22.5" width="7" height="5.5" rx="1" fill="#c68642" opacity="0.65"/>
-  <rect x="23" y="22.5" width="7" height="5.5" rx="1" fill="#c68642" opacity="0.65"/>
-</svg>`;
-
-function getStockItemIcon(sku) {
-  return sku === PRIMARY_EQUIPMENT_SKU ? ORDER_FLOW_WOOD_ICON : PALLET_ICON;
-}
 
 /* ── Progress bar colour logic ─────────────────────────────────────────── */
 
@@ -96,7 +82,7 @@ function buildStockItem(product) {
     : '<span class="stock-item__badge stock-item__badge--low">Low Stock</span>';
 
   li.innerHTML = `
-    <div class="stock-item__icon">${getStockItemIcon(product.sku)}</div>
+    <div class="stock-item__icon">${BRICK_ICON}</div>
     <div class="stock-item__details">
       <div class="stock-item__header">
         <span class="stock-item__name">${getDisplayName(product)}</span>

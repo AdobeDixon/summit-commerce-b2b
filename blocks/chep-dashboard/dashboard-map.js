@@ -33,7 +33,53 @@ const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyrigh
 const TILE_SUBDOMAINS = 'abc';
 
 const GEOCODE_CACHE_PREFIX = 'ond-nominatim-coord:';
-const NOMINATIM_DELAY_MS = 1100;
+/** Nominatim usage policy: space requests; UK postcodes use postcodes.io first to avoid hammering OSM. */
+const NOMINATIM_DELAY_MS = 550;
+
+/**
+ * UK postcodes: primary browser-safe geocode (OpenStreetMap Nominatim often blocks or throttles
+ * client-side requests; postcodes.io is CORS-friendly for GB/NI).
+ */
+function shouldTryUkPostcodeApi(site) {
+  const cc = (site.countryCode || '').toUpperCase();
+  if (cc && cc !== 'GB' && cc !== 'UK') return false;
+  return Boolean(site.postcode && String(site.postcode).trim());
+}
+
+/**
+ * @param {string} postcode
+ * @returns {Promise<number[] | null>}
+ */
+async function geocodeUkPostcode(postcode) {
+  const raw = String(postcode || '').trim();
+  if (!raw) return null;
+  const compact = raw.replace(/\s+/g, '').toUpperCase();
+  if (compact.length < 5) return null;
+
+  const tryUrls = [
+    `https://api.postcodes.io/postcodes/${encodeURIComponent(compact)}`,
+    `https://api.postcodes.io/postcodes/${encodeURIComponent(raw)}`,
+  ];
+
+  for (let u = 0; u < tryUrls.length; u += 1) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const res = await fetch(tryUrls[u], {
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) continue;
+      // eslint-disable-next-line no-await-in-loop
+      const data = await res.json();
+      const r = data.result;
+      if (r?.latitude != null && r?.longitude != null) {
+        return [parseFloat(r.latitude), parseFloat(r.longitude)];
+      }
+    } catch {
+      /* try next */
+    }
+  }
+  return null;
+}
 
 /**
  * Resolve [lat, lng] for a delivery site: optional static override, else Nominatim (cached).
@@ -67,12 +113,21 @@ async function resolveSiteCoordinates(site) {
 
   const cacheKey = `${GEOCODE_CACHE_PREFIX}${site.id}`;
 
+  if (shouldTryUkPostcodeApi(site)) {
+    const uk = await geocodeUkPostcode(site.postcode);
+    if (uk) {
+      sessionStorage.setItem(cacheKey, JSON.stringify(uk));
+      return uk;
+    }
+  }
+
   const q = [
     site.address1,
     site.city,
     site.postcode,
     site.region,
     site.countryCode,
+    'United Kingdom',
   ].filter(Boolean).join(', ');
 
   if (!q.trim()) return null;
@@ -83,7 +138,6 @@ async function resolveSiteCoordinates(site) {
     const res = await fetch(url, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'SummitCommerceB2B/1.0 (dashboard map; contact: storefront)',
       },
     });
     if (!res.ok) return null;
@@ -96,6 +150,69 @@ async function resolveSiteCoordinates(site) {
   } catch {
     return null;
   }
+}
+
+/**
+ * Add markers for each site; returns bounds coords for fitBounds.
+ * @param {*} L - Leaflet namespace
+ * @param {*} markerLayer - L.layerGroup()
+ * @param {Array<object>} sites - delivery sites from getDeliverySites()
+ * @param {*} chepIcon - L.divIcon
+ */
+function createChepMarkerIcon(L) {
+  return L.divIcon({
+    className: 'chep-map-marker',
+    html: `
+      <div class="chep-map-marker__pin">
+        <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#c2410c"/>
+          <circle cx="16" cy="16" r="6" fill="white"/>
+        </svg>
+      </div>
+    `,
+    iconSize: [32, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [0, -44],
+  });
+}
+
+async function addMarkersForSites(L, markerLayer, sites, chepIcon) {
+  const siteBounds = [];
+  let isFirstNetworkLookup = true;
+  // eslint-disable-next-line no-restricted-syntax
+  for (let i = 0; i < sites.length; i += 1) {
+    const site = sites[i];
+    const hadCoords = Boolean(peekKnownCoordinates(site));
+    if (!hadCoords) {
+      if (!isFirstNetworkLookup) {
+        // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
+        await new Promise((r) => setTimeout(r, NOMINATIM_DELAY_MS));
+      }
+      isFirstNetworkLookup = false;
+    }
+    // eslint-disable-next-line no-await-in-loop
+    const coords = await resolveSiteCoordinates(site);
+    if (!coords) continue;
+    siteBounds.push(coords);
+
+    const typeLabel = site.type
+      ? site.type.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
+      : 'Site';
+
+    L.marker(coords, { icon: chepIcon })
+      .bindPopup(
+        `<div class="chep-map-popup">
+          <strong class="chep-map-popup__name">${site.name}</strong>
+          <div class="chep-map-popup__type">${typeLabel}</div>
+          <div class="chep-map-popup__addr">${site.address1}, ${site.city}</div>
+          <div class="chep-map-popup__postcode">${site.postcode}</div>
+        </div>`,
+        { maxWidth: 240, className: 'chep-popup-wrap' },
+      )
+      .addTo(markerLayer);
+  }
+
+  return siteBounds;
 }
 
 /* ── Leaflet loader ────────────────────────────────────────────────────── */
@@ -135,7 +252,6 @@ function loadLeafletJs() {
 async function initMap(container) {
   loadLeafletCss();
   const L = await loadLeafletJs();
-  const siteBounds = [];
 
   const map = L.map(container, {
     center: MAP_CONFIG.center,
@@ -151,61 +267,21 @@ async function initMap(container) {
     maxZoom: 20,
   }).addTo(map);
 
-  /* Custom site marker icon */
-  const chepIcon = L.divIcon({
-    className: 'chep-map-marker',
-    html: `
-      <div class="chep-map-marker__pin">
-        <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#c2410c"/>
-          <circle cx="16" cy="16" r="6" fill="white"/>
-        </svg>
-      </div>
-    `,
-    iconSize: [32, 40],
-    iconAnchor: [16, 40],
-    popupAnchor: [0, -44],
-  });
+  const chepIcon = createChepMarkerIcon(L);
+
+  const markerLayer = L.layerGroup().addTo(map);
+  container.__chepLeafletMap = map;
+  container.__chepMarkerLayer = markerLayer;
 
   /* Add a marker for each address-book site (geocoded unless SITE_COORDINATES overrides). */
   const sites = getDeliverySites();
-  let isFirstNetworkLookup = true;
-  // eslint-disable-next-line no-restricted-syntax
-  for (let i = 0; i < sites.length; i += 1) {
-    const site = sites[i];
-    const hadCoords = Boolean(peekKnownCoordinates(site));
-    if (!hadCoords) {
-      if (!isFirstNetworkLookup) {
-        // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
-        await new Promise((r) => setTimeout(r, NOMINATIM_DELAY_MS));
-      }
-      isFirstNetworkLookup = false;
-    }
-    // eslint-disable-next-line no-await-in-loop
-    const coords = await resolveSiteCoordinates(site);
-    if (!coords) continue;
-    siteBounds.push(coords);
-
-    const typeLabel = site.type
-      ? site.type.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
-      : 'Site';
-
-    L.marker(coords, { icon: chepIcon })
-      .bindPopup(
-        `<div class="chep-map-popup">
-          <strong class="chep-map-popup__name">${site.name}</strong>
-          <div class="chep-map-popup__type">${typeLabel}</div>
-          <div class="chep-map-popup__addr">${site.address1}, ${site.city}</div>
-          <div class="chep-map-popup__postcode">${site.postcode}</div>
-        </div>`,
-        { maxWidth: 240, className: 'chep-popup-wrap' },
-      )
-      .addTo(map);
-  }
+  const siteBounds = await addMarkersForSites(L, markerLayer, sites, chepIcon);
+  container.__chepSiteBounds = siteBounds;
 
   function fitToSites() {
-    if (!siteBounds.length) return;
-    map.fitBounds(siteBounds, {
+    const bounds = container.__chepSiteBounds;
+    if (!bounds?.length) return;
+    map.fitBounds(bounds, {
       padding: [28, 28],
       maxZoom: 6,
     });
@@ -241,6 +317,40 @@ async function initMap(container) {
   setTimeout(fixSize, 1000);
 
   return map;
+}
+
+/**
+ * Re-run geocoding + markers after delivery sites were loaded late (e.g. after GraphQL auth).
+ * No-op if the map has not been initialised yet.
+ * @param {HTMLElement} mapContainer - `.dashboard-map-container`
+ */
+export async function refreshDashboardSiteMarkers(mapContainer) {
+  const map = mapContainer?.__chepLeafletMap;
+  const markerLayer = mapContainer?.__chepMarkerLayer;
+  if (!map || !markerLayer) return;
+
+  let L = window.L;
+  if (!L) {
+    try {
+      L = await loadLeafletJs();
+    } catch {
+      return;
+    }
+  }
+
+  markerLayer.clearLayers();
+  const sites = getDeliverySites();
+  const chepIcon = createChepMarkerIcon(L);
+  const siteBounds = await addMarkersForSites(L, markerLayer, sites, chepIcon);
+  mapContainer.__chepSiteBounds = siteBounds;
+
+  if (siteBounds.length) {
+    map.fitBounds(siteBounds, {
+      padding: [28, 28],
+      maxZoom: 6,
+    });
+  }
+  map.invalidateSize({ animate: false, pan: false });
 }
 
 /* ── Map fallback (Leaflet unavailable) ────────────────────────────────── */

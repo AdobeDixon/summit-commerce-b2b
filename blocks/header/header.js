@@ -185,10 +185,10 @@ export default async function decorate(block) {
   if (navBrand && brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container')?.classList.remove('button-container');
-    /* Replace text logo with Bodea image */
+    /* Logo from code bus (images/) — /.nav/ URLs are not reliably served as static on aem.live */
     brandLink.textContent = '';
     const logoImg = document.createElement('img');
-    logoImg.src = '/images/bodea-logo.png';
+    logoImg.src = rootLink('/images/bodea-inc-logo-white.png');
     logoImg.alt = 'Bodea - Smart. Simple. Fast.';
     logoImg.className = 'nav-brand-logo';
     brandLink.appendChild(logoImg);

@@ -32,6 +32,7 @@
 import {
   checkIsAuthenticated, rootLink, CUSTOMER_ACCOUNT_PATH, CUSTOMER_ORDERS_PATH, CUSTOMER_LOGIN_PATH,
 } from '../../scripts/commerce.js';
+import '../../scripts/initializers/auth.js';
 import '../../scripts/initializers/account.js';
 import { loadDeliverySitesFromAddressBook } from '../order-new-delivery/sites.js';
 import { buildNav, toggleNav } from './dashboard-nav.js';
@@ -42,6 +43,7 @@ import { buildEquipmentSection, updateEquipmentSection } from './dashboard-equip
 import {
   buildBottomSection,
   initializeBottomSectionMap,
+  refreshDashboardSiteMarkers,
   updateDeliveriesPanel,
 } from './dashboard-map.js';
 import { EQUIPMENT_DISPLAY_NAMES, PRIMARY_EQUIPMENT_SKU } from './dashboard-config.js';
@@ -429,9 +431,16 @@ export default async function decorate(block) {
   mainEl.appendChild(content);
   block.appendChild(mainEl);
 
+  const refreshMapFromAddressBook = () => {
+    refreshDashboardSiteMarkers(bottomSection.__mapContainer).catch(() => {});
+  };
+  document.addEventListener('chep-delivery-sites-changed', refreshMapFromAddressBook);
+
+  let addressBookSiteCount = 0;
   if (isAuthenticated) {
     try {
-      await loadDeliverySitesFromAddressBook();
+      const sites = await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
+      addressBookSiteCount = sites.length;
     } catch (err) {
       console.warn('chep-dashboard: Could not load customer addresses for the site map.', err);
     }
@@ -439,6 +448,19 @@ export default async function decorate(block) {
 
   /* Initialise the map only after the section is attached to the document. */
   requestAnimationFrame(() => initializeBottomSectionMap(bottomSection));
+
+  /*
+   * Map init is async (IntersectionObserver + Leaflet). Events can fire before markers can render.
+   * Re-apply markers a few times once the map exists so UK postcodes / late-loaded sites show up.
+   */
+  if (isAuthenticated) {
+    const mapContainer = bottomSection.__mapContainer;
+    [250, 1500, 4000].forEach((ms) => {
+      setTimeout(() => {
+        refreshDashboardSiteMarkers(mapContainer).catch(() => {});
+      }, ms);
+    });
+  }
 
   /* ── Load data asynchronously ──────────────────────────────────────── */
 
@@ -452,10 +474,8 @@ export default async function decorate(block) {
     const totalCount = ordersData?.totalCount ?? 0;
     const hasNoOrders = totalCount === 0;
     const isLoggedIn = customerIdentity != null || ordersData != null;
-    const customerEmail = (customerIdentity?.email ?? ordersData?.customer?.email ?? '').toLowerCase();
     const forceShowBanner = new URLSearchParams(window.location.search).get('newCustomerPreview') === '1';
-    const isBannerEmail = customerEmail === 'tl@ig.com';
-    const showNewCustomerBanner = forceShowBanner || isBannerEmail || (isLoggedIn && hasNoOrders);
+    const showNewCustomerBanner = forceShowBanner || (isLoggedIn && hasNoOrders);
 
     if (showNewCustomerBanner) {
       const newCustomerBanner = buildNewCustomerBanner();
@@ -483,6 +503,15 @@ export default async function decorate(block) {
 
     /* Update deliveries panel */
     updateDeliveriesPanel(bottomSection, ordersData, isAuthenticated);
+
+    /* Re-sync address book after other GraphQL (company context); chep-delivery-sites-changed refreshes the map */
+    if (isAuthenticated) {
+      try {
+        await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
+      } catch (mapAddrErr) {
+        console.warn('chep-dashboard: Could not refresh site map from address book.', mapAddrErr);
+      }
+    }
   } catch (err) {
     console.error('[Bodea Dashboard] Data load failed:', err);
 

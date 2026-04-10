@@ -8,6 +8,7 @@ import {
 } from '../../scripts/commerce.js';
 import { fetchOrdersPage } from './orders-service.js';
 import { buildNav, toggleNav } from '../chep-dashboard/dashboard-nav.js';
+import { renderBrickProductIcon } from '../order-new-delivery/brick-product-icon.js';
 import { getEquipmentProductBySku } from '../order-new-delivery/equipment-products.js';
 import { ORDER_STATUS_MAP } from '../chep-dashboard/dashboard-config.js';
 
@@ -15,26 +16,9 @@ import '../../scripts/initializers/account.js';
 
 const DEFAULT_PAGE_SIZE = 10;
 
-function renderPalletIcon(material) {
-  const colors = {
-    wood: '#c68642',
-    'wood-metal': '#8a9bb0',
-    plastic: '#c2410c',
-  };
-  const c = colors[material] || colors.wood;
-  return `<svg class="chep-orders-list__pallet-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <rect x="2" y="9" width="28" height="3.5" rx="1" fill="${c}"/>
-    <rect x="2" y="14.5" width="28" height="3.5" rx="1" fill="${c}" opacity="0.75"/>
-    <rect x="2" y="19" width="28" height="3.5" rx="1" fill="${c}" opacity="0.5"/>
-    <rect x="2" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
-    <rect x="12.5" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
-    <rect x="23" y="22.5" width="7" height="5.5" rx="1" fill="${c}" opacity="0.65"/>
-  </svg>`;
-}
-
 function getMaterialFromSku(sku) {
   const product = getEquipmentProductBySku(sku);
-  return product?.material ?? 'wood';
+  return product?.material ?? 'clay-common';
 }
 
 function buildProductPreviewIcons(items) {
@@ -47,7 +31,7 @@ function buildProductPreviewIcons(items) {
     if (!sku || seen.has(sku)) continue;
     seen.add(sku);
     const material = getMaterialFromSku(sku);
-    icons.push(renderPalletIcon(material));
+    icons.push(renderBrickProductIcon(material, { className: 'chep-orders-list__brick-icon' }));
     if (icons.length >= 4) break;
   }
 

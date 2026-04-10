@@ -5,6 +5,7 @@
  * Active state is derived from the current window.location.pathname.
  */
 
+import { rootLink } from '../../scripts/commerce.js';
 import { NAV_ITEMS } from './dashboard-config.js';
 
 /* ── SVG Icons ─────────────────────────────────────────────────────────── */
@@ -77,10 +78,6 @@ const ICONS = {
   </svg>`,
 };
 
-/* ── Bodea logo image ─────────────────────────────────────────────────── */
-
-const BODEA_LOGO_IMG = `<img src="/images/bodea-logo.png" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />`;
-
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
 function isActive(item, pathname) {
@@ -121,12 +118,13 @@ export function buildNav(pathname) {
   nav.className = 'chep-nav';
   nav.setAttribute('aria-label', 'Dashboard navigation');
 
-  /* Logo */
+  /* Logo (images/ is served from code bus; rootLink handles locale root) */
   const logoArea = document.createElement('div');
   logoArea.className = 'chep-nav__logo';
+  const logoSrc = rootLink('/images/bodea-inc-logo-white.png');
   logoArea.innerHTML = `
-    <a href="/" class="chep-nav__logo-link" aria-label="Bodea Home">
-      ${BODEA_LOGO_IMG}
+    <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="Bodea Home">
+      <img src="${logoSrc}" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />
     </a>
   `;
   nav.appendChild(logoArea);

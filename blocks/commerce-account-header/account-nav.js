@@ -62,8 +62,6 @@ const ICONS = {
 /* Fallback for unknown icons */
 const DEFAULT_ICON = ICONS.User;
 
-const BODEA_LOGO_IMG = `<img src="/images/bodea-logo.png" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />`;
-
 /* Icon name mapping (fragment may use different names) */
 const ICON_MAP = {
   user: 'User',
@@ -170,7 +168,7 @@ export async function buildAccountNav(pathname, navItems = null) {
   logoArea.className = 'chep-nav__logo';
   logoArea.innerHTML = `
     <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="Bodea Home">
-      ${BODEA_LOGO_IMG}
+      <img src="${rootLink('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />
     </a>
   `;
   nav.appendChild(logoArea);
