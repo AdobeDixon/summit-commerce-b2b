@@ -1,8 +1,8 @@
 {
   "definitions": [{
     "title": "Bodea Orders List",
-    "id": "chep-orders-list",
-    "model": "chep-orders-list",
+    "id": "bodea-orders-list",
+    "model": "bodea-orders-list",
     "plugins": {
       "da": {
         "type": "key-value-block"
@@ -10,7 +10,7 @@
     }
   }],
   "models": [{
-    "id": "chep-orders-list",
+    "id": "bodea-orders-list",
     "fields": [
       {
         "component": "number",

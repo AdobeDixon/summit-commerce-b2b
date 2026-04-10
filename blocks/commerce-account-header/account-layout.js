@@ -26,7 +26,7 @@ export function isAccountPage() {
 
 export function isAccountLayoutApplied() {
   const main = document.querySelector('main');
-  return main?.querySelector(':scope > .chep-nav') != null;
+  return main?.querySelector(':scope > .bodea-nav') != null;
 }
 
 function buildAccountTopBar(navElement, pageTitle = 'My Account') {

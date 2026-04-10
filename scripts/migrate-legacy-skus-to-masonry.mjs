@@ -22,7 +22,7 @@ import {
   EQUIPMENT_CATALOG_NAMES,
   EQUIPMENT_MSY_TO_BR_SKU_MIGRATION,
   LEGACY_EQUIPMENT_SKU_MIGRATION,
-} from '../blocks/chep-dashboard/dashboard-config.js';
+} from '../blocks/bodea-dashboard/dashboard-config.js';
 
 const ALL_SKU_MIGRATIONS = [
   ...EQUIPMENT_MSY_TO_BR_SKU_MIGRATION,

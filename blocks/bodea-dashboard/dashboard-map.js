@@ -153,17 +153,14 @@ async function resolveSiteCoordinates(site) {
 }
 
 /**
- * Add markers for each site; returns bounds coords for fitBounds.
+ * Leaflet divIcon for site markers on the dashboard map.
  * @param {*} L - Leaflet namespace
- * @param {*} markerLayer - L.layerGroup()
- * @param {Array<object>} sites - delivery sites from getDeliverySites()
- * @param {*} chepIcon - L.divIcon
  */
-function createChepMarkerIcon(L) {
+function createBodeaMarkerIcon(L) {
   return L.divIcon({
-    className: 'chep-map-marker',
+    className: 'bodea-map-marker',
     html: `
-      <div class="chep-map-marker__pin">
+      <div class="bodea-map-marker__pin">
         <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#c2410c"/>
           <circle cx="16" cy="16" r="6" fill="white"/>
@@ -176,8 +173,36 @@ function createChepMarkerIcon(L) {
   });
 }
 
-async function addMarkersForSites(L, markerLayer, sites, chepIcon) {
+/** Stronger pin for “selected” location (address book ↔ map). */
+function createBodeaMarkerIconSelected(L) {
+  return L.divIcon({
+    className: 'bodea-map-marker bodea-map-marker--selected',
+    html: `
+      <div class="bodea-map-marker__pin">
+        <svg width="36" height="44" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 23.04 15.04 23.6a1.28 1.28 0 0 0 1.92 0C17.6 39.04 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#9a3412" stroke="#fff" stroke-width="2"/>
+          <circle cx="16" cy="16" r="7" fill="white"/>
+        </svg>
+      </div>
+    `,
+    iconSize: [36, 44],
+    iconAnchor: [18, 44],
+    popupAnchor: [0, -48],
+  });
+}
+
+/**
+ * Add markers for each site; returns bounds coords for fitBounds.
+ * @param {*} L - Leaflet namespace
+ * @param {*} markerLayer - L.layerGroup()
+ * @param {Array<object>} sites - delivery sites from getDeliverySites()
+ * @param {*} bodeaIcon - L.divIcon
+ * @param {*} bodeaIconSelected - L.divIcon
+ * @param {HTMLElement|null} mapContainer - stores `__bodeaMarkersById` + icon refs
+ */
+async function addMarkersForSites(L, markerLayer, sites, bodeaIcon, bodeaIconSelected, mapContainer) {
   const siteBounds = [];
+  const markersById = new Map();
   let isFirstNetworkLookup = true;
   // eslint-disable-next-line no-restricted-syntax
   for (let i = 0; i < sites.length; i += 1) {
@@ -199,17 +224,29 @@ async function addMarkersForSites(L, markerLayer, sites, chepIcon) {
       ? site.type.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
       : 'Site';
 
-    L.marker(coords, { icon: chepIcon })
+    const marker = L.marker(coords, { icon: bodeaIcon })
       .bindPopup(
-        `<div class="chep-map-popup">
-          <strong class="chep-map-popup__name">${site.name}</strong>
-          <div class="chep-map-popup__type">${typeLabel}</div>
-          <div class="chep-map-popup__addr">${site.address1}, ${site.city}</div>
-          <div class="chep-map-popup__postcode">${site.postcode}</div>
+        `<div class="bodea-map-popup">
+          <strong class="bodea-map-popup__name">${site.name}</strong>
+          <div class="bodea-map-popup__type">${typeLabel}</div>
+          <div class="bodea-map-popup__addr">${site.address1}, ${site.city}</div>
+          <div class="bodea-map-popup__postcode">${site.postcode}</div>
         </div>`,
-        { maxWidth: 240, className: 'chep-popup-wrap' },
+        { maxWidth: 240, className: 'bodea-popup-wrap' },
       )
       .addTo(markerLayer);
+    marker.__bodeaSiteId = site.id;
+    markersById.set(site.id, marker);
+  }
+
+  if (mapContainer) {
+    mapContainer.__bodeaMarkersById = markersById;
+    mapContainer.__bodeaMarkerIconDefault = bodeaIcon;
+    mapContainer.__bodeaMarkerIconSelected = bodeaIconSelected;
+    const sel = mapContainer.__bodeaSelectedSiteId;
+    if (sel && markersById.has(sel)) {
+      markersById.get(sel).setIcon(bodeaIconSelected);
+    }
   }
 
   return siteBounds;
@@ -267,19 +304,27 @@ async function initMap(container) {
     maxZoom: 20,
   }).addTo(map);
 
-  const chepIcon = createChepMarkerIcon(L);
+  const bodeaIcon = createBodeaMarkerIcon(L);
+  const bodeaIconSelected = createBodeaMarkerIconSelected(L);
 
   const markerLayer = L.layerGroup().addTo(map);
-  container.__chepLeafletMap = map;
-  container.__chepMarkerLayer = markerLayer;
+  container.__bodeaLeafletMap = map;
+  container.__bodeaMarkerLayer = markerLayer;
 
   /* Add a marker for each address-book site (geocoded unless SITE_COORDINATES overrides). */
   const sites = getDeliverySites();
-  const siteBounds = await addMarkersForSites(L, markerLayer, sites, chepIcon);
-  container.__chepSiteBounds = siteBounds;
+  const siteBounds = await addMarkersForSites(
+    L,
+    markerLayer,
+    sites,
+    bodeaIcon,
+    bodeaIconSelected,
+    container,
+  );
+  container.__bodeaSiteBounds = siteBounds;
 
   function fitToSites() {
-    const bounds = container.__chepSiteBounds;
+    const bounds = container.__bodeaSiteBounds;
     if (!bounds?.length) return;
     map.fitBounds(bounds, {
       padding: [28, 28],
@@ -325,10 +370,12 @@ async function initMap(container) {
  * @param {HTMLElement} mapContainer - `.dashboard-map-container`
  */
 export async function refreshDashboardSiteMarkers(mapContainer) {
-  const map = mapContainer?.__chepLeafletMap;
-  const markerLayer = mapContainer?.__chepMarkerLayer;
+  const map = mapContainer?.__bodeaLeafletMap;
+  const markerLayer = mapContainer?.__bodeaMarkerLayer;
   if (!map || !markerLayer) return;
 
+  /* Leaflet attaches to window; avoid prefer-destructuring false positive on reassignment. */
+  // eslint-disable-next-line prefer-destructuring
   let L = window.L;
   if (!L) {
     try {
@@ -338,11 +385,21 @@ export async function refreshDashboardSiteMarkers(mapContainer) {
     }
   }
 
+  const { __bodeaSelectedSiteId: prevSel } = mapContainer;
   markerLayer.clearLayers();
   const sites = getDeliverySites();
-  const chepIcon = createChepMarkerIcon(L);
-  const siteBounds = await addMarkersForSites(L, markerLayer, sites, chepIcon);
-  mapContainer.__chepSiteBounds = siteBounds;
+  const bodeaIcon = createBodeaMarkerIcon(L);
+  const bodeaIconSelected = createBodeaMarkerIconSelected(L);
+  mapContainer.__bodeaSelectedSiteId = prevSel;
+  const siteBounds = await addMarkersForSites(
+    L,
+    markerLayer,
+    sites,
+    bodeaIcon,
+    bodeaIconSelected,
+    mapContainer,
+  );
+  mapContainer.__bodeaSiteBounds = siteBounds;
 
   if (siteBounds.length) {
     map.fitBounds(siteBounds, {
@@ -648,7 +705,7 @@ function buildQuickActionsPanel() {
     <ul class="quick-actions-list" role="list">
       ${QUICK_ACTIONS.map((action) => `
         <li class="quick-action-item">
-          <a href="${action.href}" class="quick-action-link${action.primary ? ' quick-action-link--primary' : ''}">
+          <a href="${rootLink(action.href)}" class="quick-action-link${action.primary ? ' quick-action-link--primary' : ''}">
             <span class="quick-action-link__label">${action.label}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="9 18 15 12 9 6"/>
@@ -660,4 +717,48 @@ function buildQuickActionsPanel() {
   `;
 
   return panel;
+}
+
+/**
+ * Initialise the same Leaflet + OSM map used on the dashboard (address-book markers).
+ * @param {HTMLElement} container - Map mount node (e.g. `.dashboard-map-container`)
+ * @returns {Promise<*>} Leaflet map instance
+ */
+export async function initSiteLocationsMap(container) {
+  return initMap(container);
+}
+
+/** List-only fallback when tiles fail (shared with bodea-address-book). */
+export { buildMapFallback as buildSiteMapFallback };
+
+/**
+ * Highlight one site’s pin (address book card selection).
+ * @param {HTMLElement} mapContainer
+ * @param {string|null|undefined} siteId
+ */
+export function setAddressBookMapSelection(mapContainer, siteId) {
+  const markersById = mapContainer?.__bodeaMarkersById;
+  const defI = mapContainer?.__bodeaMarkerIconDefault;
+  const selI = mapContainer?.__bodeaMarkerIconSelected;
+  if (!markersById || !defI || !selI) return;
+  mapContainer.__bodeaSelectedSiteId = siteId || null;
+  markersById.forEach((marker, id) => {
+    marker.setIcon(id === siteId ? selI : defI);
+  });
+}
+
+/**
+ * Pan/zoom to a site, open popup, and set selected pin.
+ * @param {HTMLElement} mapContainer
+ * @param {string} siteId
+ */
+export function focusAddressBookMapOnSite(mapContainer, siteId) {
+  const map = mapContainer?.__bodeaLeafletMap;
+  const markersById = mapContainer?.__bodeaMarkersById;
+  if (!map || !markersById?.has(siteId)) return;
+  const marker = markersById.get(siteId);
+  const ll = marker.getLatLng();
+  map.setView(ll, Math.max(map.getZoom(), 12), { animate: true });
+  setAddressBookMapSelection(mapContainer, siteId);
+  marker.openPopup();
 }

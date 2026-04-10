@@ -112,7 +112,7 @@ body.account-page main {
   margin: 0 !important;
 }
 
-body.account-page main > .chep-nav {
+body.account-page main > .bodea-nav {
   flex-shrink: 0;
 }
 
@@ -235,7 +235,7 @@ body.account-page .commerce-account-shell__content .section > div {
 
 /* ── Left nav (shared with dashboard/company-users – needed when they don't load) ── */
 
-body.account-page .chep-nav {
+body.account-page .bodea-nav {
   display: flex;
   flex-direction: column;
   width: 240px;
@@ -249,7 +249,7 @@ body.account-page .chep-nav {
   scrollbar-color: rgb(255 255 255 / 20%) transparent;
 }
 
-body.account-page .chep-nav__overlay {
+body.account-page .bodea-nav__overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -259,11 +259,11 @@ body.account-page .chep-nav__overlay {
   transition: opacity 0.25s ease;
 }
 
-body.account-page .chep-nav__overlay--visible {
+body.account-page .bodea-nav__overlay--visible {
   opacity: 1;
 }
 
-body.account-page .chep-nav__logo {
+body.account-page .bodea-nav__logo {
   padding: 24px 20px 20px;
   border-bottom: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
@@ -272,7 +272,7 @@ body.account-page .chep-nav__logo {
   align-items: center;
 }
 
-body.account-page .chep-nav__logo-link {
+body.account-page .bodea-nav__logo-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -280,14 +280,14 @@ body.account-page .chep-nav__logo-link {
   text-decoration: none !important;
 }
 
-body.account-page .chep-nav__logo-link:hover,
-body.account-page .chep-nav__logo-link:focus {
+body.account-page .bodea-nav__logo-link:hover,
+body.account-page .bodea-nav__logo-link:focus {
   opacity: 1;
   background: transparent !important;
   outline: none;
 }
 
-body.account-page .chep-nav__logo-img {
+body.account-page .bodea-nav__logo-img {
   display: block;
   max-width: 260px;
   width: 100%;
@@ -297,20 +297,20 @@ body.account-page .chep-nav__logo-img {
   mix-blend-mode: lighten; /* Makes black background transparent, white logo visible */
 }
 
-body.account-page .chep-nav__list {
+body.account-page .bodea-nav__list {
   list-style: none;
   margin: 0;
   padding: 16px 0;
   flex: 1;
 }
 
-body.account-page .chep-nav__item {
+body.account-page .bodea-nav__item {
   margin: 2px 12px;
   border-radius: 8px;
   overflow: hidden;
 }
 
-body.account-page .chep-nav__link {
+body.account-page .bodea-nav__link {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -323,18 +323,18 @@ body.account-page .chep-nav__link {
   position: relative;
 }
 
-body.account-page .chep-nav__link:hover {
+body.account-page .bodea-nav__link:hover {
   background: rgb(255 255 255 / 10%);
   color: var(--color-neutral-50) !important;
 }
 
-body.account-page .chep-nav__item--active .chep-nav__link {
+body.account-page .bodea-nav__item--active .bodea-nav__link {
   background: rgb(255 255 255 / 15%);
   color: var(--color-neutral-50) !important;
   font-weight: 600;
 }
 
-body.account-page .chep-nav__item--active .chep-nav__link::before {
+body.account-page .bodea-nav__item--active .bodea-nav__link::before {
   content: "";
   position: absolute;
   left: -12px;
@@ -346,7 +346,7 @@ body.account-page .chep-nav__item--active .chep-nav__link::before {
   border-radius: 0 3px 3px 0;
 }
 
-body.account-page .chep-nav__icon {
+body.account-page .bodea-nav__icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -355,23 +355,23 @@ body.account-page .chep-nav__icon {
   flex-shrink: 0;
 }
 
-body.account-page .chep-nav__label {
+body.account-page .bodea-nav__label {
   flex: 1;
 }
 
-body.account-page .chep-nav__active-indicator {
+body.account-page .bodea-nav__active-indicator {
   display: flex;
   align-items: center;
   opacity: 0.6;
 }
 
-body.account-page .chep-nav__footer {
+body.account-page .bodea-nav__footer {
   padding: 16px 20px;
   border-top: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
 }
 
-body.account-page .chep-nav__footer-text {
+body.account-page .bodea-nav__footer-text {
   display: block;
   color: rgb(255 255 255 / 50%);
   font-size: 11px;
@@ -380,7 +380,7 @@ body.account-page .chep-nav__footer-text {
   text-transform: uppercase;
 }
 
-body.account-page .chep-nav__footer-sub {
+body.account-page .bodea-nav__footer-sub {
   display: block;
   margin-top: 3px;
   color: rgb(255 255 255 / 35%);
@@ -388,7 +388,7 @@ body.account-page .chep-nav__footer-sub {
 }
 
 @media (max-width: 767px) {
-  body.account-page .chep-nav {
+  body.account-page .bodea-nav {
     position: fixed;
     top: 0;
     left: 0;
@@ -396,11 +396,11 @@ body.account-page .chep-nav__footer-sub {
     transform: translateX(-100%);
   }
 
-  body.account-page .chep-nav--open {
+  body.account-page .bodea-nav--open {
     transform: translateX(0);
   }
 
-  body.account-page .chep-nav__overlay {
+  body.account-page .bodea-nav__overlay {
     display: block;
   }
 }

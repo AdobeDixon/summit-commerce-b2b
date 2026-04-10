@@ -185,6 +185,52 @@
     ]
   },
   {
+    "id": "bodea-address-book",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "headline",
+        "value": "",
+        "label": "Headline",
+        "description": "Optional page title (default: Address book)",
+        "required": false
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "mapheight",
+        "value": "tall",
+        "label": "Map height",
+        "description": "Tall gives more map area; short fits tighter layouts.",
+        "options": [
+          {
+            "name": "Tall",
+            "value": "tall"
+          },
+          {
+            "name": "Short",
+            "value": "short"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bodea-dashboard",
+    "fields": []
+  },
+  {
+    "id": "bodea-orders-list",
+    "fields": [
+      {
+        "component": "number",
+        "name": "page-size",
+        "label": "Page Size"
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
@@ -231,20 +277,6 @@
         "name": "text",
         "label": "Text",
         "valueType": "string"
-      }
-    ]
-  },
-  {
-    "id": "chep-dashboard",
-    "fields": []
-  },
-  {
-    "id": "chep-orders-list",
-    "fields": [
-      {
-        "component": "number",
-        "name": "page-size",
-        "label": "Page Size"
       }
     ]
   },

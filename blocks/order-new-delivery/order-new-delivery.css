@@ -187,7 +187,7 @@ main .order-new-delivery-container {
 }
 
 /* Left nav (shared with dashboard/orders/invoices) */
-.order-new-delivery-shell .chep-nav {
+.order-new-delivery-shell .bodea-nav {
   display: flex;
   flex-direction: column;
   width: 240px;
@@ -201,7 +201,7 @@ main .order-new-delivery-container {
   scrollbar-color: rgb(255 255 255 / 20%) transparent;
 }
 
-.order-new-delivery-shell .chep-nav__overlay {
+.order-new-delivery-shell .bodea-nav__overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -211,11 +211,11 @@ main .order-new-delivery-container {
   transition: opacity 0.25s ease;
 }
 
-.order-new-delivery-shell .chep-nav__overlay--visible {
+.order-new-delivery-shell .bodea-nav__overlay--visible {
   opacity: 1;
 }
 
-.order-new-delivery-shell .chep-nav__logo {
+.order-new-delivery-shell .bodea-nav__logo {
   padding: 24px 20px 20px;
   border-bottom: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
@@ -224,7 +224,7 @@ main .order-new-delivery-container {
   align-items: center;
 }
 
-.order-new-delivery-shell .chep-nav__logo-link {
+.order-new-delivery-shell .bodea-nav__logo-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -232,14 +232,14 @@ main .order-new-delivery-container {
   text-decoration: none !important;
 }
 
-.order-new-delivery-shell .chep-nav__logo-link:hover,
-.order-new-delivery-shell .chep-nav__logo-link:focus {
+.order-new-delivery-shell .bodea-nav__logo-link:hover,
+.order-new-delivery-shell .bodea-nav__logo-link:focus {
   opacity: 1;
   background: transparent !important;
   outline: none;
 }
 
-.order-new-delivery-shell .chep-nav__logo-img {
+.order-new-delivery-shell .bodea-nav__logo-img {
   display: block;
   max-width: 260px;
   width: 100%;
@@ -249,20 +249,20 @@ main .order-new-delivery-container {
   mix-blend-mode: lighten;
 }
 
-.order-new-delivery-shell .chep-nav__list {
+.order-new-delivery-shell .bodea-nav__list {
   list-style: none;
   margin: 0;
   padding: 16px 0;
   flex: 1;
 }
 
-.order-new-delivery-shell .chep-nav__item {
+.order-new-delivery-shell .bodea-nav__item {
   margin: 2px 12px;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.order-new-delivery-shell .chep-nav__link {
+.order-new-delivery-shell .bodea-nav__link {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -275,18 +275,18 @@ main .order-new-delivery-container {
   position: relative;
 }
 
-.order-new-delivery-shell .chep-nav__link:hover {
+.order-new-delivery-shell .bodea-nav__link:hover {
   background: rgb(255 255 255 / 10%);
   color: var(--color-neutral-50) !important;
 }
 
-.order-new-delivery-shell .chep-nav__item--active .chep-nav__link {
+.order-new-delivery-shell .bodea-nav__item--active .bodea-nav__link {
   background: rgb(255 255 255 / 15%);
   color: var(--color-neutral-50) !important;
   font-weight: 600;
 }
 
-.order-new-delivery-shell .chep-nav__item--active .chep-nav__link::before {
+.order-new-delivery-shell .bodea-nav__item--active .bodea-nav__link::before {
   content: "";
   position: absolute;
   left: -12px;
@@ -298,7 +298,7 @@ main .order-new-delivery-container {
   border-radius: 0 3px 3px 0;
 }
 
-.order-new-delivery-shell .chep-nav__icon {
+.order-new-delivery-shell .bodea-nav__icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -307,23 +307,23 @@ main .order-new-delivery-container {
   flex-shrink: 0;
 }
 
-.order-new-delivery-shell .chep-nav__label {
+.order-new-delivery-shell .bodea-nav__label {
   flex: 1;
 }
 
-.order-new-delivery-shell .chep-nav__active-indicator {
+.order-new-delivery-shell .bodea-nav__active-indicator {
   display: flex;
   align-items: center;
   opacity: 0.6;
 }
 
-.order-new-delivery-shell .chep-nav__footer {
+.order-new-delivery-shell .bodea-nav__footer {
   padding: 16px 20px;
   border-top: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
 }
 
-.order-new-delivery-shell .chep-nav__footer-text {
+.order-new-delivery-shell .bodea-nav__footer-text {
   display: block;
   color: rgb(255 255 255 / 50%);
   font-size: 11px;
@@ -332,7 +332,7 @@ main .order-new-delivery-container {
   text-transform: uppercase;
 }
 
-.order-new-delivery-shell .chep-nav__footer-sub {
+.order-new-delivery-shell .bodea-nav__footer-sub {
   display: block;
   margin-top: 3px;
   color: rgb(255 255 255 / 35%);
@@ -352,7 +352,7 @@ main .order-new-delivery-container {
     padding: 16px;
   }
 
-  .order-new-delivery-shell .chep-nav {
+  .order-new-delivery-shell .bodea-nav {
     position: fixed;
     top: 0;
     left: 0;
@@ -360,11 +360,11 @@ main .order-new-delivery-container {
     transform: translateX(-100%);
   }
 
-  .order-new-delivery-shell .chep-nav--open {
+  .order-new-delivery-shell .bodea-nav--open {
     transform: translateX(0);
   }
 
-  .order-new-delivery-shell .chep-nav__overlay {
+  .order-new-delivery-shell .bodea-nav__overlay {
     display: block;
   }
 }

@@ -33,7 +33,7 @@ import { readFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-import { EQUIPMENT_CATALOG_NAMES } from '../blocks/chep-dashboard/dashboard-config.js';
+import { EQUIPMENT_CATALOG_NAMES } from '../blocks/bodea-dashboard/dashboard-config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, '..');

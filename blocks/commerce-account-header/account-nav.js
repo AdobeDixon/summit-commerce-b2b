@@ -104,16 +104,16 @@ function buildNavItem(item) {
   const { title, subtitle, href, icon } = item;
   const active = isItemActive(href);
   const li = document.createElement('li');
-  li.className = `chep-nav__item${active ? ' chep-nav__item--active' : ''}`;
+  li.className = `bodea-nav__item${active ? ' bodea-nav__item--active' : ''}`;
 
   const a = document.createElement('a');
   a.href = rootLink(href || '#');
-  a.className = 'chep-nav__link';
+  a.className = 'bodea-nav__link';
   a.setAttribute('aria-current', active ? 'page' : 'false');
   a.innerHTML = `
-    <span class="chep-nav__icon">${getIconSvg(icon)}</span>
-    <span class="chep-nav__label">${title || 'Item'}</span>
-    ${active ? `<span class="chep-nav__active-indicator">${ICONS.chevronRight}</span>` : ''}
+    <span class="bodea-nav__icon">${getIconSvg(icon)}</span>
+    <span class="bodea-nav__label">${title || 'Item'}</span>
+    ${active ? `<span class="bodea-nav__active-indicator">${ICONS.chevronRight}</span>` : ''}
   `;
 
   li.appendChild(a);
@@ -161,20 +161,20 @@ export async function buildAccountNav(pathname, navItems = null) {
   }
 
   const nav = document.createElement('nav');
-  nav.className = 'chep-nav';
+  nav.className = 'bodea-nav';
   nav.setAttribute('aria-label', 'My account navigation');
 
   const logoArea = document.createElement('div');
-  logoArea.className = 'chep-nav__logo';
+  logoArea.className = 'bodea-nav__logo';
   logoArea.innerHTML = `
-    <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="Bodea Home">
-      <img src="${getCodeAssetUrl('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />
+    <a href="${rootLink('/')}" class="bodea-nav__logo-link" aria-label="Bodea Home">
+      <img src="${getCodeAssetUrl('/images/bodea-inc-logo-white.png')}" alt="Bodea - Smart. Simple. Fast." class="bodea-nav__logo-img" width="140" height="auto" />
     </a>
   `;
   nav.appendChild(logoArea);
 
   const ul = document.createElement('ul');
-  ul.className = 'chep-nav__list';
+  ul.className = 'bodea-nav__list';
   ul.setAttribute('role', 'list');
 
   items.forEach((item) => {
@@ -184,16 +184,16 @@ export async function buildAccountNav(pathname, navItems = null) {
   nav.appendChild(ul);
 
   const footer = document.createElement('div');
-  footer.className = 'chep-nav__footer';
+  footer.className = 'bodea-nav__footer';
   footer.innerHTML = `
-    <div class="chep-nav__footer-brand">
-      <span class="chep-nav__footer-text">Bodea</span>
+    <div class="bodea-nav__footer-brand">
+      <span class="bodea-nav__footer-text">Bodea</span>
     </div>
   `;
   nav.appendChild(footer);
 
   const overlay = document.createElement('div');
-  overlay.className = 'chep-nav__overlay';
+  overlay.className = 'bodea-nav__overlay';
   overlay.setAttribute('aria-hidden', 'true');
   overlay.addEventListener('click', () => closeAccountNav(nav, overlay));
   document.body.appendChild(overlay);
@@ -203,23 +203,23 @@ export async function buildAccountNav(pathname, navItems = null) {
 }
 
 export function openAccountNav(nav) {
-  nav.classList.add('chep-nav--open');
+  nav.classList.add('bodea-nav--open');
   if (nav.__overlay) {
-    nav.__overlay.classList.add('chep-nav__overlay--visible');
+    nav.__overlay.classList.add('bodea-nav__overlay--visible');
   }
   document.body.style.overflow = 'hidden';
 }
 
 export function closeAccountNav(nav, overlay) {
-  nav.classList.remove('chep-nav--open');
+  nav.classList.remove('bodea-nav--open');
   if (overlay) {
-    overlay.classList.remove('chep-nav__overlay--visible');
+    overlay.classList.remove('bodea-nav__overlay--visible');
   }
   document.body.style.overflow = '';
 }
 
 export function toggleAccountNav(nav) {
-  if (nav.classList.contains('chep-nav--open')) {
+  if (nav.classList.contains('bodea-nav--open')) {
     closeAccountNav(nav, nav.__overlay);
   } else {
     openAccountNav(nav);

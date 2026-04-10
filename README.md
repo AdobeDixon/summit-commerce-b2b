@@ -7,8 +7,8 @@ This repository is a **demonstration storefront** built on the **Adobe Commerce 
 - **Base**: [Adobe Commerce Storefront boilerplate](https://experienceleague.adobe.com/developer/commerce/storefront/get-started/) for Edge Delivery Services with Adobe Commerce drop-ins (cart, checkout, account, B2B purchase orders, negotiable quotes, requisition lists, and related account blocks).
 - **Demo brand**: **Bodea** — fictional company; copy, products, and scenarios are for demos and learning.
 - **Custom experience blocks** (Bodea-specific UI on top of Commerce APIs):
-  - **Bodea Dashboard** (`chep-dashboard`) — Home-style dashboard: left nav, KPIs, recent orders, stock alerts, equipment overview, and a delivery-activity map.
-  - **Bodea Orders List** (`chep-orders-list`) — Paginated orders table with status, dates, products, and links to order details; shares navigation patterns with the dashboard.
+  - **Bodea Dashboard** (`bodea-dashboard`) — Home-style dashboard: left nav, KPIs, recent orders, stock alerts, equipment overview, and a delivery-activity map.
+  - **Bodea Orders List** (`bodea-orders-list`) — Paginated orders table with status, dates, products, and links to order details; shares navigation patterns with the dashboard.
   - **Order New Delivery** (`order-new-delivery`) — Multi-step wizard to place a delivery order (order type, date, transport, equipment, site and contact, delivery window), backed by Commerce order APIs and catalog configuration.
 
 Other blocks in `blocks/` follow the boilerplate: commerce account, cart, checkout, B2B PO and approval flows, returns, invoices, and content blocks (e.g. cards, carousel, columns). See each block’s `README.md` for details.

@@ -7,10 +7,10 @@ import {
   rootLink,
 } from '../../scripts/commerce.js';
 import { fetchOrdersPage } from './orders-service.js';
-import { buildNav, toggleNav } from '../chep-dashboard/dashboard-nav.js';
+import { buildNav, toggleNav } from '../bodea-dashboard/dashboard-nav.js';
 import { renderBrickProductIcon } from '../order-new-delivery/brick-product-icon.js';
 import { getEquipmentProductBySku } from '../order-new-delivery/equipment-products.js';
-import { ORDER_STATUS_MAP } from '../chep-dashboard/dashboard-config.js';
+import { ORDER_STATUS_MAP } from '../bodea-dashboard/dashboard-config.js';
 
 import '../../scripts/initializers/account.js';
 
@@ -31,12 +31,12 @@ function buildProductPreviewIcons(items) {
     if (!sku || seen.has(sku)) continue;
     seen.add(sku);
     const material = getMaterialFromSku(sku);
-    icons.push(renderBrickProductIcon(material, { className: 'chep-orders-list__brick-icon' }));
+    icons.push(renderBrickProductIcon(material, { className: 'bodea-orders-list__brick-icon' }));
     if (icons.length >= 4) break;
   }
 
   if (icons.length === 0) return '—';
-  return `<span class="chep-orders-list__product-preview" role="img" aria-label="Product types">${icons.join('')}</span>`;
+  return `<span class="bodea-orders-list__product-preview" role="img" aria-label="Product types">${icons.join('')}</span>`;
 }
 
 function getPageSize(block) {
@@ -78,42 +78,42 @@ function getOrderStatusVariant(status) {
 
 function buildSkeletonRows(count = 5) {
   return Array.from({ length: count }, () => `
-    <tr class="chep-orders-list__row chep-orders-list__row--skeleton">
-      <td><span class="chep-orders-list__skeleton-line"></span></td>
-      <td><span class="chep-orders-list__skeleton-line"></span></td>
-      <td><span class="chep-orders-list__skeleton-line"></span></td>
-      <td><span class="chep-orders-list__skeleton-line"></span></td>
-      <td><span class="chep-orders-list__skeleton-line"></span></td>
-      <td><span class="chep-orders-list__skeleton-line"></span></td>
+    <tr class="bodea-orders-list__row bodea-orders-list__row--skeleton">
+      <td><span class="bodea-orders-list__skeleton-line"></span></td>
+      <td><span class="bodea-orders-list__skeleton-line"></span></td>
+      <td><span class="bodea-orders-list__skeleton-line"></span></td>
+      <td><span class="bodea-orders-list__skeleton-line"></span></td>
+      <td><span class="bodea-orders-list__skeleton-line"></span></td>
+      <td><span class="bodea-orders-list__skeleton-line"></span></td>
     </tr>
   `).join('');
 }
 
 function buildTopBar(navElement) {
   const topBar = document.createElement('div');
-  topBar.className = 'chep-orders-list__topbar';
+  topBar.className = 'bodea-orders-list__topbar';
   topBar.innerHTML = `
-    <button class="chep-orders-list__menu-btn" aria-label="Toggle navigation" type="button">
+    <button class="bodea-orders-list__menu-btn" aria-label="Toggle navigation" type="button">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="3" y1="12" x2="21" y2="12"/>
         <line x1="3" y1="6" x2="21" y2="6"/>
         <line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
     </button>
-    <div class="chep-orders-list__topbar-copy">
-      <span class="chep-orders-list__eyebrow">Customer Portal</span>
-      <h1 class="chep-orders-list__page-title">Orders</h1>
+    <div class="bodea-orders-list__topbar-copy">
+      <span class="bodea-orders-list__eyebrow">Customer Portal</span>
+      <h1 class="bodea-orders-list__page-title">Orders</h1>
     </div>
-    <a class="chep-orders-list__account-link" href="${rootLink(CUSTOMER_ACCOUNT_PATH)}">
+    <a class="bodea-orders-list__account-link" href="${rootLink(CUSTOMER_ACCOUNT_PATH)}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
         <circle cx="12" cy="7" r="4"/>
       </svg>
-      <span class="chep-orders-list__account-name">My Account</span>
+      <span class="bodea-orders-list__account-name">My Account</span>
     </a>
   `;
 
-  topBar.querySelector('.chep-orders-list__menu-btn')
+  topBar.querySelector('.bodea-orders-list__menu-btn')
     .addEventListener('click', () => toggleNav(navElement));
 
   return topBar;
@@ -122,7 +122,7 @@ function buildTopBar(navElement) {
 function setTopBarCustomerName(block, customer) {
   const name = [customer?.firstname, customer?.lastname].filter(Boolean).join(' ');
   const label = name || 'My Account';
-  const nameEl = block.querySelector('.chep-orders-list__account-name');
+  const nameEl = block.querySelector('.bodea-orders-list__account-name');
 
   if (nameEl) {
     nameEl.textContent = label;
@@ -132,32 +132,32 @@ function setTopBarCustomerName(block, customer) {
 function renderShell(block) {
   document.body.classList.add('dashboard-page');
   block.innerHTML = '';
-  block.classList.add('chep-orders-list', 'chep-orders-list-shell');
+  block.classList.add('bodea-orders-list', 'bodea-orders-list-shell');
 
   const nav = buildNav(window.location.pathname);
   block.appendChild(nav);
 
   const main = document.createElement('div');
-  main.className = 'chep-orders-list__main';
+  main.className = 'bodea-orders-list__main';
 
   const topBar = buildTopBar(nav);
   main.appendChild(topBar);
 
   const page = document.createElement('div');
-  page.className = 'chep-orders-list__page';
+  page.className = 'bodea-orders-list__page';
   page.innerHTML = `
-    <div class="chep-orders-list__card">
-      <div class="chep-orders-list__hero">
-        <div class="chep-orders-list__hero-copy">
-          <span class="chep-orders-list__hero-eyebrow">Account</span>
-          <h2 class="chep-orders-list__hero-title">Orders</h2>
-          <p class="chep-orders-list__hero-text">View all your delivery orders and track their status.</p>
+    <div class="bodea-orders-list__card">
+      <div class="bodea-orders-list__hero">
+        <div class="bodea-orders-list__hero-copy">
+          <span class="bodea-orders-list__hero-eyebrow">Account</span>
+          <h2 class="bodea-orders-list__hero-title">Orders</h2>
+          <p class="bodea-orders-list__hero-text">View all your delivery orders and track their status.</p>
         </div>
-        <span class="chep-orders-list__hero-badge" aria-live="polite">Loading…</span>
+        <span class="bodea-orders-list__hero-badge" aria-live="polite">Loading…</span>
       </div>
-      <div class="chep-orders-list__content">
-        <div class="chep-orders-list__table-wrap">
-          <table class="chep-orders-list__table">
+      <div class="bodea-orders-list__content">
+        <div class="bodea-orders-list__table-wrap">
+          <table class="bodea-orders-list__table">
             <thead>
               <tr>
                 <th>Order</th>
@@ -182,7 +182,7 @@ function renderShell(block) {
 }
 
 function setMeta(block, text) {
-  const meta = block.querySelector('.chep-orders-list__hero-badge');
+  const meta = block.querySelector('.bodea-orders-list__hero-badge');
   if (meta) meta.textContent = text;
 }
 
@@ -199,16 +199,16 @@ function renderTable(block, state) {
     const statusLabel = getStatusLabel(order.status);
 
     return `
-      <tr class="chep-orders-list__row">
-        <td><a class="chep-orders-list__order-link" href="${detailHref}">#${order.number}</a></td>
+      <tr class="bodea-orders-list__row">
+        <td><a class="bodea-orders-list__order-link" href="${detailHref}">#${order.number}</a></td>
         <td>${formatOrderDate(order.orderDate)}</td>
-        <td><span class="chep-orders-list__location" title="${order.location ?? ''}">${order.location ?? '—'}</span></td>
+        <td><span class="bodea-orders-list__location" title="${order.location ?? ''}">${order.location ?? '—'}</span></td>
         <td>${buildProductPreviewIcons(order.items)}</td>
         <td>
-          <span class="chep-orders-list__status" data-status="${statusVariant}">${statusLabel}</span>
+          <span class="bodea-orders-list__status" data-status="${statusVariant}">${statusLabel}</span>
         </td>
         <td>
-          <a class="chep-orders-list__view" href="${detailHref}">
+          <a class="bodea-orders-list__view" href="${detailHref}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="9 18 15 12 9 6"/>
             </svg>
@@ -222,20 +222,20 @@ function renderTable(block, state) {
   const footer = [];
 
   if (state.footerError) {
-    footer.push(`<p class="chep-orders-list__footer-message">${state.footerError}</p>`);
+    footer.push(`<p class="bodea-orders-list__footer-message">${state.footerError}</p>`);
   }
 
   if (state.currentPage < state.totalPages) {
     footer.push(`
-      <button class="chep-orders-list__load-more" type="button" ${state.loadingMore ? 'disabled' : ''}>
+      <button class="bodea-orders-list__load-more" type="button" ${state.loadingMore ? 'disabled' : ''}>
         ${state.loadingMore ? 'Loading…' : 'Load More'}
       </button>
     `);
   }
 
-  block.querySelector('.chep-orders-list__content').innerHTML = `
-    <div class="chep-orders-list__table-wrap">
-      <table class="chep-orders-list__table">
+  block.querySelector('.bodea-orders-list__content').innerHTML = `
+    <div class="bodea-orders-list__table-wrap">
+      <table class="bodea-orders-list__table">
         <thead>
           <tr>
             <th>Order</th>
@@ -249,33 +249,33 @@ function renderTable(block, state) {
         <tbody>${tbody}</tbody>
       </table>
     </div>
-    ${footer.length ? `<div class="chep-orders-list__footer">${footer.join('')}</div>` : ''}
+    ${footer.length ? `<div class="bodea-orders-list__footer">${footer.join('')}</div>` : ''}
   `;
 
-  const loadMoreButton = block.querySelector('.chep-orders-list__load-more');
+  const loadMoreButton = block.querySelector('.bodea-orders-list__load-more');
   if (loadMoreButton) {
     loadMoreButton.addEventListener('click', () => state.loadMore());
   }
 }
 
 function renderEmptyState(block, message) {
-  block.querySelector('.chep-orders-list__content').innerHTML = `
-    <div class="chep-orders-list__state">
-      <p class="chep-orders-list__state-message">${message}</p>
-      <a class="chep-orders-list__cta" href="${rootLink('/order')}">Create Order</a>
+  block.querySelector('.bodea-orders-list__content').innerHTML = `
+    <div class="bodea-orders-list__state">
+      <p class="bodea-orders-list__state-message">${message}</p>
+      <a class="bodea-orders-list__cta" href="${rootLink('/order')}">Create Order</a>
     </div>
   `;
 }
 
 function renderErrorState(block, retry) {
-  block.querySelector('.chep-orders-list__content').innerHTML = `
-    <div class="chep-orders-list__state">
-      <p class="chep-orders-list__state-message">We could not load orders right now.</p>
-      <button class="chep-orders-list__retry" type="button">Try Again</button>
+  block.querySelector('.bodea-orders-list__content').innerHTML = `
+    <div class="bodea-orders-list__state">
+      <p class="bodea-orders-list__state-message">We could not load orders right now.</p>
+      <button class="bodea-orders-list__retry" type="button">Try Again</button>
     </div>
   `;
 
-  block.querySelector('.chep-orders-list__retry').addEventListener('click', retry);
+  block.querySelector('.bodea-orders-list__retry').addEventListener('click', retry);
 }
 
 function dedupeOrders(orders) {
@@ -289,7 +289,7 @@ function dedupeOrders(orders) {
 }
 
 export default async function decorate(block) {
-  block.classList.add('chep-orders-list');
+  block.classList.add('bodea-orders-list');
 
   if (!checkIsAuthenticated()) {
     const returnUrl = encodeURIComponent(window.location.pathname || '/order-list');

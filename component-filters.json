@@ -32,9 +32,9 @@
       "commerce-order-product-list",
       "commerce-order-returns",
       "commerce-order-status",
-      "chep-dashboard",
+      "bodea-dashboard",
       "commerce-invoices-list",
-      "chep-orders-list",
+      "bodea-orders-list",
       "commerce-return-header",
       "commerce-search-order",
       "commerce-shipping-status",
@@ -54,6 +54,10 @@
     "components": [
       "accordion-item"
     ]
+  },
+  {
+    "id": "bodea-address-book",
+    "components": []
   },
   {
     "id": "cards",

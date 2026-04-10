@@ -1,0 +1,1259 @@
+/* Dashboard shell (nav, top bar, layout) — must load via CSS @import; JS cannot import .css in the browser. */
+@import url('../bodea-dashboard/bodea-dashboard.css');
+
+/* ==========================================================================
+   Bodea Address Book — locations page (dashboard-aligned, site tokens for buttons)
+   ========================================================================== */
+
+/* Match standard dashboard content padding (see .bodea-dashboard-content) */
+body.bodea-address-book-page .bodea-dashboard-content {
+  padding: 24px;
+}
+
+@media (min-width: 1280px) {
+  body.bodea-address-book-page .bodea-dashboard-content {
+    padding: 24px 28px 28px;
+  }
+}
+
+/* Inner scroll area: page width + rhythm (inherit dashboard font stack / 14px context) */
+.bodea-dashboard .bodea-address-book {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  contain: layout paint;
+  color: var(--color-neutral-900);
+}
+
+.bodea-address-book__page {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Shell: align with dashboard-panel / account surfaces */
+.bodea-address-book__shell {
+  --bodeaaddr-pad-x: 20px;
+  --bodeaaddr-row-pad-y: 18px;
+  --bodeaaddr-row-pad-y-bottom: 14px;
+
+  background: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 10px;
+  box-shadow: var(--shape-shadow-card);
+  overflow: hidden;
+}
+
+/* Screen-reader-only */
+.bodea-address-book__vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.bodea-dashboard[data-loading] .bodea-address-book {
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.bodea-address-book__error {
+  padding: var(--spacing-large);
+  font: var(--type-body-1-default-font);
+  color: var(--color-neutral-700);
+}
+
+/* ── Buttons (match main `button.button` / `.secondary`; dashboard resets global .button) ─ */
+
+.bodea-address-book__btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xsmall);
+  max-width: 100%;
+  margin: 0;
+  border-radius: var(--shape-border-radius-2);
+  padding: 0.65em 1.25em;
+  font: var(--type-button-2-font);
+  letter-spacing: var(--type-button-2-letter-spacing);
+  font-style: normal;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  min-height: 44px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.bodea-address-book__btn--primary {
+  border: var(--shape-border-width-3) solid transparent;
+  background-color: var(--color-brand-500);
+  color: var(--color-neutral-50);
+}
+
+.bodea-address-book__btn--primary:hover,
+.bodea-address-book__btn--primary:focus {
+  background-color: var(--color-brand-600);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-brand-700) 32%, transparent);
+  outline: none;
+}
+
+.bodea-address-book__btn--primary:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 2px;
+}
+
+.bodea-address-book__btn--secondary {
+  background-color: transparent;
+  border: var(--shape-border-width-3) solid var(--color-brand-500);
+  color: var(--color-brand-500);
+}
+
+.bodea-address-book__btn--secondary:hover,
+.bodea-address-book__btn--secondary:focus {
+  background-color: var(--color-brand-500);
+  color: var(--color-neutral-50);
+  outline: none;
+}
+
+.bodea-address-book__btn--secondary:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bodea-address-book__btn {
+    transition: none;
+  }
+}
+
+/* ── Page header (title + subtitle + primary CTA) ─────────────────────── */
+
+.bodea-address-book__page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-small) var(--spacing-medium);
+  padding: var(--bodeaaddr-row-pad-y) var(--bodeaaddr-pad-x) var(--bodeaaddr-row-pad-y-bottom);
+  box-sizing: border-box;
+  background: rgb(255 255 255);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.bodea-address-book__page-head-text {
+  flex: 1;
+  min-width: min(100%, 260px);
+}
+
+.bodea-address-book__page-title {
+  margin: 0 0 6px;
+  font: var(--type-headline-2-strong-font);
+  letter-spacing: var(--type-headline-2-strong-letter-spacing);
+  color: var(--color-neutral-900);
+}
+
+.bodea-address-book__page-subtitle {
+  margin: 0;
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  color: var(--color-neutral-600);
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+/* Primary page CTA — storefront button-1 scale */
+.bodea-address-book__btn--add {
+  flex-shrink: 0;
+  align-self: flex-start;
+  font: var(--type-button-1-font);
+  letter-spacing: var(--type-button-1-letter-spacing);
+  min-height: 48px;
+  padding: 0.55em 1.25em;
+}
+
+@media (max-width: 640px) {
+  .bodea-address-book__page-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bodea-address-book__btn--add {
+    width: 100%;
+  }
+}
+
+/* ── Default delivery address (highlighted primary) ───────────────────── */
+
+.bodea-address-book__default-section {
+  padding: var(--spacing-xsmall) var(--bodeaaddr-pad-x) var(--spacing-small);
+  box-sizing: border-box;
+  background: rgb(255 255 255);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.bodea-address-book__default-card {
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-bottom: 2px;
+  padding: 20px var(--bodeaaddr-pad-x) 12px;
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid color-mix(in srgb, var(--color-brand-500) 28%, var(--color-neutral-300));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-brand-500) 6%, rgb(255 255 255)) 0%,
+    rgb(255 255 255) 60%
+  );
+  box-shadow: var(--shape-shadow-3);
+}
+
+.bodea-address-book__default-label {
+  margin: 0 0 6px;
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-brand-600);
+}
+
+.bodea-address-book__default-name {
+  margin: 0 0 var(--spacing-xsmall);
+  font: var(--type-body-1-strong-font);
+  letter-spacing: var(--type-body-1-strong-letter-spacing);
+  color: var(--color-neutral-900);
+}
+
+.bodea-address-book__default-body {
+  margin-bottom: var(--spacing-xsmall);
+}
+
+.bodea-address-book__default-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xsmall) var(--spacing-small);
+  padding-top: 10px;
+  margin-top: 2px;
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+/* ── Search field (base; toolbar narrows margin) ─────────────────────── */
+
+.bodea-address-book__search {
+  display: flex;
+  align-items: stretch;
+  gap: var(--spacing-xsmall);
+  margin-bottom: 0;
+}
+
+.bodea-address-book__search-inner {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  min-height: 48px;
+  box-sizing: border-box;
+  border: var(--shape-border-width-1) solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-2);
+  background: rgb(255 255 255);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.bodea-address-book__search-inner:focus-within {
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 15%, transparent);
+}
+
+.bodea-address-book__search-glyph {
+  display: flex;
+  color: var(--color-neutral-500);
+  flex-shrink: 0;
+}
+
+.bodea-address-book__search-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font: var(--type-body-1-default-font);
+  letter-spacing: var(--type-body-1-default-letter-spacing);
+  color: var(--color-neutral-900);
+  outline: none;
+}
+
+.bodea-address-book__search-input::placeholder {
+  color: var(--color-neutral-500);
+}
+
+.bodea-address-book__search-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-2);
+  background: rgb(255 255 255);
+  color: var(--color-neutral-600);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.bodea-address-book__search-filter:hover {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-500);
+}
+
+.bodea-address-book__search-filter:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bodea-address-book__search-inner,
+  .bodea-address-book__search-filter {
+    transition: none;
+  }
+}
+
+/* ── Toolbar: search + filters ────────────────────────────────────────── */
+
+.bodea-address-book__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xsmall) var(--spacing-small);
+  margin: 0 0 var(--spacing-medium);
+  padding: var(--bodeaaddr-row-pad-y) 0 calc(var(--bodeaaddr-row-pad-y-bottom) + 4px);
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.bodea-address-book__toolbar .bodea-address-book__search {
+  flex: 1 1 220px;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.bodea-address-book__filter-select {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 36px 0 12px;
+  border: var(--shape-border-width-1) solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-2);
+  background-color: rgb(255 255 255);
+  font: var(--type-body-1-default-font);
+  letter-spacing: var(--type-body-1-default-letter-spacing);
+  color: var(--color-neutral-800);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bodea-address-book__filter-select:hover,
+.bodea-address-book__filter-select:focus {
+  border-color: var(--color-brand-500);
+  outline: none;
+}
+
+.bodea-address-book__filter-select:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .bodea-address-book__filter-select {
+    flex: 1 1 calc(50% - var(--spacing-small));
+    min-width: 140px;
+  }
+}
+
+/* ── Location cards list ──────────────────────────────────────────────── */
+
+.bodea-address-book__locations-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xsmall);
+  min-width: 0;
+}
+
+.bodea-loc-card {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--shape-border-radius-card);
+  border: 1px solid var(--color-neutral-300);
+  background: rgb(255 255 255);
+  box-shadow: var(--shape-shadow-3);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.bodea-loc-card:hover {
+  border-color: var(--color-neutral-300);
+  box-shadow: 0 4px 14px rgb(15 23 42 / 7%);
+}
+
+.bodea-loc-card:focus {
+  outline: none;
+}
+
+.bodea-loc-card:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+.bodea-loc-card--selected {
+  border-color: color-mix(in srgb, var(--color-brand-500) 55%, var(--color-neutral-300));
+  background: color-mix(in srgb, var(--color-brand-500) 5%, rgb(255 255 255));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-brand-500) 25%, transparent),
+    0 6px 20px rgb(15 23 42 / 8%);
+}
+
+.bodea-loc-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-small);
+  margin-bottom: var(--spacing-xsmall);
+  min-height: 36px;
+}
+
+.bodea-loc-card__title {
+  margin: 0;
+  font: var(--type-body-1-strong-font);
+  letter-spacing: var(--type-body-1-strong-letter-spacing);
+  color: var(--color-neutral-900);
+  line-height: 1.35;
+}
+
+.bodea-loc-card__icon-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.bodea-loc-icon-btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 8px;
+  background: rgb(255 255 255);
+  color: var(--color-neutral-600);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.bodea-loc-icon-btn:hover {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-600);
+  background: color-mix(in srgb, var(--color-brand-500) 6%, rgb(255 255 255));
+}
+
+.bodea-loc-icon-btn:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 2px;
+}
+
+.bodea-loc-icon-btn--map {
+  color: var(--color-brand-600);
+  border-color: color-mix(in srgb, var(--color-brand-500) 35%, var(--color-neutral-200));
+}
+
+.bodea-loc-icon-btn--delete:hover {
+  border-color: var(--color-error-500, #c53030);
+  color: var(--color-error-500, #c53030);
+  background: color-mix(in srgb, var(--color-error-500, #c53030) 8%, rgb(255 255 255));
+}
+
+.bodea-loc-card__body {
+  margin-bottom: var(--spacing-xsmall);
+}
+
+.bodea-loc-card__line {
+  margin: 0 0 2px;
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  color: var(--color-neutral-800);
+  line-height: 1.45;
+}
+
+.bodea-loc-card__meta {
+  margin: 4px 0 0;
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  color: var(--color-neutral-600);
+}
+
+.bodea-loc-card__phone {
+  margin: 4px 0 0;
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  color: var(--color-neutral-600);
+}
+
+.bodea-address-book__default-card .bodea-loc-card__line {
+  margin: 0 0 4px;
+}
+
+.bodea-address-book__default-card .bodea-loc-card__meta {
+  margin: 8px 0 0;
+}
+
+.bodea-address-book__default-card .bodea-loc-card__phone {
+  margin: 6px 0 0;
+}
+
+.bodea-loc-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--spacing-xsmall);
+}
+
+.bodea-loc-card__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font: var(--type-body-2-strong-font);
+  letter-spacing: var(--type-body-2-strong-letter-spacing);
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.bodea-loc-card__tag--ship {
+  background: color-mix(in srgb, var(--color-brand-500) 12%, rgb(255 255 255));
+  border: 1px solid color-mix(in srgb, var(--color-brand-500) 35%, transparent);
+  color: var(--color-brand-700);
+}
+
+.bodea-loc-card__tag--bill {
+  background: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-200);
+  color: var(--color-neutral-700);
+}
+
+.bodea-loc-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--spacing-xsmall) var(--spacing-small);
+  padding-top: 8px;
+  margin-top: 2px;
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.bodea-loc-card__link-action {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  font-weight: 600;
+  color: var(--color-brand-500);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.bodea-loc-card__link-action:hover {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+}
+
+.bodea-loc-card__link-action:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.bodea-loc-card__link-action--anchor {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.bodea-loc-card__link-action--anchor:hover {
+  text-decoration: underline;
+}
+
+/* ── Empty state ───────────────────────────────────────────────────────── */
+
+.bodea-address-book__empty {
+  padding: var(--spacing-medium) var(--bodeaaddr-pad-x);
+  text-align: center;
+  border: 1px dashed var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: rgb(255 255 255);
+}
+
+.bodea-address-book__empty-text {
+  margin: 0;
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  color: var(--color-neutral-600);
+  max-width: 42ch;
+  margin-inline: auto;
+  line-height: 1.5;
+}
+
+/* ── Addresses drop-in (Commerce account block; lives in dialog) ──────── */
+
+.bodea-address-book__dropin-host {
+  padding: 0;
+  background: transparent;
+  flex: 1;
+  min-height: 0;
+}
+
+.bodea-address-book__dropin-host .account-addresses {
+  max-width: none;
+}
+
+/* Stack address cards with even spacing (drop-in default margins are tight) */
+.bodea-address-book__dropin-host .account-addresses-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+  width: 100%;
+}
+
+.bodea-address-book__dropin-host .account-address-card {
+  margin-bottom: 0 !important;
+}
+
+.bodea-address-book__dropin-host .account-address-card.dropin-card--secondary {
+  border: 1px solid var(--color-neutral-300) !important;
+  border-left: 3px solid var(--color-brand-500) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 4%) !important;
+}
+
+/* Adobe drop-in Tag uses neutral-400 background — align with Bodea brand chips */
+.bodea-address-book__dropin-host .dropin-tag-container {
+  background-color: color-mix(in srgb, var(--color-brand-500) 12%, rgb(255 255 255)) !important;
+  border: 1px solid color-mix(in srgb, var(--color-brand-500) 38%, transparent) !important;
+  border-radius: 999px !important;
+  padding: 5px 12px !important;
+}
+
+.bodea-address-book__dropin-host .dropin-tag-container__label {
+  color: var(--color-brand-700) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  font-size: 10px !important;
+  line-height: 1.4 !important;
+}
+
+/* “Add address” tile — match outline control pattern */
+.bodea-address-book__dropin-host .account-actions-address {
+  border-color: var(--color-neutral-300) !important;
+  background-color: rgb(255 255 255) !important;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease !important;
+}
+
+.bodea-address-book__dropin-host .account-actions-address:hover {
+  border-color: var(--color-brand-500) !important;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-brand-500) 25%, transparent) !important;
+}
+
+.bodea-address-book__dropin-host .account-actions-address__title {
+  color: var(--color-neutral-900) !important;
+}
+
+/* Tertiary text actions — consistent brand link behavior */
+.bodea-address-book__dropin-host .account-address-card__action .dropin-button--tertiary {
+  color: var(--color-brand-500) !important;
+}
+
+.bodea-address-book__dropin-host .account-address-card__action .dropin-button--tertiary:hover {
+  color: var(--color-brand-600) !important;
+}
+
+/* Form actions inside this block — align with lazy-styles dropin buttons */
+.bodea-address-book__dropin-host .dropin-button--primary {
+  background-color: var(--color-brand-500) !important;
+  border-color: var(--color-brand-500) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+  font: var(--type-button-2-font) !important;
+  letter-spacing: var(--type-button-2-letter-spacing) !important;
+}
+
+.bodea-address-book__dropin-host .dropin-button--primary:hover {
+  background-color: var(--color-brand-600) !important;
+  border-color: var(--color-brand-600) !important;
+}
+
+.bodea-address-book__dropin-host .dropin-button--secondary {
+  border-color: var(--color-brand-500) !important;
+  color: var(--color-brand-500) !important;
+}
+
+.bodea-address-book__dropin-host .dropin-button--secondary:hover {
+  background-color: var(--color-brand-500) !important;
+  color: var(--color-neutral-50) !important;
+}
+
+.bodea-address-book__dropin-host .dropin-design .dropin-button--primary {
+  background-color: var(--color-brand-500) !important;
+  border-color: var(--color-brand-500) !important;
+  border-radius: var(--shape-border-radius-2) !important;
+  font: var(--type-button-2-font) !important;
+  letter-spacing: var(--type-button-2-letter-spacing) !important;
+}
+
+.bodea-address-book__dropin-host .dropin-design .dropin-button--primary:hover {
+  background-color: var(--color-brand-600) !important;
+  border-color: var(--color-brand-600) !important;
+}
+
+.bodea-address-book__dropin-host .dropin-design .dropin-button--secondary {
+  border-color: var(--color-brand-500) !important;
+  color: var(--color-brand-500) !important;
+}
+
+.bodea-address-book__dropin-host .dropin-design .dropin-button--secondary:hover {
+  background-color: var(--color-brand-500) !important;
+  color: var(--color-neutral-50) !important;
+}
+
+.bodea-address-book__dropin-host .account-addresses__footer {
+  margin-top: var(--spacing-xsmall);
+}
+
+/* ── Address dialog (Commerce Addresses drop-in — add / edit) ─────────── */
+
+.bodea-address-book__address-dialog {
+  --bodeaaddr-pad-x: 20px;
+  --bodeaaddr-row-pad-y: 18px;
+  --bodeaaddr-row-pad-y-bottom: 14px;
+
+  padding: 0;
+  margin: 0;
+  border: none;
+  width: 100%;
+  max-width: 100vw;
+  height: 100%;
+  max-height: 100vh;
+  background: transparent;
+}
+
+.bodea-address-book__address-dialog::backdrop {
+  background: rgb(0 0 0 / 40%);
+}
+
+.bodea-address-book__address-dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  cursor: default;
+  background: transparent;
+}
+
+.bodea-address-book__address-dialog__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: min(720px, 94vw);
+  max-height: min(90vh, 880px);
+  margin: 4vh auto;
+  overflow: hidden;
+  background: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-modal);
+  box-shadow: var(--shape-shadow-2);
+}
+
+.bodea-address-book__address-dialog__header {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-small);
+  flex-shrink: 0;
+  padding: var(--bodeaaddr-row-pad-y) var(--bodeaaddr-pad-x) var(--bodeaaddr-row-pad-y-bottom);
+  border-bottom: 1px solid var(--color-neutral-200);
+  background: rgb(255 255 255);
+}
+
+.bodea-address-book__address-dialog__title {
+  margin: 0;
+  font: var(--type-headline-2-strong-font);
+  letter-spacing: var(--type-headline-2-strong-letter-spacing);
+  color: var(--color-neutral-900);
+}
+
+.bodea-address-book__address-dialog__close {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 8px;
+  background: rgb(255 255 255);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-neutral-700);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.bodea-address-book__address-dialog__close:hover {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-600);
+}
+
+.bodea-address-book__address-dialog__close:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 2px;
+}
+
+.bodea-address-book__address-dialog__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--spacing-small) var(--bodeaaddr-pad-x) var(--spacing-medium);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Drop-in mount: full width inside dialog */
+.bodea-address-book__address-dialog .bodea-address-book__dropin-host {
+  position: static;
+  width: 100%;
+  min-height: 120px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bodea-address-book__address-dialog__close {
+    transition: none;
+  }
+}
+
+/* Add flow: hide duplicate Commerce cards; new-address form lives in footer */
+.bodea-address-book__address-dialog[data-bodeaaddr-mode='add'] .account-address-card {
+  display: none !important;
+}
+
+/* ── Header row (pin + eyebrow + title) — legacy hero (unused in new flow) ─ */
+
+.bodea-address-book__hero {
+  padding: var(--spacing-large) var(--spacing-xbig) var(--spacing-medium);
+  background: transparent;
+}
+
+.bodea-address-book__hero-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--spacing-medium);
+}
+
+.bodea-address-book__hero-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-brand-500) 12%, rgb(255 255 255));
+  color: var(--color-brand-500);
+}
+
+.bodea-address-book__hero-svg {
+  display: block;
+}
+
+.bodea-address-book__hero-text {
+  flex: 1;
+  min-width: min(100%, 220px);
+}
+
+.bodea-address-book__eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-neutral-500);
+  margin: 0 0 6px;
+}
+
+.bodea-address-book__title {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-neutral-900);
+}
+
+.bodea-address-book__hero-rule {
+  display: none;
+}
+
+/* ── Intro + search (left column) ─────────────────────────────────────── */
+
+.bodea-address-book__col--list {
+  position: relative;
+  padding: var(--spacing-small) var(--bodeaaddr-pad-x) var(--spacing-medium);
+  min-width: 0;
+  background: rgb(255 255 255);
+}
+
+.bodea-address-book__intro {
+  font: var(--type-body-1-default-font);
+  letter-spacing: var(--type-body-1-default-letter-spacing);
+  color: var(--color-neutral-700);
+  margin: 0 0 var(--spacing-medium);
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+.bodea-address-book__count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 10px;
+  font: var(--type-details-caption-1-font);
+  letter-spacing: var(--type-details-caption-1-letter-spacing);
+  color: var(--color-neutral-700);
+  background: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 999px;
+}
+
+.bodea-address-book__intro .bodea-address-book__count {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Two-column body: list | map ─────────────────────────────────────── */
+
+.bodea-address-book__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: stretch;
+
+  /* One continuous surface — avoids a grey “stripe” from shell showing in grid gaps */
+  background: rgb(255 255 255);
+}
+
+@media (min-width: 1024px) {
+  .bodea-address-book__layout {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: stretch;
+  }
+
+  .bodea-address-book__col--list {
+    padding-top: 0;
+    padding-right: var(--spacing-medium);
+  }
+
+  .bodea-address-book__layout > .bodea-address-book__map-panel {
+    position: sticky;
+    top: 0;
+    align-self: stretch;
+    min-height: 100%;
+    max-height: calc(100vh - 48px);
+  }
+}
+
+/* ── Map column — dashboard-style panel ───────────────────────────────── */
+
+.bodea-address-book__map-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 0;
+  background: rgb(255 255 255);
+  border-left: 1px solid var(--color-neutral-200);
+}
+
+@media (max-width: 1023px) {
+  .bodea-address-book__map-panel {
+    border-left: none;
+    border-top: 1px solid var(--color-neutral-200);
+  }
+}
+
+.bodea-address-book__panel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xsmall) var(--spacing-small);
+  padding: calc(var(--bodeaaddr-row-pad-y) + 4px) var(--bodeaaddr-pad-x) var(--bodeaaddr-row-pad-y-bottom);
+  border-bottom: 1px solid var(--color-neutral-200);
+  background: rgb(255 255 255);
+  flex-shrink: 0;
+}
+
+.bodea-address-book__panel-head-text {
+  flex: 1;
+  min-width: min(100%, 200px);
+}
+
+.bodea-address-book__panel-title {
+  font: var(--type-body-1-strong-font);
+  letter-spacing: var(--type-body-1-strong-letter-spacing);
+  color: var(--color-neutral-900);
+  margin: 0 0 6px;
+}
+
+.bodea-address-book__panel-sub {
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  color: var(--color-neutral-600);
+  margin: 0;
+  max-width: 52ch;
+  line-height: 1.5;
+}
+
+.bodea-address-book__panel-header .bodea-address-book__btn {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+@media (max-width: 640px) {
+  .bodea-address-book__panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bodea-address-book__panel-header .bodea-address-book__btn {
+    align-self: stretch;
+    width: 100%;
+  }
+}
+
+/* ── Map container (shared behaviour with dashboard-map) ─────────────── */
+
+.bodea-address-book__map-container {
+  position: relative;
+  flex: 1 1 auto;
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: min(320px, 50vh);
+  margin: 0;
+  background: var(--color-neutral-200);
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.bodea-address-book[data-bodeaaddr-mapheight='short'] .bodea-address-book__map-container {
+  min-height: 220px;
+}
+
+/* Leaflet fills the map mount */
+.bodea-address-book__map-container .leaflet-container {
+  height: 100%;
+}
+
+/* ── Leaflet / markers (aligned with bodea-dashboard) ─────────────────── */
+
+.bodea-address-book .bodea-map-marker {
+  background: transparent;
+  border: none;
+}
+
+.bodea-address-book .bodea-map-marker__pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 5px rgb(0 0 0 / 30%));
+  transition: filter 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bodea-address-book .bodea-map-marker__pin {
+    transition: none;
+  }
+}
+
+.bodea-address-book .bodea-map-marker__pin:hover {
+  filter: drop-shadow(0 4px 10px rgb(3 105 161 / 50%));
+}
+
+.bodea-address-book .bodea-popup-wrap .leaflet-popup-content-wrapper {
+  border-radius: var(--shape-border-radius-2);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+  padding: 0;
+  overflow: hidden;
+}
+
+.bodea-address-book .bodea-popup-wrap .leaflet-popup-content {
+  margin: 0;
+}
+
+.bodea-address-book .bodea-map-popup {
+  padding: 12px 14px;
+  min-width: 180px;
+}
+
+.bodea-address-book .bodea-map-popup__name {
+  font: var(--type-body-1-strong-font);
+  letter-spacing: var(--type-body-1-strong-letter-spacing);
+  color: var(--color-neutral-900);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.bodea-address-book .bodea-map-popup__type {
+  font: var(--type-details-overline-font);
+  letter-spacing: var(--type-details-overline-letter-spacing);
+  color: var(--color-brand-600);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.bodea-address-book .bodea-map-popup__addr,
+.bodea-address-book .bodea-map-popup__postcode {
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  color: var(--color-neutral-600);
+  line-height: 1.45;
+  display: block;
+}
+
+/* Map fallback list */
+.bodea-address-book .map-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  min-height: inherit;
+  padding: var(--spacing-large) var(--spacing-medium);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.bodea-address-book .map-fallback__icon {
+  color: var(--color-neutral-400);
+  margin-bottom: var(--spacing-small);
+}
+
+.bodea-address-book .map-fallback__title {
+  font: var(--type-body-1-strong-font);
+  letter-spacing: var(--type-body-1-strong-letter-spacing);
+  margin: 0 0 var(--spacing-xsmall);
+  color: var(--color-neutral-800);
+}
+
+.bodea-address-book .map-fallback__desc {
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-600);
+  margin: 0 0 var(--spacing-medium);
+  max-width: 36ch;
+}
+
+.bodea-address-book .map-fallback__sites {
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+}
+
+.bodea-address-book .map-fallback__site {
+  padding: var(--spacing-small);
+  border-bottom: 1px solid var(--color-neutral-200);
+  font: var(--type-body-2-default-font);
+}
+
+.bodea-address-book .map-fallback__site strong {
+  display: block;
+  color: var(--color-neutral-900);
+  margin-bottom: 4px;
+}
+
+.bodea-address-book .map-fallback__site span {
+  color: var(--color-neutral-600);
+  font-size: 0.95em;
+}
+
+.bodea-address-book .map-fallback__no-sites {
+  font: var(--type-body-2-default-font);
+  color: var(--color-neutral-600);
+  margin: 0;
+}

@@ -163,7 +163,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
 }
 
 /* Left nav – shared with invoices/dashboard blocks */
-.chep-nav {
+.bodea-nav {
   display: flex;
   flex-direction: column;
   width: 240px;
@@ -177,7 +177,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   scrollbar-color: rgb(255 255 255 / 20%) transparent;
 }
 
-.chep-nav__overlay {
+.bodea-nav__overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -187,11 +187,11 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   transition: opacity 0.25s ease;
 }
 
-.chep-nav__overlay--visible {
+.bodea-nav__overlay--visible {
   opacity: 1;
 }
 
-.chep-nav__logo {
+.bodea-nav__logo {
   padding: 24px 20px 20px;
   border-bottom: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
@@ -200,7 +200,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   align-items: center;
 }
 
-.chep-nav__logo-link {
+.bodea-nav__logo-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -208,14 +208,14 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   text-decoration: none !important;
 }
 
-.chep-nav__logo-link:hover,
-.chep-nav__logo-link:focus {
+.bodea-nav__logo-link:hover,
+.bodea-nav__logo-link:focus {
   opacity: 1;
   background: transparent !important;
   outline: none;
 }
 
-.chep-nav__logo-img {
+.bodea-nav__logo-img {
   display: block;
   max-width: 260px;
   width: 100%;
@@ -225,20 +225,20 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   mix-blend-mode: lighten; /* Makes black background transparent, white logo visible */
 }
 
-.chep-nav__list {
+.bodea-nav__list {
   list-style: none;
   margin: 0;
   padding: 16px 0;
   flex: 1;
 }
 
-.chep-nav__item {
+.bodea-nav__item {
   margin: 2px 12px;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.chep-nav__link {
+.bodea-nav__link {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -251,18 +251,18 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   position: relative;
 }
 
-.chep-nav__link:hover {
+.bodea-nav__link:hover {
   background: rgb(255 255 255 / 10%);
   color: var(--color-neutral-50) !important;
 }
 
-.chep-nav__item--active .chep-nav__link {
+.bodea-nav__item--active .bodea-nav__link {
   background: rgb(255 255 255 / 15%);
   color: var(--color-neutral-50) !important;
   font-weight: 600;
 }
 
-.chep-nav__item--active .chep-nav__link::before {
+.bodea-nav__item--active .bodea-nav__link::before {
   content: "";
   position: absolute;
   left: -12px;
@@ -274,7 +274,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   border-radius: 0 3px 3px 0;
 }
 
-.chep-nav__icon {
+.bodea-nav__icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -283,23 +283,23 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   flex-shrink: 0;
 }
 
-.chep-nav__label {
+.bodea-nav__label {
   flex: 1;
 }
 
-.chep-nav__active-indicator {
+.bodea-nav__active-indicator {
   display: flex;
   align-items: center;
   opacity: 0.6;
 }
 
-.chep-nav__footer {
+.bodea-nav__footer {
   padding: 16px 20px;
   border-top: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
 }
 
-.chep-nav__footer-text {
+.bodea-nav__footer-text {
   display: block;
   color: rgb(255 255 255 / 50%);
   font-size: 11px;
@@ -308,7 +308,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
   text-transform: uppercase;
 }
 
-.chep-nav__footer-sub {
+.bodea-nav__footer-sub {
   display: block;
   margin-top: 3px;
   color: rgb(255 255 255 / 35%);
@@ -316,7 +316,7 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
 }
 
 @media (max-width: 767px) {
-  .chep-nav {
+  .bodea-nav {
     position: fixed;
     top: 0;
     left: 0;
@@ -324,11 +324,11 @@ body.dashboard-page main > .section:has(.commerce-company-users) {
     transform: translateX(-100%);
   }
 
-  .chep-nav--open {
+  .bodea-nav--open {
     transform: translateX(0);
   }
 
-  .chep-nav__overlay {
+  .bodea-nav__overlay {
     display: block;
   }
 

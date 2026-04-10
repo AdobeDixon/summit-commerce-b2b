@@ -27,7 +27,8 @@ export const FEATURED_EQUIPMENT_SKUS = [
 export const PRIMARY_EQUIPMENT_SKU = FEATURED_EQUIPMENT_SKUS[0];
 
 /**
- * Product titles for Commerce name field and UI (short format: Type (detail) – Standard Size, Pack of ~n).
+ * Product titles for Commerce name field and UI
+ * (short format: Type (detail) – Standard Size, Pack of ~n).
  */
 export const EQUIPMENT_CATALOG_NAMES = {
   'HCS-BR-FAC-WIRECUT-P450':
@@ -133,6 +134,7 @@ export const NAV_ITEMS = [
   {
     id: 'locations',
     label: 'Locations',
+    /** DA `locations` (`locations.html`) — Bodea Address Book (map + addresses). */
     href: '/locations',
     matchPaths: ['/locations'],
     icon: 'locations',

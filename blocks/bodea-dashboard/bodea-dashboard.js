@@ -234,16 +234,16 @@ function buildAccountDropdown(isAuthenticated) {
 
 /* ── Top bar ───────────────────────────────────────────────────────────── */
 
-function buildTopBar(navElement) {
+export function buildTopBar(navElement) {
   const isAuthenticated = checkIsAuthenticated();
   const unreadCount = PLACEHOLDER_NOTIFICATIONS.filter((n) => n.unread).length;
 
   const topBar = document.createElement('div');
-  topBar.className = 'chep-topbar';
+  topBar.className = 'bodea-topbar';
   topBar.setAttribute('role', 'banner');
 
   topBar.innerHTML = `
-    <button class="chep-topbar__menu-btn" aria-label="Toggle navigation" type="button">
+    <button class="bodea-topbar__menu-btn" aria-label="Toggle navigation" type="button">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="3" y1="12" x2="21" y2="12"/>
         <line x1="3" y1="6" x2="21" y2="6"/>
@@ -251,17 +251,17 @@ function buildTopBar(navElement) {
       </svg>
     </button>
 
-    <div class="chep-topbar__search-wrap">
-      <label class="chep-topbar__search-label" for="dashboard-search">Search orders</label>
-      <div class="chep-topbar__search-inner">
-        <svg class="chep-topbar__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <div class="bodea-topbar__search-wrap">
+      <label class="bodea-topbar__search-label" for="dashboard-search">Search orders</label>
+      <div class="bodea-topbar__search-inner">
+        <svg class="bodea-topbar__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/>
           <line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         <input
           id="dashboard-search"
           type="search"
-          class="chep-topbar__search-input"
+          class="bodea-topbar__search-input"
           placeholder="Search orders…"
           autocomplete="off"
           aria-label="Search orders"
@@ -269,32 +269,32 @@ function buildTopBar(navElement) {
       </div>
     </div>
 
-    <div class="chep-topbar__actions">
+    <div class="bodea-topbar__actions">
       <!-- Notifications button + panel -->
-      <div class="chep-topbar__notif-wrap">
-        <button class="chep-topbar__icon-btn chep-topbar__notif-btn" type="button" aria-label="${unreadCount} notifications" aria-haspopup="true" aria-expanded="false">
+      <div class="bodea-topbar__notif-wrap">
+        <button class="bodea-topbar__icon-btn bodea-topbar__notif-btn" type="button" aria-label="${unreadCount} notifications" aria-haspopup="true" aria-expanded="false">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
           </svg>
-          ${unreadCount > 0 ? `<span class="chep-topbar__notif-badge" aria-hidden="true">${unreadCount}</span>` : ''}
+          ${unreadCount > 0 ? `<span class="bodea-topbar__notif-badge" aria-hidden="true">${unreadCount}</span>` : ''}
         </button>
       </div>
 
       <!-- Account button + dropdown -->
-      <div class="chep-topbar__account-wrap">
-        <button class="chep-topbar__account" type="button" aria-haspopup="true" aria-expanded="false">
-          <div class="chep-topbar__avatar" aria-hidden="true">
+      <div class="bodea-topbar__account-wrap">
+        <button class="bodea-topbar__account" type="button" aria-haspopup="true" aria-expanded="false">
+          <div class="bodea-topbar__avatar" aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
           </div>
-          <div class="chep-topbar__account-text">
-            <span class="chep-topbar__account-name chep-topbar__account-name--loading">Loading…</span>
-            <span class="chep-topbar__account-role">Bodea customer</span>
+          <div class="bodea-topbar__account-text">
+            <span class="bodea-topbar__account-name bodea-topbar__account-name--loading">Loading…</span>
+            <span class="bodea-topbar__account-role">Bodea customer</span>
           </div>
-          <svg class="chep-topbar__account-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="bodea-topbar__account-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polyline points="6 9 12 15 18 9"/>
           </svg>
         </button>
@@ -303,10 +303,10 @@ function buildTopBar(navElement) {
   `;
 
   /* Wire mobile menu toggle */
-  topBar.querySelector('.chep-topbar__menu-btn').addEventListener('click', () => toggleNav(navElement));
+  topBar.querySelector('.bodea-topbar__menu-btn').addEventListener('click', () => toggleNav(navElement));
 
   /* Search */
-  const searchInput = topBar.querySelector('.chep-topbar__search-input');
+  const searchInput = topBar.querySelector('.bodea-topbar__search-input');
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && searchInput.value.trim()) {
       window.location.href = rootLink(`/order-list?q=${encodeURIComponent(searchInput.value.trim())}`);
@@ -314,8 +314,8 @@ function buildTopBar(navElement) {
   });
 
   /* Notification panel */
-  const notifWrap = topBar.querySelector('.chep-topbar__notif-wrap');
-  const notifBtn = topBar.querySelector('.chep-topbar__notif-btn');
+  const notifWrap = topBar.querySelector('.bodea-topbar__notif-wrap');
+  const notifBtn = topBar.querySelector('.bodea-topbar__notif-btn');
   const notifPanel = buildNotifPanel();
   notifWrap.appendChild(notifPanel);
 
@@ -326,13 +326,13 @@ function buildTopBar(navElement) {
     notifBtn.setAttribute('aria-expanded', String(!open));
     if (!open) {
       topBar.querySelector('.topbar-account-dropdown').hidden = true;
-      topBar.querySelector('.chep-topbar__account').setAttribute('aria-expanded', 'false');
+      topBar.querySelector('.bodea-topbar__account').setAttribute('aria-expanded', 'false');
     }
   });
 
   /* Account dropdown */
-  const accountWrap = topBar.querySelector('.chep-topbar__account-wrap');
-  const accountBtn = topBar.querySelector('.chep-topbar__account');
+  const accountWrap = topBar.querySelector('.bodea-topbar__account-wrap');
+  const accountBtn = topBar.querySelector('.bodea-topbar__account');
   const accountDropdown = buildAccountDropdown(isAuthenticated);
   accountWrap.appendChild(accountDropdown);
 
@@ -360,11 +360,11 @@ function buildTopBar(navElement) {
 
 /* ── Account name update ───────────────────────────────────────────────── */
 
-function updateAccountName(topBar, customerIdentity) {
-  const nameEl = topBar.querySelector('.chep-topbar__account-name');
+export function updateAccountName(topBar, customerIdentity) {
+  const nameEl = topBar.querySelector('.bodea-topbar__account-name');
   if (!nameEl) return;
 
-  nameEl.classList.remove('chep-topbar__account-name--loading');
+  nameEl.classList.remove('bodea-topbar__account-name--loading');
 
   if (customerIdentity?.firstname) {
     const name = [customerIdentity.firstname, customerIdentity.lastname].filter(Boolean).join(' ');
@@ -383,7 +383,7 @@ export default async function decorate(block) {
   document.body.classList.add('dashboard-page');
 
   block.innerHTML = '';
-  block.classList.add('chep-dashboard');
+  block.classList.add('bodea-dashboard');
 
   const isAuthenticated = checkIsAuthenticated();
   const { pathname } = window.location;
@@ -394,13 +394,13 @@ export default async function decorate(block) {
   block.appendChild(nav);
 
   const mainEl = document.createElement('div');
-  mainEl.className = 'chep-dashboard-main';
+  mainEl.className = 'bodea-dashboard-main';
 
   const topBar = buildTopBar(nav);
   mainEl.appendChild(topBar);
 
   const content = document.createElement('div');
-  content.className = 'chep-dashboard-content';
+  content.className = 'bodea-dashboard-content';
 
   /* Welcome banner (placeholder name until data loads) */
   const welcomeBanner = buildWelcomeBanner(null);
@@ -434,7 +434,7 @@ export default async function decorate(block) {
   const refreshMapFromAddressBook = () => {
     refreshDashboardSiteMarkers(bottomSection.__mapContainer).catch(() => {});
   };
-  document.addEventListener('chep-delivery-sites-changed', refreshMapFromAddressBook);
+  document.addEventListener('bodea-delivery-sites-changed', refreshMapFromAddressBook);
 
   let addressBookSiteCount = 0;
   if (isAuthenticated) {
@@ -442,7 +442,7 @@ export default async function decorate(block) {
       const sites = await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
       addressBookSiteCount = sites.length;
     } catch (err) {
-      console.warn('chep-dashboard: Could not load customer addresses for the site map.', err);
+      console.warn('bodea-dashboard: Could not load customer addresses for the site map.', err);
     }
   }
 
@@ -504,12 +504,12 @@ export default async function decorate(block) {
     /* Update deliveries panel */
     updateDeliveriesPanel(bottomSection, ordersData, isAuthenticated);
 
-    /* Re-sync address book after other GraphQL (company context); chep-delivery-sites-changed refreshes the map */
+    /* Re-sync address book after other GraphQL (company context); bodea-delivery-sites-changed refreshes the map */
     if (isAuthenticated) {
       try {
         await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
       } catch (mapAddrErr) {
-        console.warn('chep-dashboard: Could not refresh site map from address book.', mapAddrErr);
+        console.warn('bodea-dashboard: Could not refresh site map from address book.', mapAddrErr);
       }
     }
   } catch (err) {

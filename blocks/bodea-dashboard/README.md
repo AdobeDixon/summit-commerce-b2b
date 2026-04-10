@@ -6,6 +6,7 @@ The Bodea Dashboard block provides the Bodea homepage experience: left navigatio
 
 ## DA.live Integration
 
+- **Block name (component id)**: `bodea-dashboard` (replaces legacy `chep-dashboard`). Re-insert or swap the block in existing documents and republish so pages load the new block.
 - **Type**: key-value-block
 - **Rows/Columns**: Single empty cell
 - Block takes over viewport; add to document at `/dashboard` or `/`

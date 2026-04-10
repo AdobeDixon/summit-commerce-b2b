@@ -261,9 +261,19 @@
           }
         },
         {
+          "title": "Bodea Address Book",
+          "id": "bodea-address-book",
+          "model": "bodea-address-book",
+          "plugins": {
+            "da": {
+              "type": "key-value-block"
+            }
+          }
+        },
+        {
           "title": "Bodea Dashboard",
-          "id": "chep-dashboard",
-          "model": "chep-dashboard",
+          "id": "bodea-dashboard",
+          "model": "bodea-dashboard",
           "plugins": {
             "da": {
               "type": "key-value-block"
@@ -272,8 +282,8 @@
         },
         {
           "title": "Bodea Orders List",
-          "id": "chep-orders-list",
-          "model": "chep-orders-list",
+          "id": "bodea-orders-list",
+          "model": "bodea-orders-list",
           "plugins": {
             "da": {
               "type": "key-value-block"

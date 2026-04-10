@@ -51,7 +51,7 @@ body.dashboard-page main > .section > div {
 }
 
 /* Demo mode banner — avoid account lockout during demos */
-.chep-demo-banner {
+.bodea-demo-banner {
   display: block;
   padding: 6px 12px;
   background: var(--color-informational-200);
@@ -63,19 +63,19 @@ body.dashboard-page main > .section > div {
 
 /* Beat `main a:not(.dropin-design a) { color: var(--color-brand-500) }` from styles.css.
    Using the same leading `main` specificity prefix to win at equal cascade weight. */
-main .chep-dashboard a:not(.dropin-design a) {
+main .bodea-dashboard a:not(.dropin-design a) {
   color: inherit;
   text-decoration: none;
 }
 
-main .chep-dashboard a:not(.dropin-design a):hover {
+main .bodea-dashboard a:not(.dropin-design a):hover {
   color: inherit;
   text-decoration: none;
 }
 
 /* Prevent global button rules interfering with dashboard links */
-.chep-dashboard a.button,
-.chep-dashboard button.button {
+.bodea-dashboard a.button,
+.bodea-dashboard button.button {
   all: unset;
 }
 
@@ -83,7 +83,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    Block shell
    ========================================================================== */
 
-.chep-dashboard {
+.bodea-dashboard {
   display: flex;
   width: 100%;
   height: 100dvh;
@@ -98,9 +98,9 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   box-sizing: border-box;
 }
 
-.chep-dashboard *,
-.chep-dashboard *::before,
-.chep-dashboard *::after {
+.bodea-dashboard *,
+.bodea-dashboard *::before,
+.bodea-dashboard *::after {
   box-sizing: border-box;
 }
 
@@ -108,7 +108,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    Left navigation rail
    ========================================================================== */
 
-.chep-nav {
+.bodea-nav {
   display: flex;
   flex-direction: column;
   width: 240px;
@@ -122,7 +122,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   scrollbar-color: rgb(255 255 255 / 20%) transparent;
 }
 
-.chep-nav__overlay {
+.bodea-nav__overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -132,12 +132,12 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   transition: opacity 0.25s ease;
 }
 
-.chep-nav__overlay--visible {
+.bodea-nav__overlay--visible {
   opacity: 1;
 }
 
 /* Logo area */
-.chep-nav__logo {
+.bodea-nav__logo {
   padding: 24px 20px 20px;
   border-bottom: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
@@ -146,7 +146,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   align-items: center;
 }
 
-.chep-nav__logo-link {
+.bodea-nav__logo-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -154,15 +154,15 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   color: var(--color-neutral-50) !important;
 }
 
-.chep-nav__logo-link:hover,
-.chep-nav__logo-link:focus {
+.bodea-nav__logo-link:hover,
+.bodea-nav__logo-link:focus {
   opacity: 1;
   color: var(--color-neutral-50) !important;
   background: transparent !important;
   outline: none;
 }
 
-.chep-nav__logo-img {
+.bodea-nav__logo-img {
   display: block;
   max-width: 260px;
   width: 100%;
@@ -173,20 +173,20 @@ main .chep-dashboard a:not(.dropin-design a):hover {
 }
 
 /* Nav list */
-.chep-nav__list {
+.bodea-nav__list {
   list-style: none;
   margin: 0;
   padding: 16px 0;
   flex: 1;
 }
 
-.chep-nav__item {
+.bodea-nav__item {
   margin: 2px 12px;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.chep-nav__link {
+.bodea-nav__link {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -202,19 +202,19 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   position: relative;
 }
 
-.chep-nav__link:hover {
+.bodea-nav__link:hover {
   background: rgb(255 255 255 / 10%);
   color: var(--color-neutral-50) !important;
   text-decoration: none !important;
 }
 
-.chep-nav__item--active .chep-nav__link {
+.bodea-nav__item--active .bodea-nav__link {
   background: rgb(255 255 255 / 15%);
   color: var(--color-neutral-50) !important;
   font-weight: 600;
 }
 
-.chep-nav__item--active .chep-nav__link::before {
+.bodea-nav__item--active .bodea-nav__link::before {
   content: "";
   position: absolute;
   left: -12px;
@@ -226,7 +226,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   border-radius: 0 3px 3px 0;
 }
 
-.chep-nav__icon {
+.bodea-nav__icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,25 +236,25 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   opacity: 0.9;
 }
 
-.chep-nav__label {
+.bodea-nav__label {
   flex: 1;
   white-space: nowrap;
 }
 
-.chep-nav__active-indicator {
+.bodea-nav__active-indicator {
   display: flex;
   align-items: center;
   opacity: 0.6;
 }
 
 /* Nav footer */
-.chep-nav__footer {
+.bodea-nav__footer {
   padding: 16px 20px;
   border-top: 1px solid rgb(255 255 255 / 12%);
   flex-shrink: 0;
 }
 
-.chep-nav__footer-text {
+.bodea-nav__footer-text {
   display: block;
   font-size: 11px;
   color: rgb(255 255 255 / 50%);
@@ -263,7 +263,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   letter-spacing: 0.08em;
 }
 
-.chep-nav__footer-sub {
+.bodea-nav__footer-sub {
   display: block;
   font-size: 11px;
   color: rgb(255 255 255 / 35%);
@@ -274,7 +274,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    Main content area
    ========================================================================== */
 
-.chep-dashboard-main {
+.bodea-dashboard-main {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -286,7 +286,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    Top bar
    ========================================================================== */
 
-.chep-topbar {
+.bodea-topbar {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -299,7 +299,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   z-index: 100;
 }
 
-.chep-topbar__menu-btn {
+.bodea-topbar__menu-btn {
   display: none;
   align-items: center;
   justify-content: center;
@@ -314,18 +314,18 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   transition: background 0.15s ease;
 }
 
-.chep-topbar__menu-btn:hover {
+.bodea-topbar__menu-btn:hover {
   background: var(--color-neutral-200);
   color: var(--color-brand-500);
 }
 
 /* Search */
-.chep-topbar__search-wrap {
+.bodea-topbar__search-wrap {
   flex: 1;
   max-width: 400px;
 }
 
-.chep-topbar__search-label {
+.bodea-topbar__search-label {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -333,7 +333,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   overflow: hidden;
 }
 
-.chep-topbar__search-inner {
+.bodea-topbar__search-inner {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -345,18 +345,18 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.chep-topbar__search-inner:focus-within {
+.bodea-topbar__search-inner:focus-within {
   border-color: var(--color-brand-500);
   box-shadow: 0 0 0 3px rgb(3 105 161 / 12%);
   background: white;
 }
 
-.chep-topbar__search-icon {
+.bodea-topbar__search-icon {
   color: var(--color-neutral-500);
   flex-shrink: 0;
 }
 
-.chep-topbar__search-input {
+.bodea-topbar__search-input {
   flex: 1;
   border: none;
   background: transparent;
@@ -366,12 +366,12 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   font-family: inherit;
 }
 
-.chep-topbar__search-input::placeholder {
+.bodea-topbar__search-input::placeholder {
   color: var(--color-neutral-500);
 }
 
 /* Topbar actions */
-.chep-topbar__actions {
+.bodea-topbar__actions {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -379,7 +379,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   flex-shrink: 0;
 }
 
-.chep-topbar__icon-btn {
+.bodea-topbar__icon-btn {
   position: relative;
   display: flex;
   align-items: center;
@@ -394,12 +394,12 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.chep-topbar__icon-btn:hover {
+.bodea-topbar__icon-btn:hover {
   background: var(--color-neutral-200);
   color: var(--color-brand-500);
 }
 
-.chep-topbar__notif-badge {
+.bodea-topbar__notif-badge {
   position: absolute;
   top: 4px;
   right: 4px;
@@ -418,13 +418,13 @@ main .chep-dashboard a:not(.dropin-design a):hover {
 }
 
 /* Notification wrap + panel */
-.chep-topbar__notif-wrap,
-.chep-topbar__account-wrap {
+.bodea-topbar__notif-wrap,
+.bodea-topbar__account-wrap {
   position: relative;
 }
 
 /* Account area */
-.chep-topbar__account {
+.bodea-topbar__account {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -437,7 +437,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   transition: background 0.15s ease;
 }
 
-.chep-topbar__account:hover {
+.bodea-topbar__account:hover {
   background: var(--color-neutral-200);
 }
 
@@ -664,7 +664,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   margin: 4px 0;
 }
 
-.chep-topbar__avatar {
+.bodea-topbar__avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -676,31 +676,31 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   flex-shrink: 0;
 }
 
-.chep-topbar__account-text {
+.bodea-topbar__account-text {
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
 
-.chep-topbar__account-name {
+.bodea-topbar__account-name {
   font-size: 13px;
   font-weight: 600;
   color: var(--color-neutral-900);
   line-height: 1.2;
 }
 
-.chep-topbar__account-name--loading {
+.bodea-topbar__account-name--loading {
   color: var(--color-neutral-500);
   font-weight: 400;
 }
 
-.chep-topbar__account-role {
+.bodea-topbar__account-role {
   font-size: 11px;
   color: var(--color-neutral-600);
   line-height: 1;
 }
 
-.chep-topbar__account-chevron {
+.bodea-topbar__account-chevron {
   color: var(--color-neutral-500);
 }
 
@@ -708,7 +708,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    Dashboard content scroll area
    ========================================================================== */
 
-.chep-dashboard-content {
+.bodea-dashboard-content {
   flex: 1;
   overflow: hidden auto;
   padding: 24px;
@@ -719,15 +719,15 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   scrollbar-color: var(--color-neutral-400) transparent;
 }
 
-.chep-dashboard-content::-webkit-scrollbar {
+.bodea-dashboard-content::-webkit-scrollbar {
   width: 6px;
 }
 
-.chep-dashboard-content::-webkit-scrollbar-track {
+.bodea-dashboard-content::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.chep-dashboard-content::-webkit-scrollbar-thumb {
+.bodea-dashboard-content::-webkit-scrollbar-thumb {
   background: var(--color-neutral-400);
   border-radius: 3px;
 }
@@ -1626,12 +1626,12 @@ main .chep-dashboard a:not(.dropin-design a):hover {
 /* ── Leaflet overrides ─────────────────────────────────────────────────── */
 
 /* Custom map pin marker */
-.chep-map-marker {
+.bodea-map-marker {
   background: transparent;
   border: none;
 }
 
-.chep-map-marker__pin {
+.bodea-map-marker__pin {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1639,32 +1639,32 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   transition: filter 0.15s ease;
 }
 
-.chep-map-marker__pin:hover {
+.bodea-map-marker__pin:hover {
   filter: drop-shadow(0 4px 10px rgb(3 105 161 / 50%));
 }
 
 /* Custom popup wrapper */
-.chep-popup-wrap .leaflet-popup-content-wrapper {
+.bodea-popup-wrap .leaflet-popup-content-wrapper {
   border-radius: 10px;
   box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
   padding: 0;
   overflow: hidden;
 }
 
-.chep-popup-wrap .leaflet-popup-content {
+.bodea-popup-wrap .leaflet-popup-content {
   margin: 0;
 }
 
-.chep-popup-wrap .leaflet-popup-tip-container {
+.bodea-popup-wrap .leaflet-popup-tip-container {
   margin-top: -1px;
 }
 
-.chep-map-popup {
+.bodea-map-popup {
   padding: 12px 14px;
   min-width: 180px;
 }
 
-.chep-map-popup__name {
+.bodea-map-popup__name {
   font-size: 13px;
   font-weight: 700;
   color: var(--color-neutral-900);
@@ -1672,7 +1672,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   margin-bottom: 3px;
 }
 
-.chep-map-popup__type {
+.bodea-map-popup__type {
   font-size: 10px;
   font-weight: 700;
   color: var(--color-brand-500);
@@ -1682,8 +1682,8 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   display: block;
 }
 
-.chep-map-popup__addr,
-.chep-map-popup__postcode {
+.bodea-map-popup__addr,
+.bodea-map-popup__postcode {
   font-size: 12px;
   color: var(--color-neutral-600);
   line-height: 1.4;
@@ -1985,7 +1985,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    ========================================================================== */
 
 @media (max-width: 899px) {
-  .chep-nav {
+  .bodea-nav {
     position: fixed;
     top: 0;
     left: 0;
@@ -1994,19 +1994,19 @@ main .chep-dashboard a:not(.dropin-design a):hover {
     z-index: 200;
   }
 
-  .chep-nav--open {
+  .bodea-nav--open {
     transform: translateX(0);
   }
 
-  .chep-nav__overlay {
+  .bodea-nav__overlay {
     display: block;
   }
 
-  .chep-topbar__menu-btn {
+  .bodea-topbar__menu-btn {
     display: flex;
   }
 
-  .chep-dashboard-content {
+  .bodea-dashboard-content {
     padding: 16px;
     gap: 16px;
   }
@@ -2024,11 +2024,11 @@ main .chep-dashboard a:not(.dropin-design a):hover {
     flex-direction: column;
   }
 
-  .chep-topbar__account-text {
+  .bodea-topbar__account-text {
     display: none;
   }
 
-  .chep-topbar__account-chevron {
+  .bodea-topbar__account-chevron {
     display: none;
   }
 }
@@ -2038,12 +2038,12 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    ========================================================================== */
 
 @media (max-width: 599px) {
-  .chep-topbar {
+  .bodea-topbar {
     padding: 0 16px;
     gap: 10px;
   }
 
-  .chep-topbar__search-wrap {
+  .bodea-topbar__search-wrap {
     max-width: none;
   }
 
@@ -2079,7 +2079,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
   .kpi-card,
   .dashboard-welcome__cta,
   .dashboard-new-customer-banner__guide-btn,
-  .chep-nav,
+  .bodea-nav,
   .equip-card {
     transition: none;
   }
@@ -2100,7 +2100,7 @@ main .chep-dashboard a:not(.dropin-design a):hover {
    Focus / accessibility
    ========================================================================== */
 
-.chep-nav__link:focus-visible,
+.bodea-nav__link:focus-visible,
 .kpi-card:focus-visible,
 .quick-action-link:focus-visible,
 .dashboard-welcome__cta:focus-visible,

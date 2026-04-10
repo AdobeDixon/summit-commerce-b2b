@@ -90,16 +90,16 @@ function isActive(item, pathname) {
 function buildNavItem(item, pathname) {
   const active = isActive(item, pathname);
   const li = document.createElement('li');
-  li.className = `chep-nav__item${active ? ' chep-nav__item--active' : ''}`;
+  li.className = `bodea-nav__item${active ? ' bodea-nav__item--active' : ''}`;
 
   const a = document.createElement('a');
-  a.href = item.href;
-  a.className = 'chep-nav__link';
+  a.href = rootLink(item.href);
+  a.className = 'bodea-nav__link';
   a.setAttribute('aria-current', active ? 'page' : 'false');
   a.innerHTML = `
-    <span class="chep-nav__icon">${ICONS[item.icon] ?? ''}</span>
-    <span class="chep-nav__label">${item.label}</span>
-    ${active ? `<span class="chep-nav__active-indicator">${ICONS.chevronRight}</span>` : ''}
+    <span class="bodea-nav__icon">${ICONS[item.icon] ?? ''}</span>
+    <span class="bodea-nav__label">${item.label}</span>
+    ${active ? `<span class="bodea-nav__active-indicator">${ICONS.chevronRight}</span>` : ''}
   `;
 
   li.appendChild(a);
@@ -115,23 +115,23 @@ function buildNavItem(item, pathname) {
  */
 export function buildNav(pathname) {
   const nav = document.createElement('nav');
-  nav.className = 'chep-nav';
+  nav.className = 'bodea-nav';
   nav.setAttribute('aria-label', 'Dashboard navigation');
 
   /* Logo (images/ is served from code bus; rootLink handles locale root) */
   const logoArea = document.createElement('div');
-  logoArea.className = 'chep-nav__logo';
+  logoArea.className = 'bodea-nav__logo';
   const logoSrc = getCodeAssetUrl('/images/bodea-inc-logo-white.png');
   logoArea.innerHTML = `
-    <a href="${rootLink('/')}" class="chep-nav__logo-link" aria-label="Bodea Home">
-      <img src="${logoSrc}" alt="Bodea - Smart. Simple. Fast." class="chep-nav__logo-img" width="140" height="auto" />
+    <a href="${rootLink('/')}" class="bodea-nav__logo-link" aria-label="Bodea Home">
+      <img src="${logoSrc}" alt="Bodea - Smart. Simple. Fast." class="bodea-nav__logo-img" width="140" height="auto" />
     </a>
   `;
   nav.appendChild(logoArea);
 
   /* Nav items */
   const ul = document.createElement('ul');
-  ul.className = 'chep-nav__list';
+  ul.className = 'bodea-nav__list';
   ul.setAttribute('role', 'list');
 
   NAV_ITEMS.forEach((item) => {
@@ -142,17 +142,17 @@ export function buildNav(pathname) {
 
   /* Footer */
   const footer = document.createElement('div');
-  footer.className = 'chep-nav__footer';
+  footer.className = 'bodea-nav__footer';
   footer.innerHTML = `
-    <div class="chep-nav__footer-brand">
-      <span class="chep-nav__footer-text">Bodea</span>
+    <div class="bodea-nav__footer-brand">
+      <span class="bodea-nav__footer-text">Bodea</span>
     </div>
   `;
   nav.appendChild(footer);
 
   /* Mobile overlay toggle */
   const overlay = document.createElement('div');
-  overlay.className = 'chep-nav__overlay';
+  overlay.className = 'bodea-nav__overlay';
   overlay.setAttribute('aria-hidden', 'true');
   overlay.addEventListener('click', () => closeNav(nav, overlay));
   document.body.appendChild(overlay);
@@ -164,23 +164,23 @@ export function buildNav(pathname) {
 }
 
 export function openNav(nav) {
-  nav.classList.add('chep-nav--open');
+  nav.classList.add('bodea-nav--open');
   if (nav.__overlay) {
-    nav.__overlay.classList.add('chep-nav__overlay--visible');
+    nav.__overlay.classList.add('bodea-nav__overlay--visible');
   }
   document.body.style.overflow = 'hidden';
 }
 
 export function closeNav(nav) {
-  nav.classList.remove('chep-nav--open');
+  nav.classList.remove('bodea-nav--open');
   if (nav.__overlay) {
-    nav.__overlay.classList.remove('chep-nav__overlay--visible');
+    nav.__overlay.classList.remove('bodea-nav__overlay--visible');
   }
   document.body.style.overflow = '';
 }
 
 export function toggleNav(nav) {
-  if (nav.classList.contains('chep-nav--open')) {
+  if (nav.classList.contains('bodea-nav--open')) {
     closeNav(nav);
   } else {
     openNav(nav);

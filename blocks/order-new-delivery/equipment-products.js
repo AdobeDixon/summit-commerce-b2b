@@ -1,4 +1,4 @@
-import { EQUIPMENT_CATALOG_NAMES } from '../chep-dashboard/dashboard-config.js';
+import { EQUIPMENT_CATALOG_NAMES } from '../bodea-dashboard/dashboard-config.js';
 
 export const EQUIPMENT_PRODUCTS = [
   {

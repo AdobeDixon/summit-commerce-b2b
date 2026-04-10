@@ -8,7 +8,7 @@ import {
   rootLink,
 } from '../../scripts/commerce.js';
 import { fetchInvoicesPage } from './invoices-service.js';
-import { buildNav, toggleNav } from '../chep-dashboard/dashboard-nav.js';
+import { buildNav, toggleNav } from '../bodea-dashboard/dashboard-nav.js';
 
 import '../../scripts/initializers/account.js';
 

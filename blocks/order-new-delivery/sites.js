@@ -125,7 +125,7 @@ async function fetchCustomerAddressesFromCoreGraphql() {
 function notifyDeliverySitesChanged(count) {
   try {
     document.dispatchEvent(
-      new CustomEvent('chep-delivery-sites-changed', {
+      new CustomEvent('bodea-delivery-sites-changed', {
         bubbles: true,
         detail: { count },
       }),
@@ -206,20 +206,64 @@ export function mapCustomerAddressesToDeliverySites(addresses) {
       ? !!addr.defaultShipping
       : !!addr.default_shipping;
 
+    const defaultBilling = 'defaultBilling' in addr
+      ? !!addr.defaultBilling
+      : !!addr.default_billing;
+
+    const telephone = addr.telephone ? String(addr.telephone).trim() : '';
+
     const idRaw = addr.uid ?? addr.id;
     const id = idRaw != null ? String(idRaw) : `address-${index}`;
+
+    let streetOut = streetLines.length ? streetLines : [];
+    if (!streetOut.length && address1) {
+      streetOut = [address1];
+    } else if (!streetOut.length) {
+      streetOut = [''];
+    }
 
     return {
       id,
       name,
       address1,
-      streetLines: streetLines.length ? streetLines : (address1 ? [address1] : ['']),
+      streetLines: streetOut,
       city,
       region: typeof region === 'string' ? region : String(region),
       postcode,
       countryCode,
+      defaultShipping,
+      defaultBilling,
+      telephone,
       type: defaultShipping ? 'default-shipping' : 'saved-address',
     };
+  });
+}
+
+/**
+ * Prefer default shipping, then default billing, else first saved row.
+ * @param {Array<Object>} sites - delivery sites from mapCustomerAddressesToDeliverySites
+ * @returns {Object | null}
+ */
+export function getPrimaryDeliverySite(sites) {
+  if (!Array.isArray(sites) || sites.length === 0) return null;
+  const ship = sites.find((s) => s.defaultShipping);
+  if (ship) return ship;
+  const bill = sites.find((s) => s.defaultBilling);
+  if (bill) return bill;
+  return sites[0];
+}
+
+/**
+ * Same ordering as account address list (defaults first), then name.
+ * @param {Array<Object>} sites
+ * @returns {Array<Object>}
+ */
+export function sortDeliverySitesForAccountUI(sites) {
+  if (!Array.isArray(sites)) return [];
+  return [...sites].sort((a, b) => {
+    const score = (s) => (s.defaultShipping ? 4 : 0) + (s.defaultBilling ? 2 : 0);
+    if (score(b) !== score(a)) return score(b) - score(a);
+    return String(a.name).localeCompare(String(b.name), undefined, { sensitivity: 'base' });
   });
 }
 
@@ -286,7 +330,9 @@ export async function loadDeliverySitesFromAddressBook(options = {}) {
   await ensureCompanySwitcherLoaded();
   await waitForAuthGraphQlReady();
   await syncCompanyHeaderWithCommerce();
-  await new Promise((r) => setTimeout(r, 50));
+  await new Promise((r) => {
+    setTimeout(r, 50);
+  });
 
   let raw = await resolveAddressRows();
   let sites = mapCustomerAddressesToDeliverySites(raw);
@@ -295,7 +341,9 @@ export async function loadDeliverySitesFromAddressBook(options = {}) {
     const delaysMs = [120, 300, 600, 1200];
     for (let i = 0; i < delaysMs.length && sites.length === 0; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      await new Promise((r) => setTimeout(r, delaysMs[i]));
+      await new Promise((r) => {
+        setTimeout(r, delaysMs[i]);
+      });
       // eslint-disable-next-line no-await-in-loop
       await syncCompanyHeaderWithCommerce();
       // eslint-disable-next-line no-await-in-loop

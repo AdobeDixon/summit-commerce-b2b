@@ -6,6 +6,7 @@ The Bodea Orders List block displays a paginated table of customer orders with s
 
 ## DA.live Integration
 
+- **Block name (component id)**: `bodea-orders-list` (replaces legacy `chep-orders-list`). Update authored pages that still reference the old block name.
 - Content in block cells (optional)
 - Block config: `page-size` (default 10, max 50)
 

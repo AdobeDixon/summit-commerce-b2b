@@ -1,3 +1,7 @@
+# Content repo for this project (adobedixon/summit-commerce-b2b). Document Authoring preview
+# must use the matching Helix site (e.g. main--summit-commerce-b2b--adobedixon.aem.page). If
+# preview errors reference another repo (e.g. mycheps-march-demo), the wrong site/tab is open —
+# open preview from this repo’s GitHub → AEM config, not another project.
 mountpoints:
   /:
     url: https://content.da.live/adobedixon/summit-commerce-b2b/

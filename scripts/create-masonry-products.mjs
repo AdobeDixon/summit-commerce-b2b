@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Create the six masonry brick products in Adobe Commerce (POST /V1/products).
- * SKUs and names come from blocks/chep-dashboard/dashboard-config.js.
+ * SKUs and names come from blocks/bodea-dashboard/dashboard-config.js.
  *
  * Skips a SKU if GET /V1/products/:sku already returns 200.
  *
@@ -24,7 +24,7 @@ import { dirname, join } from 'path';
 import {
   EQUIPMENT_CATALOG_NAMES,
   FEATURED_EQUIPMENT_SKUS,
-} from '../blocks/chep-dashboard/dashboard-config.js';
+} from '../blocks/bodea-dashboard/dashboard-config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, '..');

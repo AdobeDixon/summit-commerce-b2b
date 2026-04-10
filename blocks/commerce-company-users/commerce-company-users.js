@@ -24,7 +24,7 @@ import {
   checkIsAuthenticated,
   rootLink,
 } from '../../scripts/commerce.js';
-import { buildNav, toggleNav } from '../chep-dashboard/dashboard-nav.js';
+import { buildNav, toggleNav } from '../bodea-dashboard/dashboard-nav.js';
 
 import '../../scripts/initializers/company.js';
 

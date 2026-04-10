@@ -1,6 +1,6 @@
 /**
  * Stretcher-bond brick wall (masonry), material-colored.
- * Shared by order-new-delivery wizard and chep-orders-list product previews.
+ * Shared by order-new-delivery wizard and bodea-orders-list product previews.
  *
  * @param {string} material clay-facing | clay-engineering | concrete | clay-common | clay-perf | vent
  * @param {{ className?: string }} [opts]

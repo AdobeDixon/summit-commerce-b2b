@@ -43,7 +43,7 @@ const DEFAULT_PAYMENT_METHOD_CODE = process.env.CHEP_DEMO_PAYMENT_METHOD ?? 'che
 const ORDER_SOURCE = 'BODEA';
 const MAX_LINE_ITEMS = 60;
 
-/** Canonical HCS-BR-* masonry SKUs (same list as blocks/chep-dashboard/dashboard-config.js). */
+/** Canonical HCS-BR-* masonry SKUs (same list as blocks/bodea-dashboard/dashboard-config.js). */
 const FEATURED_EQUIPMENT_SKUS = [
   'HCS-BR-FAC-WIRECUT-P450',
   'HCS-BR-ENG-CLASSAB-P350',

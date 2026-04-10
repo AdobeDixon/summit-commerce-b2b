@@ -5,7 +5,7 @@ import {
   checkIsAuthenticated,
   rootLink,
 } from '../../scripts/commerce.js';
-import { buildNav, toggleNav } from '../chep-dashboard/dashboard-nav.js';
+import { buildNav, toggleNav } from '../bodea-dashboard/dashboard-nav.js';
 import { renderBrickProductIcon } from './brick-product-icon.js';
 import { EQUIPMENT_PRODUCTS } from './equipment-products.js';
 import {
