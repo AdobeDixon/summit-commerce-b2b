@@ -380,7 +380,7 @@ export function updateAccountName(topBar, customerIdentity) {
 
 /* ── Main decorate ─────────────────────────────────────────────────────── */
 
-export default async function decorate(block) {
+export default function decorate(block) {
   /* Take over the page layout */
   document.body.classList.add('dashboard-page');
 
@@ -443,12 +443,11 @@ export default async function decorate(block) {
   };
   document.addEventListener('bodea-delivery-sites-changed', refreshMapFromAddressBook);
 
+  /* Do not await — otherwise loadSection stays on display:none until GraphQL completes. */
   if (isAuthenticated) {
-    try {
-      await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
-    } catch (err) {
+    loadDeliverySitesFromAddressBook({ retryIfEmpty: true }).catch((err) => {
       console.warn('bodea-dashboard: Could not load customer addresses for the site map.', err);
-    }
+    });
   }
 
   /* Initialise the map only after the section is attached to the document. */
@@ -467,82 +466,88 @@ export default async function decorate(block) {
     });
   }
 
-  /* ── Load data asynchronously ──────────────────────────────────────── */
+  /* ── Load data in background (do not block first paint / section reveal) ─ */
 
-  try {
-    const {
-      customerIdentity,
-      ordersData,
-      stockData,
-      spendTrendData,
-      companyCreditData,
-    } = await DashboardService.loadAll();
+  const loadDashboardData = async () => {
+    try {
+      const {
+        customerIdentity,
+        ordersData,
+        stockData,
+        spendTrendData,
+        companyCreditData,
+      } = await DashboardService.loadAll();
 
-    /* Update topbar account name — uses dedicated identity query, independent of orders */
-    updateAccountName(topBar, customerIdentity);
+      /* Update topbar account name — uses dedicated identity query, independent of orders */
+      updateAccountName(topBar, customerIdentity);
 
-    /* Show new customer banner when authenticated and no orders */
-    const totalCount = ordersData?.totalCount ?? 0;
-    const hasNoOrders = totalCount === 0;
-    const isLoggedIn = customerIdentity != null || ordersData != null;
-    const forceShowBanner = new URLSearchParams(window.location.search).get('newCustomerPreview') === '1';
-    const showNewCustomerBanner = forceShowBanner || (isLoggedIn && hasNoOrders);
+      /* Show new customer banner when authenticated and no orders */
+      const totalCount = ordersData?.totalCount ?? 0;
+      const hasNoOrders = totalCount === 0;
+      const isLoggedIn = customerIdentity != null || ordersData != null;
+      const forceShowBanner = new URLSearchParams(window.location.search).get('newCustomerPreview') === '1';
+      const showNewCustomerBanner = forceShowBanner || (isLoggedIn && hasNoOrders);
 
-    if (showNewCustomerBanner) {
-      const newCustomerBanner = buildNewCustomerBanner();
-      content.prepend(newCustomerBanner);
-    }
-
-    /* Update welcome banner with real customer first name */
-    const firstname = customerIdentity?.firstname ?? ordersData?.customer?.firstname;
-    if (firstname) {
-      const heading = welcomeBanner.querySelector('.dashboard-welcome__heading');
-      if (heading) heading.textContent = `Welcome back, ${firstname}!`;
-    }
-
-    /* Update KPI cards */
-    updateKpiSection(kpiSection, { ordersData, stockData, isAuthenticated });
-
-    /* Spend trend + company credit panels */
-    updateSpendTrendSection(spendTrendSection, spendTrendData, isAuthenticated, ordersData);
-    updateCompanyCreditSection(companyCreditSection, companyCreditData, isAuthenticated);
-
-    /* Update orders table */
-    updateOrdersSection(ordersSection, ordersData, isAuthenticated);
-
-    /* Update stock alerts */
-    updateStockSection(stockSection, stockData);
-
-    /* Update deliveries panel */
-    updateDeliveriesPanel(bottomSection, ordersData, isAuthenticated);
-
-    /* Re-sync address book after other GraphQL (company context); */
-    /* bodea-delivery-sites-changed refreshes the map */
-    if (isAuthenticated) {
-      try {
-        await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
-      } catch (mapAddrErr) {
-        console.warn('bodea-dashboard: Could not refresh site map from address book.', mapAddrErr);
+      if (showNewCustomerBanner) {
+        const newCustomerBanner = buildNewCustomerBanner();
+        content.prepend(newCustomerBanner);
       }
-    }
-  } catch (err) {
-    console.error('[Bodea Dashboard] Data load failed:', err);
 
-    updateKpiSection(kpiSection, { ordersData: null, stockData: [], isAuthenticated });
-    updateSpendTrendSection(
-      spendTrendSection,
-      { points: [], currency: 'GBP', error: 'network' },
-      isAuthenticated,
-      null,
-    );
-    updateCompanyCreditSection(
-      companyCreditSection,
-      { error: 'network' },
-      isAuthenticated,
-    );
-    updateOrdersSection(ordersSection, null, isAuthenticated);
-    updateStockSection(stockSection, []);
-    updateDeliveriesPanel(bottomSection, null, isAuthenticated);
-    updateAccountName(topBar, null);
-  }
+      /* Update welcome banner with real customer first name */
+      const firstname = customerIdentity?.firstname ?? ordersData?.customer?.firstname;
+      if (firstname) {
+        const heading = welcomeBanner.querySelector('.dashboard-welcome__heading');
+        if (heading) heading.textContent = `Welcome back, ${firstname}!`;
+      }
+
+      /* Update KPI cards */
+      updateKpiSection(kpiSection, { ordersData, stockData, isAuthenticated });
+
+      /* Spend trend + company credit panels */
+      updateSpendTrendSection(spendTrendSection, spendTrendData, isAuthenticated, ordersData);
+      updateCompanyCreditSection(companyCreditSection, companyCreditData, isAuthenticated);
+
+      /* Update orders table */
+      updateOrdersSection(ordersSection, ordersData, isAuthenticated);
+
+      /* Update stock alerts */
+      updateStockSection(stockSection, stockData);
+
+      /* Update deliveries panel */
+      updateDeliveriesPanel(bottomSection, ordersData, isAuthenticated);
+
+      /* Re-sync address book after other GraphQL (company context); */
+      /* bodea-delivery-sites-changed refreshes the map */
+      if (isAuthenticated) {
+        try {
+          await loadDeliverySitesFromAddressBook({ retryIfEmpty: true });
+        } catch (mapAddrErr) {
+          console.warn('bodea-dashboard: Could not refresh site map from address book.', mapAddrErr);
+        }
+      }
+    } catch (err) {
+      console.error('[Bodea Dashboard] Data load failed:', err);
+
+      updateKpiSection(kpiSection, { ordersData: null, stockData: [], isAuthenticated });
+      updateSpendTrendSection(
+        spendTrendSection,
+        { points: [], currency: 'GBP', error: 'network' },
+        isAuthenticated,
+        null,
+      );
+      updateCompanyCreditSection(
+        companyCreditSection,
+        { error: 'network' },
+        isAuthenticated,
+      );
+      updateOrdersSection(ordersSection, null, isAuthenticated);
+      updateStockSection(stockSection, []);
+      updateDeliveriesPanel(bottomSection, null, isAuthenticated);
+      updateAccountName(topBar, null);
+    }
+  };
+
+  loadDashboardData().catch(() => {
+    /* Errors handled inside loadDashboardData */
+  });
 }

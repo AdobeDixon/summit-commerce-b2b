@@ -116,7 +116,12 @@ async function loadEager(doc) {
 
       /* Site-wide auth gate: redirect before any protected content renders */
       const shouldContinue = await runAuthGate();
-      if (!shouldContinue) return;
+      if (!shouldContinue) {
+        /* Auth gate uses location.replace(); body stays display:none until .appear (styles.css).
+           Without this, users see a blank screen for the whole redirect window. */
+        document.body.classList.add('appear');
+        return;
+      }
 
       /* Apply auth-page layout for login/create-account/forgot-password screens */
       if (isAuthOnlyPath()) {

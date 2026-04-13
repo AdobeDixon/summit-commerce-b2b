@@ -704,6 +704,9 @@ async function loadSection(section, loadCallback) {
   const status = section.dataset.sectionStatus;
   if (!status || status === 'initialized') {
     section.dataset.sectionStatus = 'loading';
+    /* Sections start as display:none in decorateSections. Reveal now so slow blocks
+       (e.g. dashboard GraphQL) do not keep the whole first section invisible until done. */
+    section.style.display = null;
     const blocks = [...section.querySelectorAll('div.block')];
     for (let i = 0; i < blocks.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -711,7 +714,6 @@ async function loadSection(section, loadCallback) {
     }
     if (loadCallback) await loadCallback(section);
     section.dataset.sectionStatus = 'loaded';
-    section.style.display = null;
   }
 }
 
