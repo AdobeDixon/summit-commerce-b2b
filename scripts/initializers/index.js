@@ -92,6 +92,7 @@ export default async function initializeDropins() {
     const companyContext = sessionStorage.getItem('DROPIN__COMPANYSWITCHER__COMPANY__CONTEXT');
     if (companyContext) {
       CORE_FETCH_GRAPHQL.setFetchGraphQlHeader('X-Adobe-Company', companyContext);
+      CS_FETCH_GRAPHQL.setFetchGraphQlHeader('X-Adobe-Company', companyContext);
     }
 
     // Initialize Global Drop-ins

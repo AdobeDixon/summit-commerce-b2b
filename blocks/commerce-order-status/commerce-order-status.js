@@ -6,11 +6,14 @@ import {
   checkIsAuthenticated,
   rootLink,
 } from '../../scripts/commerce.js';
+import { ensureAccountPageShell } from '../commerce-account-header/account-layout.js';
 
 // Initialize
 import '../../scripts/initializers/order.js';
 
 export default async function decorate(block) {
+  await ensureAccountPageShell();
+
   await orderRenderer.render(OrderStatus, {
     routeCreateReturn: ({ token, number: orderNumber }) => {
       const isAuthenticated = checkIsAuthenticated();

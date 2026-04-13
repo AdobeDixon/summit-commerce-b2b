@@ -1,3 +1,5 @@
+import { ORDER_SOURCE } from './commerce-config.js';
+
 export const CART_CUSTOM_ATTRIBUTE_CODES = Object.freeze({
   orderType: 'chep_order_type',
   transport: 'chep_transport',
@@ -28,7 +30,7 @@ export function buildOrderMetadata(payload) {
   return {
     orderType: normalizeOrderType(payload.orderType),
     transport: normalizeTransport(payload.transport),
-    source: trimString(payload.source || 'HCS'),
+    source: trimString(payload.source || ORDER_SOURCE),
     siteId: trimString(payload.site?.id),
     siteName: trimString(payload.site?.name),
     contactName: trimString(payload.contact?.name),

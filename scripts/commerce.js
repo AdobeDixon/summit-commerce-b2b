@@ -380,6 +380,9 @@ export async function loadCommerceLazy() {
  * Initializes commerce configuration
  */
 export async function initializeCommerce() {
+  /* Title/meta: run before any await — avoids Chep→Bodea flash while drop-ins initialize. */
+  normalizeBrandInPageHead();
+
   // Initialize Config
   initializeConfig(await getConfigFromSession());
 
@@ -392,7 +395,6 @@ export async function initializeCommerce() {
   CS_FETCH_GRAPHQL.setFetchGraphQlHeaders((prev) => ({ ...prev, ...getHeaders('cs') }));
 
   await initializeDropins();
-  normalizeBrandInPageHead();
 }
 
 /**

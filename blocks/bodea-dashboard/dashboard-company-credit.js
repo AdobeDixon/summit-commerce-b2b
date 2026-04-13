@@ -42,21 +42,24 @@ function buildPanelHeader() {
   const title = document.createElement('h2');
   title.className = 'panel-header__title';
   title.textContent = 'Company credit';
-
-  const subtitle = document.createElement('span');
-  subtitle.className = 'panel-header__meta';
-  subtitle.textContent = 'Account terms';
-
   titles.appendChild(title);
 
+  /* Same row structure as spend trend: title | actions | meta */
+  const actions = document.createElement('div');
+  actions.className = 'company-credit__header-actions';
   const view = document.createElement('a');
   view.className = 'panel-header__view-all';
   view.href = rootLink('/customer/company/credit');
   view.textContent = 'View details';
+  actions.appendChild(view);
+
+  const meta = document.createElement('span');
+  meta.className = 'panel-header__meta';
+  meta.textContent = 'Account terms';
 
   header.appendChild(titles);
-  header.appendChild(subtitle);
-  header.appendChild(view);
+  header.appendChild(actions);
+  header.appendChild(meta);
 
   return header;
 }
@@ -282,11 +285,11 @@ export function updateCompanyCreditSection(section, payload, isAuthenticated) {
 
   const track = document.createElement('div');
   track.className = 'company-credit__bar-track';
-  const fill = document.createElement('div');
-  fill.className = 'company-credit__bar-fill';
-  fill.style.width = `${pct}%`;
-  fill.setAttribute('role', 'presentation');
-  track.appendChild(fill);
+  const barFill = document.createElement('div');
+  barFill.className = 'company-credit__bar-fill';
+  barFill.style.width = `${pct}%`;
+  barFill.setAttribute('role', 'presentation');
+  track.appendChild(barFill);
 
   const scale = document.createElement('div');
   scale.className = 'company-credit__bar-scale';

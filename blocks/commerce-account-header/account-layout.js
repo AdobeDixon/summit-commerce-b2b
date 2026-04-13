@@ -3,6 +3,8 @@
  * Used by commerce-account-header and commerce-account-sidebar (fallback).
  */
 
+import { getRootPath } from '@dropins/tools/lib/aem/configs.js';
+import { loadCSS } from '../../scripts/aem.js';
 import {
   buildAccountNav,
   toggleAccountNav,
@@ -13,6 +15,46 @@ import {
   CUSTOMER_FORGOTPASSWORD_PATH,
   rootLink,
 } from '../../scripts/commerce.js';
+
+function getEffectivePath() {
+  const { pathname } = window.location;
+  try {
+    const root = getRootPath().replace(/\/$/, '');
+    if (root && pathname.startsWith(root)) {
+      return pathname.slice(root.length) || '/';
+    }
+  } catch {
+    // Config may not be initialized yet
+  }
+  return pathname || '/';
+}
+
+/**
+ * Auth-only /customer/* flows (login, signup, password) — keep global header, not portal shell.
+ * Mirrors scripts/auth-gate.js AUTH_ONLY_PATH_PATTERNS.
+ */
+function isAuthOnlyCustomerPath() {
+  const p = getEffectivePath().replace(/\/$/, '') || '/';
+  const isUnder = (pattern) => p === pattern || p.startsWith(`${pattern}/`);
+  return (
+    isUnder('/customer/login')
+    || isUnder('/customer/forgotpassword')
+    || isUnder('/customer/create-account')
+    || isUnder('/customer/create')
+    || isUnder('/customer/confirm-account')
+    || isUnder('/customer/create-password')
+  );
+}
+
+/**
+ * True for /customer/* pages that should use the Bodea portal shell (left nav + top bar).
+ * Excludes login/signup and works with locale-prefixed paths.
+ */
+export function isCustomerPortalPath() {
+  const p = getEffectivePath();
+  if (!p.includes('/customer/')) return false;
+  return !isAuthOnlyCustomerPath();
+}
 
 export function isAccountPage() {
   const { pathname } = window.location;
@@ -59,6 +101,7 @@ function buildAccountTopBar(navElement, pageTitle = 'My Account') {
 
 function getPageTitleFromPath() {
   const { pathname } = window.location;
+  if (pathname.includes('/order-details')) return 'Order details';
   if (pathname.includes('/orders') || pathname.includes('/order-list')) return 'Your orders';
   if (pathname.includes('/address')) return 'Addresses';
   if (pathname.includes('/returns')) return 'Returns';
@@ -93,4 +136,43 @@ export async function applyAccountLayout(pageTitle = null) {
   main.appendChild(nav);
   main.appendChild(mainArea);
   mainArea.appendChild(content);
+}
+
+let accountPageShellPromise = null;
+
+/**
+ * Updates the portal shell title when a page also uses commerce-account-header with a custom title.
+ */
+export function setAccountShellPageTitle(pageTitle) {
+  if (!pageTitle) return;
+  const el = document.querySelector('.commerce-account-shell__page-title');
+  if (el) el.textContent = pageTitle;
+}
+
+/**
+ * Applies the Bodea account shell for any /customer/* portal route when blocks like
+ * commerce-account-sidebar live in lazy sections (too late), or when those blocks are omitted.
+ * Safe to call from multiple blocks; coalesced with accountPageShellPromise.
+ *
+ * @param {string|null} [pageTitle] - Optional title; when layout exists, updates the top bar.
+ */
+export async function ensureAccountPageShell(pageTitle = null) {
+  if (isAccountLayoutApplied()) {
+    setAccountShellPageTitle(pageTitle);
+    return;
+  }
+  if (!isCustomerPortalPath()) return;
+
+  if (!accountPageShellPromise) {
+    accountPageShellPromise = (async () => {
+      await loadCSS(`${window.hlx.codeBasePath}/blocks/commerce-account-header/commerce-account-header.css`);
+      await applyAccountLayout(pageTitle);
+    })().finally(() => {
+      accountPageShellPromise = null;
+    });
+  } else if (pageTitle) {
+    setAccountShellPageTitle(pageTitle);
+  }
+  await accountPageShellPromise;
+  if (pageTitle) setAccountShellPageTitle(pageTitle);
 }

@@ -78,7 +78,7 @@ async function syncCompanyHeaderWithCommerce() {
   if (getConfigValue('commerce-companies-enabled') !== true) return;
   if (!getAuthDropinToken()) return;
 
-  const { CORE_FETCH_GRAPHQL } = await import('../../scripts/commerce.js');
+  const { CORE_FETCH_GRAPHQL, CS_FETCH_GRAPHQL } = await import('../../scripts/commerce.js');
 
   try {
     const res = await CORE_FETCH_GRAPHQL.fetchGraphQl(GET_CURRENT_B2B_COMPANY_QUERY, {
@@ -95,6 +95,7 @@ async function syncCompanyHeaderWithCommerce() {
       sessionStorage.setItem(COMPANY_SESSION_STORAGE_KEY, companyId);
     }
     CORE_FETCH_GRAPHQL.setFetchGraphQlHeader('X-Adobe-Company', companyId);
+    CS_FETCH_GRAPHQL.setFetchGraphQlHeader('X-Adobe-Company', companyId);
     try {
       events.emit('companyContext/changed', companyId);
     } catch {

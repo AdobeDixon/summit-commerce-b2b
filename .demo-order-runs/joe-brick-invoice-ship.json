@@ -1,0 +1,55 @@
+{
+  "completedAt": "2026-04-10T09:50:18.854Z",
+  "seed": "random-1775814601882-h86b60taiir",
+  "selected": [
+    "000000039",
+    "000000040",
+    "000000041",
+    "000000042",
+    "000000045"
+  ],
+  "skipped": [
+    "000000037",
+    "000000038",
+    "000000043",
+    "000000044",
+    "000000046"
+  ],
+  "results": [
+    {
+      "incrementId": "000000039",
+      "entityId": 39,
+      "invoiceOk": true,
+      "shipOk": true,
+      "newStatus": "complete"
+    },
+    {
+      "incrementId": "000000040",
+      "entityId": 40,
+      "invoiceOk": true,
+      "shipOk": true,
+      "newStatus": "complete"
+    },
+    {
+      "incrementId": "000000041",
+      "entityId": 41,
+      "invoiceOk": true,
+      "shipOk": true,
+      "newStatus": "complete"
+    },
+    {
+      "incrementId": "000000042",
+      "entityId": 42,
+      "invoiceOk": true,
+      "shipOk": true,
+      "newStatus": "complete"
+    },
+    {
+      "incrementId": "000000045",
+      "entityId": 45,
+      "invoiceOk": true,
+      "shipOk": true,
+      "newStatus": "complete"
+    }
+  ]
+}

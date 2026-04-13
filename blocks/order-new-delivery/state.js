@@ -70,7 +70,7 @@ function formatOrderType(value) {
 }
 
 function formatTransport(value) {
-  if (value === 'chep') return 'HCS delivery';
+  if (value === 'chep') return 'Bodea delivery';
   if (value === 'customer') return 'Customer pickup';
   return 'Not selected';
 }

@@ -19,6 +19,7 @@
     "prepare": "husky",
     "create-user": "node scripts/create-commerce-user.mjs",
     "update-product-names": "node scripts/update-commerce-product-names.mjs",
+    "update-masonry-product-prices": "node scripts/update-masonry-product-prices.mjs",
     "migrate-masonry-skus": "node scripts/migrate-legacy-skus-to-masonry.mjs",
     "create-masonry-products": "node scripts/create-masonry-products.mjs",
     "set-masonry-stock": "node scripts/set-masonry-stock.mjs",

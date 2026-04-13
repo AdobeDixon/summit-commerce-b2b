@@ -130,6 +130,16 @@ async function loadEager(doc) {
 
       decorateMain(main);
       applyTemplates(doc);
+      /* Portal shell for all /customer/* pages (addresses, returns, etc.) — must run before lazy
+         sections so commerce-account-sidebar in a later section is not required for layout. */
+      try {
+        const { ensureAccountPageShell, isCustomerPortalPath } = await import(
+          `${window.hlx.codeBasePath}/blocks/commerce-account-header/account-layout.js`
+        );
+        if (isCustomerPortalPath()) await ensureAccountPageShell();
+      } catch (e) {
+        console.warn('ensureAccountPageShell:', e);
+      }
       await loadCommerceEager();
     } catch (e) {
       console.error('Error initializing commerce configuration:', e);

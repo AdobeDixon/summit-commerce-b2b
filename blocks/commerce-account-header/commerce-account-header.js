@@ -1,6 +1,6 @@
 import { Header, provider as UI } from '@dropins/tools/components.js';
 import { readBlockConfig } from '../../scripts/aem.js';
-import { isAccountPage, applyAccountLayout } from './account-layout.js';
+import { ensureAccountPageShell, isCustomerPortalPath } from './account-layout.js';
 
 export default async function decorate(block) {
   const {
@@ -9,8 +9,8 @@ export default async function decorate(block) {
 
   block.innerHTML = '';
 
-  if (isAccountPage()) {
-    await applyAccountLayout(title);
+  if (isCustomerPortalPath()) {
+    await ensureAccountPageShell(title);
   }
 
   return UI.render(Header, { title })(block);

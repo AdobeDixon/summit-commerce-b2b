@@ -1,7 +1,7 @@
 /**
  * Bodea Dashboard – Equipment Overview Section
  *
- * Renders featured pallet cards with stock indicators and a link
+ * Renders featured brick equipment cards with stock indicators and a link
  * to the order/equipment flow.
  *
  * DATA:

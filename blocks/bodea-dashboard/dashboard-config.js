@@ -69,6 +69,19 @@ export const EQUIPMENT_CATALOG_NAMES = {
 export const EQUIPMENT_DISPLAY_NAMES = { ...EQUIPMENT_CATALOG_NAMES };
 
 /**
+ * Demo list price (USD) per salable unit. One unit = one pack (see EQUIPMENT_CATALOG_NAMES
+ * “Pack of ~n”). Values are prior list reduced ~70% (×0.3) for lower demo unit economics.
+ */
+export const EQUIPMENT_CATALOG_PRICES_USD = {
+  'HCS-BR-FAC-WIRECUT-P450': 209.4,
+  'HCS-BR-ENG-CLASSAB-P350': 229.5,
+  'HCS-BR-CMU-SOLID-P450': 164.4,
+  'HCS-BR-COM-UTILITY-P450': 175.5,
+  'HCS-BR-PRF-MULTICELL-P450': 201.6,
+  'HCS-BR-AIR-VENT-P030': 33.6,
+};
+
+/**
  * Legacy CHEP pallet SKUs → canonical HCS-BR SKUs (Commerce migration; see scripts).
  */
 export const LEGACY_EQUIPMENT_SKU_MIGRATION = [
@@ -143,11 +156,11 @@ export const NAV_ITEMS = [
     icon: 'companyUsers',
   },
   {
-    id: 'equipment',
-    label: 'Equipment',
+    id: 'materials',
+    label: 'Materials',
     href: '/order',
     matchPaths: ['/order', '/order-new-delivery', '/equipment'],
-    icon: 'equipment',
+    icon: 'materials',
   },
   {
     id: 'locations',

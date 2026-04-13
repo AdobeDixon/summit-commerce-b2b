@@ -57,7 +57,7 @@ function getDemoOrderForDeliveryToday() {
       },
     ],
     primaryEquipment: EQUIPMENT_DISPLAY_NAMES[PRIMARY_EQUIPMENT_SKU],
-    total: { value: 1250, currency: 'GBP' },
+    total: { value: 1250, currency: 'USD' },
   };
 }
 
@@ -870,7 +870,7 @@ async function fetchCompanyCreditDashboard() {
  *                    true "delivering today" requires fulfilment/TMS integration)
  * - pickupOrders:    orders with status = pending (proxy; pickup ≠ pending in all setups)
  * - lowStockAlerts:  products whose qty < LOW_STOCK_THRESHOLD or OUT_OF_STOCK (real)
- * - equipmentTypes:  count of distinct featured SKUs (config)
+ * - materialTypes:   count of distinct featured SKUs (config)
  */
 export function deriveKpis(ordersData, stockData, lowStockThreshold) {
   const orders = ordersData?.orders ?? [];
@@ -901,7 +901,7 @@ export function deriveKpis(ordersData, stockData, lowStockThreshold) {
     deliveringToday,
     pickupOrders,
     lowStockAlerts,
-    equipmentTypes: FEATURED_EQUIPMENT_SKUS.length,
+    materialTypes: FEATURED_EQUIPMENT_SKUS.length,
   };
 }
 

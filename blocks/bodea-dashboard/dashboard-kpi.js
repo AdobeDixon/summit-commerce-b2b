@@ -1,15 +1,15 @@
 /**
  * Bodea Dashboard – KPI Summary Cards
  *
- * Renders a row of KPI metric cards. Each card displays a label, a large
- * numeric value, and a supporting subtitle.
+ * Renders a row of KPI metric cards. Each card displays a large numeric value
+ * and a label.
  *
  * DATA NOTES (see dashboard-service.js → deriveKpis for full derivation logic):
  * - Active Orders:     real orders count from customer.orders (Commerce)
  * - Delivering Today:  derived — processing orders created today (proxy)
  * - Pickup Orders:     derived — pending orders (proxy; TODO: fulfilment integration)
  * - Low Stock Alerts:  real — products below LOW_STOCK_THRESHOLD or OUT_OF_STOCK
- * - Equipment Types:   config — count of FEATURED_EQUIPMENT_SKUS
+ * - Material Types:    config — count of FEATURED_EQUIPMENT_SKUS
  */
 
 import { deriveKpis } from './dashboard-service.js';
@@ -46,11 +46,11 @@ const KPI_ICONS = {
     <line x1="12" y1="17" x2="12.01" y2="17"/>
   </svg>`,
 
-  equipment: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="7" width="20" height="14" rx="2"/>
-    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-    <line x1="12" y1="12" x2="12" y2="16"/>
-    <line x1="10" y1="14" x2="14" y2="14"/>
+  materials: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="5" rx="1"/>
+    <rect x="3" y="10" width="8" height="5" rx="1"/>
+    <rect x="13" y="10" width="8" height="5" rx="1"/>
+    <rect x="3" y="16" width="18" height="5" rx="1"/>
   </svg>`,
 };
 
@@ -64,7 +64,6 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       iconColor: 'blue',
       label: 'Active Orders',
       value: isAuthenticated ? kpis.activeOrders : '—',
-      subtitle: 'orders',
       href: '/order-list',
     },
     {
@@ -73,8 +72,6 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       iconColor: 'teal',
       label: 'Delivering Today',
       value: isAuthenticated ? kpis.deliveringToday : '—',
-      subtitle: 'deliveries',
-      note: 'proxy: processing orders today',
       href: '/order-list',
     },
     {
@@ -83,8 +80,6 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       iconColor: 'blue',
       label: 'Pickup Orders',
       value: isAuthenticated ? kpis.pickupOrders : '—',
-      subtitle: 'pending equipment',
-      note: 'proxy: pending status orders',
       href: '/order-list',
     },
     {
@@ -93,16 +88,14 @@ function getKpiDefinitions(kpis, isAuthenticated) {
       iconColor: kpis.lowStockAlerts > 0 ? 'orange' : 'green',
       label: 'Low Stock Alerts',
       value: kpis.lowStockAlerts,
-      subtitle: `items below ${LOW_STOCK_THRESHOLD} units`,
       href: '#low-stock',
     },
     {
-      id: 'equipment-types',
-      icon: 'equipment',
+      id: 'material-types',
+      icon: 'materials',
       iconColor: 'blue',
-      label: 'Equipment Types',
-      value: kpis.equipmentTypes,
-      subtitle: 'pallet formats',
+      label: 'Material Types',
+      value: kpis.materialTypes,
       href: '/order',
     },
   ];
@@ -117,8 +110,7 @@ function buildSkeletonCard() {
     <div class="kpi-card__icon-wrap kpi-card__skeleton-block" style="width:44px;height:44px;border-radius:10px"></div>
     <div class="kpi-card__body">
       <div class="kpi-card__skeleton-block" style="width:60px;height:32px;border-radius:4px;margin-bottom:6px"></div>
-      <div class="kpi-card__skeleton-block" style="width:90px;height:14px;border-radius:3px;margin-bottom:4px"></div>
-      <div class="kpi-card__skeleton-block" style="width:70px;height:12px;border-radius:3px"></div>
+      <div class="kpi-card__skeleton-block" style="width:90px;height:14px;border-radius:3px"></div>
     </div>
   `;
   return card;
@@ -139,7 +131,6 @@ function buildKpiCard(def) {
     <div class="kpi-card__body">
       <div class="kpi-card__value">${def.value ?? 0}</div>
       <div class="kpi-card__label">${def.label}</div>
-      <div class="kpi-card__subtitle">${def.subtitle ?? ''}</div>
     </div>
   `;
 

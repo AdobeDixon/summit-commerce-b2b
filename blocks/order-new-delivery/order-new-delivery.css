@@ -796,6 +796,66 @@ main .order-new-delivery-container {
   margin-bottom: 8px;
 }
 
+/* Live estimated subtotal — between product grid and truck capacity */
+.ond-equipment-subtotal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 16px 0 20px;
+  padding: 14px 16px;
+  background: var(--ond-card-bg);
+  border: 2px solid var(--color-brand-300);
+  border-radius: var(--ond-radius);
+  box-shadow: var(--ond-shadow);
+}
+
+.ond-equipment-subtotal--empty,
+.ond-equipment-subtotal--muted {
+  border-color: var(--ond-border);
+  background: var(--ond-page-bg);
+  box-shadow: none;
+}
+
+.ond-equipment-subtotal__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+}
+
+.ond-equipment-subtotal__label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ond-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ond-equipment-subtotal__value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--ond-text-primary);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.15s ease;
+}
+
+.ond-equipment-subtotal__fineprint,
+.ond-equipment-subtotal__gap,
+.ond-equipment-subtotal__hint,
+.ond-equipment-subtotal__empty,
+.ond-equipment-subtotal__status {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--ond-text-muted);
+  line-height: 1.35;
+}
+
+.ond-equipment-subtotal__gap {
+  color: var(--ond-text-secondary);
+  font-weight: 600;
+}
+
 .ond-equipment-card {
   display: flex;
   flex-direction: column;
@@ -872,6 +932,29 @@ main .order-new-delivery-container {
 .ond-equipment-card.is-selected .ond-equipment-card__material {
   background: var(--color-informational-200);
   color: var(--ond-blue-dark);
+}
+
+.ond-equipment-card__price {
+  margin-top: 8px;
+  font-size: 1.4rem;
+  line-height: 1.3;
+  color: var(--ond-text-primary);
+}
+
+.ond-equipment-card__unit {
+  font-weight: 800;
+}
+
+.ond-equipment-card__per {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--ond-text-muted);
+}
+
+.ond-equipment-card__price--muted {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--ond-text-muted);
 }
 
 .ond-equipment-card__footer {
@@ -1930,6 +2013,26 @@ main .order-new-delivery-container {
   word-break: break-word;
 }
 
+.ond-confirmation__payment-wrap {
+  margin-bottom: 24px;
+}
+
+.ond-detail-card--payment {
+  max-width: 520px;
+}
+
+.ond-detail-row--grand-total {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ond-border);
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.ond-detail-row--grand-total .ond-detail-label {
+  color: var(--ond-text-primary);
+}
+
 .ond-confirmation__equipment {
   background: var(--ond-card-bg);
   border: 1px solid var(--ond-border);
@@ -1958,12 +2061,29 @@ main .order-new-delivery-container {
 
 .ond-equipment-summary li {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 12px;
   padding: 14px 18px;
   background: var(--ond-page-bg);
   border-radius: var(--ond-radius);
   font-size: 1.5rem; /* 15px */
+}
+
+.ond-equipment-summary__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.ond-equipment-summary__line-price {
+  font-weight: 700;
+  color: var(--ond-text-primary);
+  flex-shrink: 0;
+  font-size: 1.4rem;
+}
+
+.ond-equipment-summary__line-price--placed {
+  color: var(--ond-blue);
 }
 
 .ond-equipment-summary__qty {

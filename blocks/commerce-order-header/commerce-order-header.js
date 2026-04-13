@@ -6,8 +6,11 @@ import {
   fetchPlaceholders,
   rootLink,
 } from '../../scripts/commerce.js';
+import { ensureAccountPageShell } from '../commerce-account-header/account-layout.js';
 
 export default async function decorate(block) {
+  await ensureAccountPageShell();
+
   const placeholders = await fetchPlaceholders();
 
   const headerContainer = document.createElement('div');

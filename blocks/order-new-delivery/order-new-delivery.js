@@ -8,6 +8,7 @@ import {
 import { buildNav, toggleNav } from '../bodea-dashboard/dashboard-nav.js';
 import { renderBrickProductIcon } from './brick-product-icon.js';
 import { EQUIPMENT_PRODUCTS } from './equipment-products.js';
+import { fetchEquipmentSkuPrices, formatMoneyAmount } from './equipment-prices.js';
 import {
   findSiteById,
   getDeliverySites,
@@ -44,7 +45,7 @@ const STEP_TITLES = {
 const STEP_DESCRIPTIONS = {
   orderType: 'Choose between a single delivery or a 7-day recurring order.',
   deliveryDate: 'Select the date your brick packs need to be delivered.',
-  transport: 'Choose Heavy Construction Supplies delivery or your own fleet.',
+  transport: 'Choose Bodea delivery or your own fleet.',
   equipment: 'Select brick lines and pack quantities for your order.',
   siteContact: 'Specify the delivery address and on-site contact details.',
   deliveryWindow: 'Set your preferred delivery time window for the driver.',
@@ -520,12 +521,134 @@ function patchCapacityCard(block, state) {
   }
 }
 
+/**
+ * Patches the live subtotal strip (below product grid). Keeps totals in sync without a full
+ * wizard re-render when quantities change.
+ */
+function patchEquipmentSubtotalBar(block, state) {
+  const el = block?.querySelector('[data-equipment-subtotal-bar]');
+  if (!el) return;
+  const d = document.createElement('div');
+  d.innerHTML = renderEquipmentSubtotalBar(state).trim();
+  const next = d.firstElementChild;
+  if (next) {
+    el.replaceWith(next);
+  }
+}
+
+function patchEquipmentStepLiveUi(block, state) {
+  patchEquipmentSubtotalBar(block, state);
+  patchCapacityCard(block, state);
+}
+
 /* ------------------------------------------------------------------
    Equipment product cards
    ------------------------------------------------------------------ */
 function getEquipmentQuantity(state, sku) {
   const line = state.data.equipment.find((l) => l.sku === sku);
   return line ? Number(line.quantity) : 0;
+}
+
+/**
+ * Sum of unit price × qty for lines with catalog prices. Omits unpriced SKUs; sets hasGaps when
+ * some selected lines have no price.
+ * @returns {{ value: number, currency: string, hasGaps: boolean } | null}
+ */
+function getEquipmentSubtotal(state) {
+  const priceBySku = state.ui?.equipmentPrices;
+  if (!priceBySku || !state.ui?.equipmentPricesLoaded) {
+    return null;
+  }
+
+  const lines = (state.data.equipment || []).filter((l) => l.sku && Number(l.quantity) > 0);
+  if (!lines.length) {
+    return null;
+  }
+
+  let total = 0;
+  let currency = '';
+  let pricedCount = 0;
+
+  lines.forEach((line) => {
+    const p = priceBySku[line.sku];
+    if (p && typeof p.value === 'number') {
+      total += p.value * Number(line.quantity);
+      currency = p.currency || currency;
+      pricedCount += 1;
+    }
+  });
+
+  if (pricedCount === 0) {
+    return null;
+  }
+
+  return {
+    value: total,
+    currency,
+    hasGaps: pricedCount < lines.length,
+  };
+}
+
+function renderEquipmentSubtotalBar(state) {
+  const fineprint = 'Excludes delivery and taxes; final amount at checkout.';
+
+  if (!state.ui?.equipmentPricesLoaded) {
+    return `
+      <div class="ond-equipment-subtotal" data-equipment-subtotal-bar aria-live="polite">
+        <p class="ond-equipment-subtotal__status">Loading prices…</p>
+      </div>
+    `;
+  }
+
+  const lines = (state.data.equipment || []).filter((l) => l.sku && Number(l.quantity) > 0);
+  const sub = getEquipmentSubtotal(state);
+
+  if (!lines.length) {
+    return `
+      <div class="ond-equipment-subtotal ond-equipment-subtotal--empty" data-equipment-subtotal-bar aria-live="polite">
+        <p class="ond-equipment-subtotal__hint">Add pack quantities to see an estimated subtotal.</p>
+      </div>
+    `;
+  }
+
+  if (!sub) {
+    return `
+      <div class="ond-equipment-subtotal ond-equipment-subtotal--muted" data-equipment-subtotal-bar aria-live="polite">
+        <p class="ond-equipment-subtotal__empty">Subtotal unavailable — list prices are missing for the packs you selected.</p>
+      </div>
+    `;
+  }
+
+  const gapNote = sub.hasGaps
+    ? '<p class="ond-equipment-subtotal__gap">Some lines are excluded (no list price).</p>'
+    : '';
+
+  return `
+    <div class="ond-equipment-subtotal" data-equipment-subtotal-bar role="region" aria-label="Estimated subtotal" aria-live="polite">
+      <div class="ond-equipment-subtotal__row">
+        <span class="ond-equipment-subtotal__label">Estimated subtotal</span>
+        <span class="ond-equipment-subtotal__value">${escapeHtml(formatMoneyAmount(sub.value, sub.currency))}</span>
+      </div>
+      <p class="ond-equipment-subtotal__fineprint">${escapeHtml(fineprint)}</p>
+      ${gapNote}
+    </div>
+  `;
+}
+
+function renderEquipmentUnitPrice(state, sku) {
+  if (!state.ui?.equipmentPricesLoaded) {
+    return '';
+  }
+  const p = state.ui?.equipmentPrices?.[sku];
+  if (p && typeof p.value === 'number') {
+    const formatted = formatMoneyAmount(p.value, p.currency);
+    return (
+      '<div class="ond-equipment-card__price">'
+      + `<span class="ond-equipment-card__unit">${escapeHtml(formatted)}</span>`
+      + ' <span class="ond-equipment-card__per">/ pack</span></div>'
+    );
+  }
+  return '<div class="ond-equipment-card__price ond-equipment-card__price--muted">Price unavailable</div>';
 }
 
 function formatMaterial(material) {
@@ -543,6 +666,7 @@ function renderEquipmentCards(state, errors) {
     const qty = getEquipmentQuantity(state, product.sku);
     const isSelected = qty > 0;
     const shortName = product.label;
+    const priceRow = renderEquipmentUnitPrice(state, product.sku);
 
     return `
       <div class="ond-equipment-card${isSelected ? ' is-selected' : ''}">
@@ -553,6 +677,7 @@ function renderEquipmentCards(state, errors) {
           <div class="ond-equipment-card__info">
             <div class="ond-equipment-card__name">${escapeHtml(shortName)}</div>
             <span class="ond-equipment-card__material">${escapeHtml(formatMaterial(product.material))}</span>
+            ${priceRow}
           </div>
         </div>
         <div class="ond-equipment-card__footer">
@@ -668,7 +793,7 @@ function renderStepBody(stepId, state, siteListId) {
           <div class="ond-field">
             <label for="delivery-source">Source</label>
             <input id="delivery-source" type="text" value="${escapeHtml(state.data.source)}" readonly>
-            <p class="ond-help-text">Source is fixed as Heavy Construction Supplies (HCS) for this flow.</p>
+            <p class="ond-help-text">Source is fixed as Bodea for this flow.</p>
           </div>
         </div>
       `;
@@ -680,7 +805,7 @@ function renderStepBody(stepId, state, siteListId) {
           ${renderChoiceCard({
             name: 'transport',
             value: 'chep',
-            label: 'HCS delivery',
+            label: 'Bodea delivery',
             checked: state.data.transport === 'chep',
             stepId,
           })}
@@ -700,6 +825,7 @@ function renderStepBody(stepId, state, siteListId) {
       content = `
         ${renderStepMessage(errors.summary)}
         ${renderEquipmentCards(state, errors)}
+        ${renderEquipmentSubtotalBar(state)}
         ${renderCapacityCard(state)}
       `;
       break;
@@ -843,7 +969,7 @@ function renderWizard(state, siteListId) {
   return `
     <div class="ond-page-header">
       <h2>Order New Delivery</h2>
-      <p>Create a new B2B masonry delivery order for Heavy Construction Supplies brick packs via your account.</p>
+      <p>Create a new B2B masonry delivery order for Bodea brick packs via your account.</p>
     </div>
     ${state.submitError ? `<div class="ond-form-error" role="alert">${escapeHtml(state.submitError)}</div>` : ''}
     ${renderStepProgressIndicator(state)}
@@ -856,22 +982,164 @@ function renderWizard(state, siteListId) {
 /* ------------------------------------------------------------------
    Confirmation screen
    ------------------------------------------------------------------ */
+function findOrderItemBySku(order, sku) {
+  if (!order?.items?.length || !sku) {
+    return null;
+  }
+  return order.items.find(
+    (it) => it.productSku === sku || it.product_sku === sku,
+  );
+}
+
+function formatOrderMoneyField(m) {
+  if (!m || m.value == null || !m.currency) {
+    return '';
+  }
+  return formatMoneyAmount(Number(m.value), m.currency);
+}
+
+function getPlacedOrderLineMoney(oi) {
+  if (!oi) {
+    return null;
+  }
+  const t = oi.total;
+  if (t?.value != null && t.currency) {
+    return t;
+  }
+  const ti = oi.totalInclTax;
+  if (ti?.value != null && ti.currency) {
+    return ti;
+  }
+  return null;
+}
+
+/** Prefer Commerce-placed line totals; fall back to catalog estimate from the wizard. */
+function renderConfirmationLinePrice(line, order, catalogUnit) {
+  const oi = findOrderItemBySku(order, line.sku);
+  const placed = getPlacedOrderLineMoney(oi);
+  if (placed?.value != null && placed.currency) {
+    return {
+      text: formatMoneyAmount(Number(placed.value), placed.currency),
+      source: 'order',
+    };
+  }
+  if (catalogUnit && typeof catalogUnit.value === 'number') {
+    return {
+      text: formatMoneyAmount(
+        catalogUnit.value * Number(line.quantity),
+        catalogUnit.currency,
+      ),
+      source: 'estimate',
+    };
+  }
+  return { text: '', source: '' };
+}
+
+function renderPaymentSummaryCard(order) {
+  if (!order) {
+    return '';
+  }
+
+  const grand = order.grandTotal;
+  const subIn = order.subtotalInclTax;
+  const subEx = order.subtotalExclTax;
+  const tax = order.totalTax;
+  let shipMoney = order.totalShipping;
+  if (!shipMoney?.value && order.shipping && typeof order.shipping === 'object') {
+    const s = order.shipping;
+    if (s.amount != null && (s.currency || grand?.currency)) {
+      shipMoney = { value: s.amount, currency: s.currency || grand?.currency };
+    }
+  }
+
+  const rows = [];
+  if (subIn?.value != null) {
+    rows.push({ label: 'Subtotal', value: formatOrderMoneyField(subIn) });
+  } else if (subEx?.value != null) {
+    rows.push({ label: 'Subtotal (ex. tax)', value: formatOrderMoneyField(subEx) });
+  }
+  if (shipMoney?.value != null && formatOrderMoneyField(shipMoney)) {
+    rows.push({ label: 'Shipping', value: formatOrderMoneyField(shipMoney) });
+  }
+  if (tax?.value != null && Number(tax.value) > 0) {
+    rows.push({ label: 'Tax', value: formatOrderMoneyField(tax) });
+  }
+
+  const grandStr = formatOrderMoneyField(grand);
+  const detailRows = rows.filter((r) => r.value).map(
+    (r) => `
+      <div class="ond-detail-row">
+        <span class="ond-detail-label">${escapeHtml(r.label)}</span>
+        <span class="ond-detail-value">${escapeHtml(r.value)}</span>
+      </div>
+    `,
+  ).join('');
+
+  if (!detailRows && !grandStr) {
+    return '';
+  }
+
+  const grandRow = grandStr
+    ? `
+      <div class="ond-detail-row ond-detail-row--grand-total">
+        <span class="ond-detail-label">Order total</span>
+        <span class="ond-detail-value">${escapeHtml(grandStr)}</span>
+      </div>
+    `
+    : '';
+
+  return `
+    <div class="ond-confirmation__payment-wrap">
+      <div class="ond-detail-card ond-detail-card--payment">
+        <h3>Payment summary</h3>
+        ${detailRows}
+        ${grandRow}
+      </div>
+    </div>
+  `;
+}
+
 function renderConfirmation(state) {
-  const { order, summary } = state.submitResult;
-  const site = summary.site;
+  const {
+    submitResult: {
+      order,
+      summary: {
+        site,
+        equipment: summaryEquipment,
+        deliveryDate,
+        deliveryWindow,
+        contact,
+      },
+    },
+  } = state;
   const address = [site.address1, site.city, site.region, site.postcode, site.countryCode]
     .filter(Boolean)
     .join(', ');
 
-  const equipmentItems = summary.equipment
+  const equipmentItems = summaryEquipment
     .filter((line) => line.sku && Number(line.quantity) > 0)
-    .map((line) => `
-      <li>
-        <span class="ond-equipment-summary__qty">${escapeHtml(String(line.quantity))} ×</span>
-        ${escapeHtml(line.product?.label || line.sku)}
+    .map((line) => {
+      const catalog = state.ui?.equipmentPrices?.[line.sku];
+      const priced = renderConfirmationLinePrice(line, order, catalog);
+      const priceClass = priced.source === 'order'
+        ? 'ond-equipment-summary__line-price ond-equipment-summary__line-price--placed'
+        : 'ond-equipment-summary__line-price';
+      const priceCol = priced.text
+        ? `<span class="${priceClass}">${escapeHtml(priced.text)}</span>`
+        : '';
+      return `
+      <li class="ond-equipment-summary__row">
+        <span class="ond-equipment-summary__main">
+          <span class="ond-equipment-summary__qty">${escapeHtml(String(line.quantity))} ×</span>
+          ${escapeHtml(line.product?.label || line.sku)}
+        </span>
+        ${priceCol}
       </li>
-    `)
+    `;
+    })
     .join('');
+
+  const paymentSummaryHtml = renderPaymentSummaryCard(order);
 
   return `
     <div class="ond-confirmation">
@@ -895,7 +1163,7 @@ function renderConfirmation(state) {
           </div>
           <div class="ond-detail-row">
             <span class="ond-detail-label">Delivery date</span>
-            <span class="ond-detail-value">${escapeHtml(summary.deliveryDate)}</span>
+            <span class="ond-detail-value">${escapeHtml(deliveryDate)}</span>
           </div>
           <div class="ond-detail-row">
             <span class="ond-detail-label">Transport</span>
@@ -903,7 +1171,7 @@ function renderConfirmation(state) {
           </div>
           <div class="ond-detail-row">
             <span class="ond-detail-label">Time window</span>
-            <span class="ond-detail-value">${escapeHtml(`${summary.deliveryWindow.from} – ${summary.deliveryWindow.to}`)}</span>
+            <span class="ond-detail-value">${escapeHtml(`${deliveryWindow.from} – ${deliveryWindow.to}`)}</span>
           </div>
         </div>
 
@@ -919,15 +1187,15 @@ function renderConfirmation(state) {
           </div>
           <div class="ond-detail-row">
             <span class="ond-detail-label">Contact</span>
-            <span class="ond-detail-value">${escapeHtml(summary.contact.name)}</span>
+            <span class="ond-detail-value">${escapeHtml(contact.name)}</span>
           </div>
           <div class="ond-detail-row">
             <span class="ond-detail-label">Phone</span>
-            <span class="ond-detail-value">${escapeHtml(summary.contact.phone)}</span>
+            <span class="ond-detail-value">${escapeHtml(contact.phone)}</span>
           </div>
           <div class="ond-detail-row">
             <span class="ond-detail-label">Email</span>
-            <span class="ond-detail-value">${escapeHtml(summary.contact.email)}</span>
+            <span class="ond-detail-value">${escapeHtml(contact.email)}</span>
           </div>
         </div>
       </div>
@@ -938,6 +1206,8 @@ function renderConfirmation(state) {
           ${equipmentItems}
         </ul>
       </div>
+
+      ${paymentSummaryHtml}
 
       <div class="ond-confirmation__actions">
         <button type="button" class="ond-btn-primary" data-new-order>
@@ -1145,39 +1415,51 @@ function attachInputListeners(block, state) {
         card.classList.toggle('is-selected', newQty > 0);
       }
 
-      patchCapacityCard(block, state);
+      patchEquipmentStepLiveUi(block, state);
     });
   });
 
-  // Equipment quantity input — sync typed value to state
+  function applyEquipmentQuantityValue(input, block, state, val) {
+    const sku = input.dataset.qtySku;
+    input.value = String(val);
+
+    state.data.equipment = state.data.equipment.filter((l) => l.sku !== '');
+    const existingIndex = state.data.equipment.findIndex((l) => l.sku === sku);
+
+    if (val === 0) {
+      if (existingIndex >= 0) state.data.equipment.splice(existingIndex, 1);
+    } else if (existingIndex >= 0) {
+      state.data.equipment[existingIndex].quantity = String(val);
+    } else {
+      state.data.equipment.push({ sku, quantity: String(val) });
+    }
+
+    clearStepError(state, 'equipment');
+
+    const card = input.closest('.ond-equipment-card');
+    if (card) {
+      const minusBtn = card.querySelector('[data-qty-change="-1"]');
+      if (minusBtn) minusBtn.disabled = val === 0;
+      card.classList.toggle('is-selected', val > 0);
+    }
+
+    patchEquipmentStepLiveUi(block, state);
+  }
+
+  // Equipment quantity: live subtotal on input while typing; change normalizes empty/invalid on blur
   block.querySelectorAll('input.ond-qty-value[data-qty-sku]').forEach((input) => {
+    input.addEventListener('input', () => {
+      const v = input.valueAsNumber;
+      if (Number.isNaN(v)) {
+        return;
+      }
+      const val = Math.max(0, Math.floor(v));
+      applyEquipmentQuantityValue(input, block, state, val);
+    });
     input.addEventListener('change', () => {
-      const sku = input.dataset.qtySku;
       let val = parseInt(input.value, 10);
       if (Number.isNaN(val) || val < 0) val = 0;
-      input.value = String(val);
-
-      state.data.equipment = state.data.equipment.filter((l) => l.sku !== '');
-      const existingIndex = state.data.equipment.findIndex((l) => l.sku === sku);
-
-      if (val === 0) {
-        if (existingIndex >= 0) state.data.equipment.splice(existingIndex, 1);
-      } else if (existingIndex >= 0) {
-        state.data.equipment[existingIndex].quantity = String(val);
-      } else {
-        state.data.equipment.push({ sku, quantity: String(val) });
-      }
-
-      clearStepError(state, 'equipment');
-
-      const card = input.closest('.ond-equipment-card');
-      if (card) {
-        const minusBtn = card.querySelector('[data-qty-change="-1"]');
-        if (minusBtn) minusBtn.disabled = val === 0;
-        card.classList.toggle('is-selected', val > 0);
-      }
-
-      patchCapacityCard(block, state);
+      applyEquipmentQuantityValue(input, block, state, val);
     });
   });
 
@@ -1238,7 +1520,6 @@ function attachInputListeners(block, state) {
       }
     });
   }
-
 }
 
 /* ------------------------------------------------------------------
@@ -1315,7 +1596,7 @@ function renderBlock(wizardContainer, state) {
     return;
   }
 
-  const siteListId = wizardContainer.dataset.siteListId;
+  const { siteListId } = wizardContainer.dataset;
 
   wizardContainer.innerHTML = state.submitResult
     ? renderConfirmation(state)
@@ -1329,7 +1610,10 @@ function renderBlock(wizardContainer, state) {
     if (newOrderButton) {
       newOrderButton.addEventListener('click', () => {
         const freshState = createInitialState();
-        freshState.ui = {};
+        freshState.ui = {
+          equipmentPrices: state.ui?.equipmentPrices,
+          equipmentPricesLoaded: state.ui?.equipmentPricesLoaded,
+        };
         renderBlock(wizardContainer, freshState);
       });
     }
@@ -1349,7 +1633,10 @@ export default async function decorate(block) {
   }
 
   const state = createInitialState();
-  state.ui = {}; // calendar navigation state — not sent to API
+  state.ui = {
+    equipmentPrices: {},
+    equipmentPricesLoaded: false,
+  };
 
   const selectedSite = getSelectedSite(state);
 
@@ -1359,4 +1646,19 @@ export default async function decorate(block) {
 
   const wizardContainer = renderShell(block);
   renderBlock(wizardContainer, state);
+
+  if (checkIsAuthenticated()) {
+    const skus = EQUIPMENT_PRODUCTS.map((p) => p.sku);
+    fetchEquipmentSkuPrices(skus)
+      .then((prices) => {
+        state.ui.equipmentPrices = prices;
+        state.ui.equipmentPricesLoaded = true;
+        renderBlock(wizardContainer, state);
+      })
+      .catch((err) => {
+        console.warn('order-new-delivery: Could not load SKU prices.', err);
+        state.ui.equipmentPricesLoaded = true;
+        renderBlock(wizardContainer, state);
+      });
+  }
 }

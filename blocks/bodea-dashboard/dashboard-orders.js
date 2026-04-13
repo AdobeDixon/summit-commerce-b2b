@@ -40,6 +40,22 @@ function formatOrderDate(dateStr) {
   }
 }
 
+function formatOrderTotal(total) {
+  if (total == null || total.value == null || Number.isNaN(Number(total.value))) {
+    return '—';
+  }
+  try {
+    return new Intl.NumberFormat('en-GB', {
+      style: 'currency',
+      currency: total.currency && total.currency !== 'NONE' ? total.currency : 'GBP',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(Number(total.value));
+  } catch {
+    return '—';
+  }
+}
+
 /* ── Status pill ───────────────────────────────────────────────────────── */
 
 function buildStatusPill(rawStatus) {
@@ -57,7 +73,7 @@ function buildStatusPill(rawStatus) {
 function buildSkeletonRow() {
   const tr = document.createElement('tr');
   tr.className = 'orders-table__row orders-table__row--skeleton';
-  for (let i = 0; i < 5; i += 1) {
+  for (let i = 0; i < 6; i += 1) {
     const td = document.createElement('td');
     td.innerHTML = `<span class="skeleton-line" style="width:${60 + i * 15}%"></span>`;
     tr.appendChild(td);
@@ -92,6 +108,7 @@ function buildOrderRow(order) {
         ${equipmentSummary}
       </span>
     </td>
+    <td class="orders-table__cell orders-table__cell--total">${formatOrderTotal(order.total)}</td>
     <td class="orders-table__cell orders-table__cell--status"></td>
   `;
 
@@ -159,6 +176,7 @@ export function buildOrdersSection() {
         <th class="orders-table__th">Date</th>
         <th class="orders-table__th">Location</th>
         <th class="orders-table__th">Equipment</th>
+        <th class="orders-table__th orders-table__th--total">Total</th>
         <th class="orders-table__th">Status</th>
       </tr>
     </thead>
@@ -215,6 +233,7 @@ export function updateOrdersSection(section, ordersData, isAuthenticated) {
         <th class="orders-table__th">Date</th>
         <th class="orders-table__th">Location</th>
         <th class="orders-table__th">Equipment</th>
+        <th class="orders-table__th orders-table__th--total">Total</th>
         <th class="orders-table__th">Status</th>
       </tr>
     </thead>

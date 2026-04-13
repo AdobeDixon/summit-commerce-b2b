@@ -369,6 +369,157 @@ body.dashboard-page main > .section > div {
   text-transform: uppercase;
 }
 
+/* Search & filters (client-side on loaded orders) */
+.bodea-orders-list__filters {
+  padding: var(--spacing-medium) var(--spacing-big);
+  background: var(--color-neutral-50);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.bodea-orders-list__filters-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(140px, 180px) minmax(140px, 200px) auto;
+  gap: var(--spacing-medium);
+  align-items: end;
+}
+
+.bodea-orders-list__filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.bodea-orders-list__filter-field--action {
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding-bottom: 2px;
+}
+
+.bodea-orders-list__filter-label {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font: var(--type-details-caption-1-font);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.bodea-orders-list__search-input,
+.bodea-orders-list__filter-select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-900);
+  font: var(--type-body-2-default-font);
+}
+
+.bodea-orders-list__filter-select {
+  cursor: pointer;
+  padding-right: 2rem;
+  appearance: auto;
+}
+
+.bodea-orders-list__search-input::placeholder {
+  color: var(--color-neutral-500);
+}
+
+.bodea-orders-list__search-input:hover,
+.bodea-orders-list__filter-select:hover {
+  border-color: var(--color-brand-500);
+}
+
+.bodea-orders-list__search-input:focus,
+.bodea-orders-list__filter-select:focus {
+  outline: none;
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 2px rgb(3 105 161 / 20%);
+}
+
+.bodea-orders-list__filters-clear {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--shape-border-radius-card);
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-800);
+  font: var(--type-details-caption-1-font);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.bodea-orders-list__filters-clear:hover {
+  background: var(--color-neutral-200);
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-600);
+}
+
+.bodea-orders-list__filters-clear:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+.bodea-orders-list__filters-hint {
+  margin: var(--spacing-small) 0 0;
+  color: var(--color-neutral-600);
+  font: var(--type-details-caption-2-font);
+  max-width: 72ch;
+}
+
+.bodea-orders-list__no-match {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-small);
+  padding: var(--spacing-large) var(--spacing-medium);
+  text-align: center;
+}
+
+.bodea-orders-list__no-match-message {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font: var(--type-body-2-default-font);
+}
+
+.bodea-orders-list__no-match-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-neutral-300);
+  background: var(--color-neutral-50);
+  color: var(--color-brand-500);
+  cursor: pointer;
+  font: var(--type-button-2-font);
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.bodea-orders-list__no-match-clear:hover {
+  background: var(--color-neutral-100);
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-600);
+}
+
+.bodea-orders-list__no-match-clear:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
 .bodea-orders-list__content {
   background: var(--color-neutral-50);
 }
@@ -380,8 +531,20 @@ body.dashboard-page main > .section > div {
 
 .bodea-orders-list__table {
   width: 100%;
-  min-width: 760px;
+  min-width: 840px;
   border-collapse: collapse;
+}
+
+.bodea-orders-list__table thead th.bodea-orders-list__col-total,
+.bodea-orders-list__table tbody td.bodea-orders-list__col-total {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.bodea-orders-list__table tbody td.bodea-orders-list__col-total {
+  font-weight: 600;
+  color: var(--color-neutral-900);
+  white-space: nowrap;
 }
 
 .bodea-orders-list__table thead th {
@@ -634,6 +797,23 @@ body.dashboard-page main > .section > div {
   .bodea-orders-list__footer {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .bodea-orders-list__filters {
+    padding: var(--spacing-small) var(--spacing-medium);
+  }
+
+  .bodea-orders-list__filters-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bodea-orders-list__filter-field--action {
+    justify-content: stretch;
+  }
+
+  .bodea-orders-list__filters-clear {
+    width: 100%;
+    justify-content: center;
   }
 
   .bodea-orders-list__account-name {
