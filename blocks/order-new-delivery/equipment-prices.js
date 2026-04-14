@@ -122,16 +122,25 @@ export async function fetchEquipmentSkuPrices(skus) {
 
   let response;
   try {
-    // POST + no-store: GET GraphQL is often cacheable (CDN/browser), so catalog price edits
-    // can look "stuck" until cache expires.
+    // Same as storefront PDP (`GET` for `products(skus:)`). Production CDNs/WAFs often allow
+    // this; `POST`-only catalog calls can fail live while working locally.
     response = await CS_FETCH_GRAPHQL.fetchGraphQl(EQUIPMENT_PRICES_QUERY, {
-      method: 'POST',
+      method: 'GET',
       variables: { skus: unique },
       cache: 'no-store',
     });
   } catch (err) {
-    console.warn('order-new-delivery: Equipment price request failed.', err);
-    return map;
+    console.warn('order-new-delivery: Equipment price GET failed; trying POST.', err);
+    try {
+      response = await CS_FETCH_GRAPHQL.fetchGraphQl(EQUIPMENT_PRICES_QUERY, {
+        method: 'POST',
+        variables: { skus: unique },
+        cache: 'no-store',
+      });
+    } catch (err2) {
+      console.warn('order-new-delivery: Equipment price POST fallback failed.', err2);
+      return map;
+    }
   }
 
   if (response?.errors?.length) {
