@@ -122,9 +122,12 @@ export async function fetchEquipmentSkuPrices(skus) {
 
   let response;
   try {
+    // POST + no-store: GET GraphQL is often cacheable (CDN/browser), so catalog price edits
+    // can look "stuck" until cache expires.
     response = await CS_FETCH_GRAPHQL.fetchGraphQl(EQUIPMENT_PRICES_QUERY, {
-      method: 'GET',
+      method: 'POST',
       variables: { skus: unique },
+      cache: 'no-store',
     });
   } catch (err) {
     console.warn('order-new-delivery: Equipment price request failed.', err);
